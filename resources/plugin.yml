@@ -1,0 +1,28 @@
+name: yoCore
+version: ${project.version}
+main: me.yochran.yocore.yoCore
+api-version: 1.16
+authors: [ Yochran ]
+description: Remastered version of the vCores, combined into one plugin.
+commands:
+  Setrank:
+    description: Set a players rank.
+    aliases: [sr, srank]
+  Warn:
+    description: Warn a player.
+  Mute:
+    description: Mute a player.
+  Unmute:
+    description: Unmute a player.
+  Tempmute:
+    description: Temporarily mute a player.
+  Ban:
+    description: Ban a player.
+  Unban:
+    description: Unban a player.
+  Tempban:
+    description: Temporarily ban a player.
+  Blacklist:
+    description: Blacklist an IP address.
+  Unblacklist:
+    description: Unblacklists an IP address.

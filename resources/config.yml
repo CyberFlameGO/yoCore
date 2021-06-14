@@ -1,0 +1,144 @@
+# yoCore v1.0 by Yochran
+# https://github.com/Yochran
+
+# Rank names MUST be in all caps!
+Ranks:
+  OWNER:
+    Prefix: "&7[&4Owner&7] &4"
+    Color: "&4"
+    Display: "&4Owner"
+    Priority: 4
+  ADMIN:
+    Prefix: "&7[&cAdmin&7] &c"
+    Color: "&c"
+    Display: "&cAdmin"
+    Priority: 3
+  MOD:
+    Prefix: "&7[&5Mod&7] &5"
+    Color: "&5"
+    Display: "&5Mod"
+    Priority: 2
+  DEFAULT:
+    Prefix: "&7"
+    Color: "&7"
+    Display: "&7Default"
+    Priority: 1
+
+ChatFormat: "%player_prefix%&7: &f%message%"
+
+JoinMessage:
+  Enabled: true
+  Message: "&7(&a+&7) %player%"
+
+QuitMessage:
+  Enabled: true
+  Message: "&7(&c-&7) %player%"
+
+SetRank:
+  IncorrectUsage: "&cIncorrect Usage! /setrank <player> <rank>"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidRank: "&cInvalid Rank!"
+  ConsoleOnly: "&cThis command is Console only!"
+  ExecutorMessage: "&bYou have set %target%&b's rank to %rank%&b."
+  TargetMessage: "&bYour rank has been set to %rank%&b."
+
+SilentPrefix: "&7(Silent) "
+
+Warn:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /warn <player> [-s] <reason>"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have warned %target% &bfor &3%reason%&b."
+  TargetMessage: "&6&l<!> &cYou have been warned for &4%reason%&c. &6&l<!>"
+  BroadcastMessage: "%executor% &bhas warned %target%&b."
+
+Mute:
+  NoPermission: "&cYou do not have permission to use that command."
+  InvalidPlayer: "&cInvalid Player!"
+  TargetIsMuted: "&cTarget is already muted!"
+  Permanent:
+    IncorrectUsage: "&cIncorrect Usage! /mute <player> [-s] <reason>"
+    ExecutorMessage: "&bYou have permanently muted %target% &bfor &3%reason%&b."
+    TargetMessage: "&6&l<!> &cYou have been &4permanently &cmuted for &4%reason%&c. &6&l<!>"
+    BroadcastMessage: "%executor% &bhas permanently muted %target%&b."
+    TargetAttemptToSpeak: |-
+      &cYou cannot speak as you are muted for &4%reason%&c.
+      &cThis mute will &4not &cexpire.
+  Temporary:
+    IncorrectUsage: "&cIncorrect Usage! /tempmute <player> <duration> [-s] <reason>"
+    ExecutorMessage: "&bYou have temporarily muted %target% &bfor &3%reason%&b. &7(%duration%)"
+    TargetMessage: "&6&l<!> &cYou have been temporarily muted for &4%reason%&c. &7(%duration%) &6&l<!>"
+    BroadcastMessage: "%executor% &bhas temporarily muted %target%&b."
+    TargetAttemptToSpeak: |-
+      &cYou cannot speak as you are muted for &4%reason%&c.
+      &cThis mute will expire on &4%expiration%&c.
+
+Unmute:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /unmute <player> [-s]"
+  InvalidPlayer: "&cInvalid Player!"
+  TargetIsNotMuted: "&cTarget is not muted!"
+  ExecutorMessage: "&bYou have unmuted %target%&b."
+  TargetMessage: "&6&l<!> &aYou have been unmuted. &6&l<!>"
+  BroadcastMessage: "%executor% &bhas unmuted %target%&b."
+
+Ban:
+  NoPermission: "&cYou do not have permission to use that command."
+  InvalidPlayer: "&cInvalid Player!"
+  TargetIsBanned: "&cTarget is already banned!"
+  Permanent:
+    IncorrectUsage: "&cIncorrect Usage! /ban <player> [-s] <reason>"
+    ExecutorMessage: "&bYou have permanently banned %target% &bfor &3%reason%&b."
+    BroadcastMessage: "%executor% &bhas permanently banned %target%&b."
+    TargetMessage: |-
+      &cYou've been &4banned &cfrom this server.
+      &cYou were banned for&7: &f%reason%&7.
+      &cThis ban will &4not &cexpire.
+    TargetJoinScreen: |-
+      &cYou cannot join this server as you are &4banned&c.
+      &cYou were banned for&7: &f%reason%&7.
+      &cThis ban will &4not &cexpire.
+  Temporary:
+    IncorrectUsage: "&cIncorrect Usage! /tempban <player> <duration> [-s] <reason>"
+    ExecutorMessage: "&bYou have temporarily banned %target% &bfor &3%reason%&b. &7(%duration%)"
+    BroadcastMessage: "%executor% &bhas temporarily banned %target%&b."
+    TargetMessage: |-
+      &cYou've been &4banned &cfrom this server.
+      &cYou were banned for&7: &f%reason%&7.
+      &cThis bann will expire on&7: &f%expiration%&7.
+    TargetJoinScreen: |-
+      &cYou cannot join this server as you are &4banned&c.
+      &cYou were banned for&7: &f%reason%&7.
+      &cThis bann will expire on&7: &f%expiration%&7.
+
+Unban:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /unban <player> [-s]"
+  InvalidPlayer: "&cInvalid Player!"
+  TargetIsNotBanned: "&cTarget is not banned!"
+  ExecutorMessage: "&bYou have unbanned %target%&b."
+  BroadcastMessage: "%executor% &bhas unbanned %target%&b."
+
+Blacklist:
+  NoPermission: "&cYou do not have permission to use that command."
+  InvalidPlayer: "&cInvalid Player!"
+  TargetIsBlacklisted: "&cTarget is already blacklisted!"
+  IncorrectUsage: "&cIncorrect Usage! /blacklist <player> [-s] <reason>"
+  ExecutorMessage: "&bYou have permanently blacklisted %target% &bfor &3%reason%&b."
+  BroadcastMessage: "%executor% &bhas permanently blacklisted %target%&b."
+  TargetMessage: |-
+    &cYou've been &4blacklisted &cfrom this server.
+    &cYou were blacklisted for&7: &f%reason%&7.
+    &cThis blacklist will &4not &cexpire.
+  TargetJoinScreen: |-
+    &cYou cannot join this server as you are &4blacklisted&c.
+    &cYou were blacklisted for&7: &f%reason%&7.
+    &cThis blacklist will &4not &cexpire.
+
+Unblacklist:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /unblacklist <player> [-s]"
+  InvalidPlayer: "&cInvalid Player!"
+  TargetIsNotBlacklisted: "&cTarget is not blacklisted!"
+  ExecutorMessage: "&bYou have unblacklisted %target%&b."
+  BroadcastMessage: "%executor% &bhas unblacklisted %target%&b."
