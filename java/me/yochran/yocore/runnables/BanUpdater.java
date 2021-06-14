@@ -24,7 +24,7 @@ public class BanUpdater extends BukkitRunnable {
                     if (plugin.punishmentData.config.getLong(players + ".Ban." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Ban") + ".Duration") <= System.currentTimeMillis()) {
                         plugin.banned_players.remove(UUID.fromString(players));
                         plugin.punishmentData.config.set("BannedPlayers." + players, null);
-                        plugin.punishmentData.config.set(players + ".Ban." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Ban") + ".Status", "Revoked");
+                        plugin.punishmentData.config.set(players + ".Ban." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Ban") + ".Status", "Expired");
                         plugin.punishmentData.saveData();
                     }
                 }

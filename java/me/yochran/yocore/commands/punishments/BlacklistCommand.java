@@ -63,11 +63,11 @@ public class BlacklistCommand implements CommandExecutor {
 
         boolean silent = false;
         if (reason.contains("-s")) {
-            reason = reason.replace("-s", "");
+            reason = reason.replace("-s ", "");
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Blacklist", target, executor, reason, "Permanent", silent);
+        punishmentManagement.addInfraction("Blacklist", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
         punishmentManagement.addBlacklist(target, targetIP, reason);
 
         if (silent) {

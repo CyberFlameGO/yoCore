@@ -64,11 +64,11 @@ public class TempmuteCommand implements CommandExecutor {
 
         boolean silent = false;
         if (reason.contains("-s")) {
-            reason = reason.replace("-s", "");
+            reason = reason.replace("-s ", "");
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Mute", target, executor, reason, durationMS, silent);
+        punishmentManagement.addInfraction("Mute", target, executor, reason, System.currentTimeMillis(), durationMS, silent);
         punishmentManagement.addMute(target, true);
 
         if (silent) {

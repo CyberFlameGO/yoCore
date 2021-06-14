@@ -10,6 +10,8 @@ commands:
     aliases: [sr, srank]
   Warn:
     description: Warn a player.
+  Kick:
+    description: Kick a player.
   Mute:
     description: Mute a player.
   Unmute:
@@ -26,3 +28,16 @@ commands:
     description: Blacklist an IP address.
   Unblacklist:
     description: Unblacklists an IP address.
+  History:
+    description: View a players punishment history.
+    aliases: [c, hist]
+  ClearHistory:
+    description: Clear a player's punishment history.
+    aliases: [clearhist]
+  Grant:
+    description: Grant a player a rank.
+  Grants:
+    description: View a players grant history.
+    aliases: [cg, granthistory, granthist]
+  Ungrant:
+    description: Revoke a players grant.

@@ -55,11 +55,11 @@ public class WarnCommand implements CommandExecutor {
 
         boolean silent = false;
         if (reason.contains("-s")) {
-            reason = reason.replace("-s", "");
+            reason = reason.replace("-s ", "");
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Warn", target, executor, reason, "Permanent", silent);
+        punishmentManagement.addInfraction("Warn", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.ExecutorMessage")

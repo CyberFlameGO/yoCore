@@ -1,9 +1,12 @@
 package me.yochran.yocore.listeners;
 
+import me.yochran.yocore.management.GrantManagement;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -14,6 +17,7 @@ public class PlayerLogListener implements Listener {
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final PunishmentManagement punishmentManagement = new PunishmentManagement();
+    private final GrantManagement grantManagement = new GrantManagement();
 
     public PlayerLogListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -21,6 +25,16 @@ public class PlayerLogListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        if (plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()) && !plugin.playerData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
+            plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".Name", event.getPlayer().getName());
+            plugin.playerData.saveData();
+        }
+
+        if (plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString()) && !plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
+            plugin.punishmentData.config.set(event.getPlayer().getUniqueId().toString() + ".Name", event.getPlayer().getName());
+            plugin.punishmentData.saveData();
+        }
+
         if (plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())) {
             event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
                     .replace("%reason%", plugin.blacklisted_ips.get(event.getPlayer().getAddress().getAddress().getHostAddress()))));
@@ -37,10 +51,14 @@ public class PlayerLogListener implements Listener {
             }
         }
 
-        if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString())) {
+        if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()))
             playerManagement.setupPlayer(event.getPlayer());
+
+        if (!plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString()))
             punishmentManagement.setupPlayer(event.getPlayer());
-        }
+
+        if (!plugin.grantData.config.contains(event.getPlayer().getUniqueId().toString()))
+            grantManagement.setupPlayer(event.getPlayer());
 
         if (!playerManagement.checkIP(event.getPlayer(), event.getPlayer().getAddress().getAddress().getHostAddress())) {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".IP", event.getPlayer().getAddress().getAddress().getHostAddress());

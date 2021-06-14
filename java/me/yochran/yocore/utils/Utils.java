@@ -1,8 +1,10 @@
 package me.yochran.yocore.utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 public class Utils {
 
@@ -51,5 +53,10 @@ public class Utils {
     public static String getExpirationDate(long ms) {
         SimpleDateFormat SDF = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss, z");
         return SDF.format(ms);
+    }
+
+    public static ItemStack getMaterialFromConfig(String name) {
+        Optional<XMaterial> mat = XMaterial.matchXMaterial(name);
+        return mat.map(XMaterial::parseItem).orElse(null);
     }
 }

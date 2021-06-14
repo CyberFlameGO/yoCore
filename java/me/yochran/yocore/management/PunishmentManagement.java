@@ -2,10 +2,6 @@ package me.yochran.yocore.management;
 
 import me.yochran.yocore.yoCore;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PunishmentManagement {
 
@@ -49,7 +45,7 @@ public class PunishmentManagement {
         return amount;
     }
 
-    public void addInfraction(String type, OfflinePlayer target, String executor, String reason, Object duration, boolean silent) {
+    public void addInfraction(String type, OfflinePlayer target, String executor, String reason, long date, Object duration, boolean silent) {
         int ID = getInfractionAmount(target, type) + 1;
         plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "sAmount", ID);
 
@@ -58,7 +54,8 @@ public class PunishmentManagement {
         plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Silent", silent);
         plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Date", System.currentTimeMillis());
         plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Duration", duration);
-        plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Status", "Active");
+        if (type.equalsIgnoreCase("Kick")) plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Status", "Expired");
+        else plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Status", "Active");
 
         plugin.punishmentData.saveData();
     }
@@ -87,5 +84,17 @@ public class PunishmentManagement {
         plugin.punishmentData.saveData();
 
         plugin.blacklisted_ips.put(targetIP, reason);
+    }
+
+    public void clearHistory(OfflinePlayer target) {
+        setupPlayer(target);
+
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Warn", null);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Mute", null);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Kick", null);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Ban", null);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Blacklist", null);
+
+        plugin.punishmentData.saveData();
     }
 }

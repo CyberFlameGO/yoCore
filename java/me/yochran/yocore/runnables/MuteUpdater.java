@@ -25,7 +25,7 @@ public class MuteUpdater extends BukkitRunnable {
                     if (plugin.punishmentData.config.getLong(players + ".Mute." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Mute") + ".Duration") <= System.currentTimeMillis()) {
                         plugin.muted_players.remove(UUID.fromString(players));
                         plugin.punishmentData.config.set("MutedPlayers." + players, null);
-                        plugin.punishmentData.config.set(players + ".Mute." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Mute") + ".Status", "Revoked");
+                        plugin.punishmentData.config.set(players + ".Mute." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Mute") + ".Status", "Expired");
                         plugin.punishmentData.saveData();
                     }
                 }

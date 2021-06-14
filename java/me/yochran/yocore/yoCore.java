@@ -1,13 +1,20 @@
 package me.yochran.yocore;
 
+import me.yochran.yocore.commands.GrantCommand;
+import me.yochran.yocore.commands.GrantsCommand;
 import me.yochran.yocore.commands.SetrankCommand;
+import me.yochran.yocore.commands.UngrantCommand;
 import me.yochran.yocore.commands.punishments.*;
+import me.yochran.yocore.data.GrantData;
 import me.yochran.yocore.data.PlayerData;
 import me.yochran.yocore.data.PunishmentData;
+import me.yochran.yocore.listeners.GUIClickListener;
+import me.yochran.yocore.listeners.GUIExitListener;
 import me.yochran.yocore.listeners.PlayerChatListener;
 import me.yochran.yocore.listeners.PlayerLogListener;
 import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.runnables.BanUpdater;
+import me.yochran.yocore.runnables.GrantUpdater;
 import me.yochran.yocore.runnables.MuteUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -20,6 +27,7 @@ public final class yoCore extends JavaPlugin {
 
     public PlayerData playerData;
     public PunishmentData punishmentData;
+    public GrantData grantData;
 
     private PunishmentManagement punishmentManagement;
 
@@ -46,10 +54,17 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<String, String> blacklisted_ips = new HashMap<>();
+    public Map<UUID, UUID> selected_history = new HashMap<>();
+    public Map<UUID, UUID> selected_grant_history = new HashMap<>();
+    public Map<UUID, UUID> grant_player = new HashMap<>();
+    public Map<UUID, String> grant_rank = new HashMap<>();
+    public Map<UUID, String> grant_duration = new HashMap<>();
+    public Map<UUID, String> grant_reason = new HashMap<>();
 
     private void registerCommands() {
         getCommand("Setrank").setExecutor(new SetrankCommand());
         getCommand("Warn").setExecutor(new WarnCommand());
+        getCommand("Kick").setExecutor(new KickCommand());
         getCommand("Mute").setExecutor(new MuteCommand());
         getCommand("Unmute").setExecutor(new UnmuteCommand());
         getCommand("Tempmute").setExecutor(new TempmuteCommand());
@@ -58,17 +73,25 @@ public final class yoCore extends JavaPlugin {
         getCommand("Tempban").setExecutor(new TempbanCommand());
         getCommand("Blacklist").setExecutor(new BlacklistCommand());
         getCommand("Unblacklist").setExecutor(new UnblacklistCommand());
+        getCommand("History").setExecutor(new HistoryCommand());
+        getCommand("ClearHistory").setExecutor(new ClearHistoryCommand());
+        getCommand("Grant").setExecutor(new GrantCommand());
+        getCommand("Grants").setExecutor(new GrantsCommand());
+        getCommand("Ungrant").setExecutor(new UngrantCommand());
     }
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new PlayerLogListener(), this);
         manager.registerEvents(new PlayerChatListener(), this);
+        manager.registerEvents(new GUIClickListener(), this);
+        manager.registerEvents(new GUIExitListener(), this);
     }
 
     private void runRunnables() {
         new MuteUpdater().runTaskTimer(this, 10, 20);
         new BanUpdater().runTaskTimer(this, 10, 20);
+        new GrantUpdater().runTaskTimer(this, 10, 20);
     }
 
     private void registerData() {
@@ -84,6 +107,12 @@ public final class yoCore extends JavaPlugin {
         punishmentData.saveData();
         punishmentData.reloadData();
 
+        grantData = new GrantData();
+
+        grantData.setupData();
+        grantData.saveData();
+        grantData.reloadData();
+
         new BukkitRunnable() {
             @Override
             public void run() { playerData.saveData(); }
@@ -91,6 +120,10 @@ public final class yoCore extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() { punishmentData.saveData(); }
+        }.runTaskLater(this, 10);
+        new BukkitRunnable() {
+            @Override
+            public void run() { grantData.saveData(); }
         }.runTaskLater(this, 10);
     }
 

@@ -61,11 +61,11 @@ public class BanCommand implements CommandExecutor {
 
         boolean silent = false;
         if (reason.contains("-s")) {
-            reason = reason.replace("-s", "");
+            reason = reason.replace("-s ", "");
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Ban", target, executor, reason, "Permanent", silent);
+        punishmentManagement.addInfraction("Ban", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
         punishmentManagement.addBan(target, false);
 
         if (silent) {

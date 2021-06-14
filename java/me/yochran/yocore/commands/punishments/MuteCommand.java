@@ -61,11 +61,11 @@ public class MuteCommand implements CommandExecutor {
 
         boolean silent = false;
         if (reason.contains("-s")) {
-            reason = reason.replace("-s", "");
+            reason = reason.replace("-s ", "");
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Mute", target, executor, reason, "Permanent", silent);
+        punishmentManagement.addInfraction("Mute", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
         punishmentManagement.addMute(target, false);
 
         if (silent) {
