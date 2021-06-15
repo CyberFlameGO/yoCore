@@ -39,33 +39,30 @@ public class PlayerChatListener implements Listener {
         if (event.getMessage().startsWith("# ") && event.getPlayer().hasPermission("yocore.chats.staff")) {
             event.setCancelled(true);
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff")) {
+                if (staff.hasPermission("yocore.chats.staff"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("# ", ""))));
-                }
             }
         }
 
         if (event.getMessage().startsWith("@ ") && event.getPlayer().hasPermission("yocore.chats.admin")) {
             event.setCancelled(true);
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.admin")) {
+                if (staff.hasPermission("yocore.chats.admin"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("@ ", ""))));
-                }
             }
         }
 
         if (event.getMessage().startsWith("! ") && event.getPlayer().hasPermission("yocore.chats.management")) {
             event.setCancelled(true);
-            for (Player staff : Bukkit.getOnlinePlayers()) {
+            for (Player staff : Bukkit.getOnlinePlayers())
                 if (staff.hasPermission("yocore.chats.management")) {
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("! ", ""))));
-                }
             }
         }
 
