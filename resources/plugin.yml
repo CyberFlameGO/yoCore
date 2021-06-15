@@ -58,3 +58,32 @@ commands:
     aliases: tsa
   Vanish:
     description: Vanish yourself or another player.
+    aliases: [v]
+  Gamemode:
+    description: Change your or another players gamemode.
+    aliases: gm
+  Gmc:
+    description: Enter creative mode.
+    aliases: gm1
+  Gms:
+    description: Enter Survival mode.
+    aliases: gm0
+  Gmsp:
+    description: Enter spectator mode.
+    aliases: gm2
+  Gma:
+    description: Enter adventure mode.
+    aliases: gm3
+  Heal:
+    description: Heal yourself or another player.
+  Feed:
+    description: Feed yourself or another player.
+  Clear:
+    description: Clear your or another players inventory.
+    aliases: ci
+  ClearChat:
+    description: Clear the chat.
+    aliases: cc
+  MuteChat:
+    description: Mute the chat.
+    aliases: mgc

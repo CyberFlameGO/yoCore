@@ -72,10 +72,16 @@ ChatFormat: "%player_prefix%&7: &f%message%"
 JoinMessage:
   Enabled: true
   Message: "&7(&a+&7) %player%"
+  Staff:
+    Enabled: true
+    Message: "&b[SC] %player% &bjoined &3the server."
 
 QuitMessage:
   Enabled: true
   Message: "&7(&c-&7) %player%"
+  Staff:
+    Enabled: false
+    Message: "&b[SC] %player% &bleft &3the server."
 
 SetRank:
   IncorrectUsage: "&cIncorrect Usage! /setrank <player> <rank>"
@@ -391,6 +397,10 @@ StaffAlerts:
   VanishOffSelf: "&7[%player% &eexited &7vanish.]"
   VanishOnOther: "&7[%player% &7put %target% &einto &7vanish.]"
   VanishOffOther: "&7[%player% &7took %target% &eout of &7vanish.]"
+  HealSelf: "&7[%player% &ehealed &7themselves.]"
+  HealOther: "&7[%player% &ehealed %target%&7.]"
+  FeedSelf: "&7[%player% &efed &7themselves.]"
+  FeedOther: "&7[%player% &efed %target%&7.]"
 
 Vanish:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -401,3 +411,46 @@ Vanish:
   ExecutorMessageOff: "&bYou have taken %target% &bout of &3vanish&b."
   TargetMessageOn: "&bYou are now in &3vanish&b."
   TargetMessageOff: "&bYou are no longer in &3vanish&b."
+
+Gamemode:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /gamemode <gamemode> [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidGamemode: "&cInvalid Gamemode!"
+  ExecutorMessage: "&bYou have put %target% &binto &3%gamemode% &bmode."
+  TargetMessage: "&bYou have entered &3%gamemode% &bmode."
+
+Heal:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /heal [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have healed %target%&b."
+  TargetMessage: "&bYou have been healed."
+
+Feed:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /feed [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have fed %target%&b."
+  TargetMessage: "&bYou have been fed."
+
+Clear:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /clear [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have cleared %target%&b's inventory."
+  TargetMessage: "&bYour inventory has been cleared."
+
+ClearChat:
+  NoPermission: "&cYou do not have permission to use that command."
+  MessageAfter: "&bChat has been &3cleared &bby %executor%&b."
+
+MuteChat:
+  NoPermission: "&cYou do not have permission to use that command."
+  MessageOn: "&bChat has been &3muted &bby %executor%&b."
+  MessageOff: "&bChat has been &3unmuted &bby %executor%&b."
+  AttemptToSpeak: "&cYou cannot speak as chat is muted."

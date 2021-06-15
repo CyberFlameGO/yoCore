@@ -2,8 +2,7 @@ package me.yochran.yocore;
 
 import me.yochran.yocore.commands.*;
 import me.yochran.yocore.commands.punishments.*;
-import me.yochran.yocore.commands.staff.ToggleStaffAlertsCommand;
-import me.yochran.yocore.commands.staff.VanishCommand;
+import me.yochran.yocore.commands.staff.*;
 import me.yochran.yocore.data.GrantData;
 import me.yochran.yocore.data.PlayerData;
 import me.yochran.yocore.data.PunishmentData;
@@ -28,6 +27,8 @@ public final class yoCore extends JavaPlugin {
 
     private PunishmentManagement punishmentManagement;
 
+    public boolean chat_muted;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -43,6 +44,8 @@ public final class yoCore extends JavaPlugin {
         punishmentManagement = new PunishmentManagement();
 
         refreshPunishments();
+
+        chat_muted = false;
 
         Bukkit.getConsoleSender().sendMessage("yoCore v1.0 by Yochran has successfully loaded.");
     }
@@ -60,31 +63,6 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, String> grant_rank = new HashMap<>();
     public Map<UUID, String> grant_duration = new HashMap<>();
     public Map<UUID, String> grant_reason = new HashMap<>();
-
-    private void registerCommands() {
-        getCommand("Setrank").setExecutor(new SetrankCommand());
-        getCommand("Warn").setExecutor(new WarnCommand());
-        getCommand("Kick").setExecutor(new KickCommand());
-        getCommand("Mute").setExecutor(new MuteCommand());
-        getCommand("Unmute").setExecutor(new UnmuteCommand());
-        getCommand("Tempmute").setExecutor(new TempmuteCommand());
-        getCommand("Ban").setExecutor(new BanCommand());
-        getCommand("Unban").setExecutor(new UnbanCommand());
-        getCommand("Tempban").setExecutor(new TempbanCommand());
-        getCommand("Blacklist").setExecutor(new BlacklistCommand());
-        getCommand("Unblacklist").setExecutor(new UnblacklistCommand());
-        getCommand("History").setExecutor(new HistoryCommand());
-        getCommand("ClearHistory").setExecutor(new ClearHistoryCommand());
-        getCommand("Grant").setExecutor(new GrantCommand());
-        getCommand("Grants").setExecutor(new GrantsCommand());
-        getCommand("Ungrant").setExecutor(new UngrantCommand());
-        getCommand("ClearGrantHistory").setExecutor(new ClearGrantHistoryCommand());
-        getCommand("StaffChat").setExecutor(new StaffChatCommand());
-        getCommand("AdminChat").setExecutor(new AdminChatCommand());
-        getCommand("ManagementChat").setExecutor(new ManagementChatCommand());
-        getCommand("Vanish").setExecutor(new VanishCommand());
-        getCommand("ToggleStaffAlerts").setExecutor(new ToggleStaffAlertsCommand());
-    }
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
@@ -155,5 +133,40 @@ public final class yoCore extends JavaPlugin {
                 blacklisted_ips.put(punishmentData.config.getString("BlacklistedPlayers." + uuid + ".IP"), punishmentData.config.getString(uuid + ".Blacklist." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(uuid)), "Blacklist") + ".Reason"));
             }
         }
+    }
+
+    private void registerCommands() {
+        getCommand("Setrank").setExecutor(new SetrankCommand());
+        getCommand("Warn").setExecutor(new WarnCommand());
+        getCommand("Kick").setExecutor(new KickCommand());
+        getCommand("Mute").setExecutor(new MuteCommand());
+        getCommand("Unmute").setExecutor(new UnmuteCommand());
+        getCommand("Tempmute").setExecutor(new TempmuteCommand());
+        getCommand("Ban").setExecutor(new BanCommand());
+        getCommand("Unban").setExecutor(new UnbanCommand());
+        getCommand("Tempban").setExecutor(new TempbanCommand());
+        getCommand("Blacklist").setExecutor(new BlacklistCommand());
+        getCommand("Unblacklist").setExecutor(new UnblacklistCommand());
+        getCommand("History").setExecutor(new HistoryCommand());
+        getCommand("ClearHistory").setExecutor(new ClearHistoryCommand());
+        getCommand("Grant").setExecutor(new GrantCommand());
+        getCommand("Grants").setExecutor(new GrantsCommand());
+        getCommand("Ungrant").setExecutor(new UngrantCommand());
+        getCommand("ClearGrantHistory").setExecutor(new ClearGrantHistoryCommand());
+        getCommand("StaffChat").setExecutor(new StaffChatCommand());
+        getCommand("AdminChat").setExecutor(new AdminChatCommand());
+        getCommand("ManagementChat").setExecutor(new ManagementChatCommand());
+        getCommand("Vanish").setExecutor(new VanishCommand());
+        getCommand("ToggleStaffAlerts").setExecutor(new ToggleStaffAlertsCommand());
+        getCommand("Gamemode").setExecutor(new GamemodeCommands());
+        getCommand("Gmc").setExecutor(new GamemodeCommands());
+        getCommand("Gms").setExecutor(new GamemodeCommands());
+        getCommand("Gmsp").setExecutor(new GamemodeCommands());
+        getCommand("Gma").setExecutor(new GamemodeCommands());
+        getCommand("Heal").setExecutor(new HealCommand());
+        getCommand("Feed").setExecutor(new FeedCommand());
+        getCommand("Clear").setExecutor(new ClearCommand());
+        getCommand("ClearChat").setExecutor(new ClearChatCommand());
+        getCommand("MuteChat").setExecutor(new MuteChatCommand());
     }
 }
