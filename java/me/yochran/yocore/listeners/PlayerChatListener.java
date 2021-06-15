@@ -48,8 +48,8 @@ public class PlayerChatListener implements Listener {
 
         if (event.getMessage().startsWith("@ ") && event.getPlayer().hasPermission("yocore.chats.admin")) {
             event.setCancelled(true);
-            for (Player staff : Bukkit.getOnlinePlayers())
-                if (staff.hasPermission("yocore.chats.admin")) {
+            for (Player staff : Bukkit.getOnlinePlayers()) {
+                if (staff.hasPermission("yocore.chats.admin"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("@ ", ""))));
@@ -58,8 +58,8 @@ public class PlayerChatListener implements Listener {
 
         if (event.getMessage().startsWith("! ") && event.getPlayer().hasPermission("yocore.chats.management")) {
             event.setCancelled(true);
-            for (Player staff : Bukkit.getOnlinePlayers())
-                if (staff.hasPermission("yocore.chats.management")) {
+            for (Player staff : Bukkit.getOnlinePlayers()) {
+                if (staff.hasPermission("yocore.chats.management"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("! ", ""))));
