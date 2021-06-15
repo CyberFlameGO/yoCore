@@ -32,8 +32,8 @@ commands:
     description: View a players punishment history.
     aliases: [c, hist]
   ClearHistory:
-    description: Clear a player's punishment history.
-    aliases: [clearhist]
+    description: Clear a players punishment history.
+    aliases: [ch, clearhist]
   Grant:
     description: Grant a player a rank.
   Grants:
@@ -41,3 +41,20 @@ commands:
     aliases: [cg, granthistory, granthist]
   Ungrant:
     description: Revoke a players grant.
+  ClearGrantHistory:
+    description: Clear a players grant history.
+    aliases: [cgh, cleargranthist]
+  StaffChat:
+    description: Talk privately with staff members.
+    aliases: [sc]
+  AdminChat:
+    description: Talk privately with admins and above.
+    aliases: [ac]
+  ManagementChat:
+    description: Talk privately with managers and above.
+    aliases: [mc]
+  ToggleStaffAlerts:
+    description: Toggle on or off staff alerts.
+    aliases: tsa
+  Vanish:
+    description: Vanish yourself or another player.

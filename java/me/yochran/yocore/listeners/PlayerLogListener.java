@@ -65,8 +65,15 @@ public class PlayerLogListener implements Listener {
             plugin.playerData.saveData();
         }
 
-        if (plugin.getConfig().getBoolean("JoinMessage.Enabled"))
-            event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+        if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) {
+            for (Player players : Bukkit.getOnlinePlayers())
+                event.getPlayer().hidePlayer(players);
+        }
+
+        if (plugin.getConfig().getBoolean("JoinMessage.Enabled")) {
+            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setJoinMessage("");
+            else event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+        }
     }
 
     @EventHandler
@@ -75,6 +82,7 @@ public class PlayerLogListener implements Listener {
             playerManagement.setupPlayer(event.getPlayer());
 
         if (plugin.getConfig().getBoolean("QuitMessage.Enabled"))
-            event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setQuitMessage("");
+            else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
     }
 }

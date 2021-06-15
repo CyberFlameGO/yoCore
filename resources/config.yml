@@ -13,7 +13,7 @@ Ranks:
   DEVELOPER:
     Prefix: "&7[&5&oDeveloper&7] &5&o"
     Color: "&5&o"
-    Display: "&5&oManager"
+    Display: "&5&oDeveloper"
     Priority: 2
     GrantItem: "PURPLE_WOOL"
     GrantPermission: "yocore.grant.developer"
@@ -350,9 +350,54 @@ GrantHistory:
   IncorrectUsage: "&cIncorrect Usage! /grants <player>"
   InvalidPlayer: "&cInvalid Player!"
 
+ClearGrantHistory:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /cleargranthistory <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have cleared %target%&b's grant history."
+
 Ungrant:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /ungrant <player> <id>"
   InvalidPlayer: "&cInvalid Player!"
   InvalidGrant: "&cInvalid Grant!"
   ExecutorMessage: "&bYou have revoked grant &3#%grant% &bfrom %target%&b."
+
+StaffChat:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /sc <message>"
+  Format: "&b[SC] %player%&7: &b%message%"
+
+AdminChat:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /ac <message>"
+  Format: "&c[AC] %player%&7: &b%message%"
+
+ManagementChat:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /mc <message>"
+  Format: "&4[MC] %player%&7: &b%message%"
+
+StaffAlerts:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  ToggleOnMessage: "&bYou have turned &3on &bstaff alerts."
+  ToggleOffMessage: "&bYou have turned &3off &bstaff alerts."
+  # Different Alerts
+  VanishOnSelf: "&7[%player% &eentered &7vanish.]"
+  VanishOffSelf: "&7[%player% &eexited &7vanish.]"
+  VanishOnOther: "&7[%player% &7put %target% &einto &7vanish.]"
+  VanishOffOther: "&7[%player% &7took %target% &eout of &7vanish.]"
+
+Vanish:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /vanish [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessageOn: "&bYou have put %target% &binto &3vanish&b."
+  ExecutorMessageOff: "&bYou have taken %target% &bout of &3vanish&b."
+  TargetMessageOn: "&bYou are now in &3vanish&b."
+  TargetMessageOff: "&bYou are no longer in &3vanish&b."

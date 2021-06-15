@@ -100,13 +100,13 @@ public class GrantsCommand implements CommandExecutor {
                 String ID = String.valueOf(plugin.grantData.config.getInt(target.getUniqueId().toString() + ".Grants." + grant + ".ID"));
 
                 List<String> itemLore = new ArrayList<>();
-                itemLore.add(Utils.translate("&7&m-----------------------------"));
+                itemLore.add(Utils.translate("&7&m----------------------------"));
                 itemLore.add(Utils.translate("&eRank: &f" + rank));
                 itemLore.add(Utils.translate("&eExecutor: &f" + executor));
                 itemLore.add(Utils.translate("&eReason: &f" + reason));
                 itemLore.add(Utils.translate("&eDuration: &f" + duration));
                 itemLore.add(Utils.translate("&eID: &f" + ID));
-                itemLore.add(Utils.translate("&7&m-----------------------------"));
+                itemLore.add(Utils.translate("&7&m----------------------------"));
                 if (revokable) {
                     itemLore.add(Utils.translate("&aClick to revoke this grant."));
                 }

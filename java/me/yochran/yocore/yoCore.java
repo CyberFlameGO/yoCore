@@ -1,21 +1,18 @@
 package me.yochran.yocore;
 
-import me.yochran.yocore.commands.GrantCommand;
-import me.yochran.yocore.commands.GrantsCommand;
-import me.yochran.yocore.commands.SetrankCommand;
-import me.yochran.yocore.commands.UngrantCommand;
+import me.yochran.yocore.commands.*;
 import me.yochran.yocore.commands.punishments.*;
+import me.yochran.yocore.commands.staff.ToggleStaffAlertsCommand;
+import me.yochran.yocore.commands.staff.VanishCommand;
 import me.yochran.yocore.data.GrantData;
 import me.yochran.yocore.data.PlayerData;
 import me.yochran.yocore.data.PunishmentData;
-import me.yochran.yocore.listeners.GUIClickListener;
-import me.yochran.yocore.listeners.GUIExitListener;
-import me.yochran.yocore.listeners.PlayerChatListener;
-import me.yochran.yocore.listeners.PlayerLogListener;
+import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.runnables.BanUpdater;
 import me.yochran.yocore.runnables.GrantUpdater;
 import me.yochran.yocore.runnables.MuteUpdater;
+import me.yochran.yocore.runnables.VanishUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,6 +48,9 @@ public final class yoCore extends JavaPlugin {
     }
 
     public List<String> ranks = new ArrayList<>();
+    public List<UUID> vanished_players = new ArrayList<>();
+    public List<UUID> staff_alerts = new ArrayList<>();
+
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<String, String> blacklisted_ips = new HashMap<>();
@@ -78,6 +78,12 @@ public final class yoCore extends JavaPlugin {
         getCommand("Grant").setExecutor(new GrantCommand());
         getCommand("Grants").setExecutor(new GrantsCommand());
         getCommand("Ungrant").setExecutor(new UngrantCommand());
+        getCommand("ClearGrantHistory").setExecutor(new ClearGrantHistoryCommand());
+        getCommand("StaffChat").setExecutor(new StaffChatCommand());
+        getCommand("AdminChat").setExecutor(new AdminChatCommand());
+        getCommand("ManagementChat").setExecutor(new ManagementChatCommand());
+        getCommand("Vanish").setExecutor(new VanishCommand());
+        getCommand("ToggleStaffAlerts").setExecutor(new ToggleStaffAlertsCommand());
     }
 
     private void registerListeners() {
@@ -86,12 +92,14 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new PlayerChatListener(), this);
         manager.registerEvents(new GUIClickListener(), this);
         manager.registerEvents(new GUIExitListener(), this);
+        manager.registerEvents(new VanishCheckListeners(), this);
     }
 
     private void runRunnables() {
         new MuteUpdater().runTaskTimer(this, 10, 20);
         new BanUpdater().runTaskTimer(this, 10, 20);
         new GrantUpdater().runTaskTimer(this, 10, 20);
+        new VanishUpdater().runTaskTimer(this, 10, 10);
     }
 
     private void registerData() {

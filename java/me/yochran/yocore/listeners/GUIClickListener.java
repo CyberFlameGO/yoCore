@@ -119,8 +119,6 @@ public class GUIClickListener implements Listener {
                 plugin.grant_reason.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_duration.remove(event.getWhoClicked().getUniqueId());
             }
-        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate(playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(plugin.selected_grant_history.get(event.getWhoClicked().getUniqueId()))) + "&a's grant history."))) {
-            event.setCancelled(true);
         }
 
         if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&7&m----------------------------"))

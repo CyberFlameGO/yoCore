@@ -82,4 +82,11 @@ public class GrantManagement {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
     }
+
+    public void clearHistory(OfflinePlayer target) {
+        setupPlayer(target);
+
+        plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants", null);
+        plugin.grantData.saveData();
+    }
 }
