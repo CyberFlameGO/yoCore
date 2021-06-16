@@ -95,6 +95,33 @@ public class PunishmentManagement {
         plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Ban", null);
         plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Blacklist", null);
 
+        if (plugin.punishmentData.config.contains("MutedPlayers")) {
+            for (String muted : plugin.punishmentData.config.getConfigurationSection("MutedPlayers").getKeys(false)) {
+                if (muted.equalsIgnoreCase(target.getUniqueId().toString())) {
+                    plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString(), null);
+                    plugin.banned_players.remove(target.getUniqueId());
+                }
+            }
+        }
+
+        if (plugin.punishmentData.config.contains("BannedPlayers")) {
+            for (String banned : plugin.punishmentData.config.getConfigurationSection("BannedPlayers").getKeys(false)) {
+                if (banned.equalsIgnoreCase(target.getUniqueId().toString())) {
+                    plugin.punishmentData.config.set("BannedPlayers." + target.getUniqueId().toString(), null);
+                    plugin.banned_players.remove(target.getUniqueId());
+                }
+            }
+        }
+
+        if (plugin.punishmentData.config.contains("BlacklistedPlayers")) {
+            for (String blacklisted : plugin.punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false)) {
+                if (blacklisted.equalsIgnoreCase(target.getUniqueId().toString())) {
+                    plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString(), null);
+                    plugin.blacklisted_ips.remove(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP"));
+                }
+            }
+        }
+
         plugin.punishmentData.saveData();
     }
 }

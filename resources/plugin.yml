@@ -87,3 +87,20 @@ commands:
   MuteChat:
     description: Mute the chat.
     aliases: mgc
+  Fly:
+    description: Change your or another players fly mode.
+  Teleport:
+    description: Teleport yourself to another player, or teleport a player to you, or teleport a player to another player.
+    aliases: tp
+  TeleportHere:
+    description: Teleport another player to you.
+    aliases: tphere
+  TeleportAll:
+    description: Teleport all players to yourself.
+    aliases: tpall
+  Freeze:
+    description: Freeze a player.
+    aliases: ss
+  Modmode:
+    description: Put you or another player into modmode.
+    aliases: mod

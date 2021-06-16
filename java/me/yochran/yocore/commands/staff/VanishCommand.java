@@ -39,8 +39,10 @@ public class VanishCommand implements CommandExecutor {
             if (!plugin.vanished_players.contains(((Player) sender).getUniqueId())) {
                 plugin.vanished_players.add(((Player) sender).getUniqueId());
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.TargetMessageOn")));
-                for (Player players : Bukkit.getOnlinePlayers())
-                    ((Player) sender).hidePlayer(players);
+                for (Player players : Bukkit.getOnlinePlayers()) {
+                    if (!players.hasPermission("yocore.vanish"))
+                        players.hidePlayer((Player) sender);
+                }
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
@@ -71,8 +73,10 @@ public class VanishCommand implements CommandExecutor {
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.TargetMessageOn")));
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.ExecutorMessageOn")
                         .replace("%target%", playerManagement.getPlayerColor(target))));
-                for (Player players : Bukkit.getOnlinePlayers())
-                    target.hidePlayer(players);
+                for (Player players : Bukkit.getOnlinePlayers()) {
+                    if (!players.hasPermission("yocore.vanish"))
+                        players.hidePlayer(target);
+                }
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))

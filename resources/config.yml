@@ -393,14 +393,24 @@ StaffAlerts:
   ToggleOnMessage: "&bYou have turned &3on &bstaff alerts."
   ToggleOffMessage: "&bYou have turned &3off &bstaff alerts."
   # Different Alerts
-  VanishOnSelf: "&7[%player% &eentered &7vanish.]"
-  VanishOffSelf: "&7[%player% &eexited &7vanish.]"
-  VanishOnOther: "&7[%player% &7put %target% &einto &7vanish.]"
-  VanishOffOther: "&7[%player% &7took %target% &eout of &7vanish.]"
-  HealSelf: "&7[%player% &ehealed &7themselves.]"
-  HealOther: "&7[%player% &ehealed %target%&7.]"
-  FeedSelf: "&7[%player% &efed &7themselves.]"
-  FeedOther: "&7[%player% &efed %target%&7.]"
+  VanishOnSelf: "&7[%player% &7entered vanish.]"
+  VanishOffSelf: "&7[%player% &7exited vanish.]"
+  VanishOnOther: "&7[%player% &7put %target% &7into vanish.]"
+  VanishOffOther: "&7[%player% &7took %target% &7out of vanish.]"
+  HealSelf: "&7[%player% &7healed themselves.]"
+  HealOther: "&7[%player% &7healed %target%&7.]"
+  FeedSelf: "&7[%player% &7fed themselves.]"
+  FeedOther: "&7[%player% &7fed %target%&7.]"
+  Teleport: "&7[%player% &7teleported to %target%&7.]"
+  TeleportHere: "&7[%player% &7teleported %target% &7to themselves.]"
+  TeleportTwo: "&7[%player% &7teleported %target1% &7to %target2%&7.]"
+  TeleportAll: "&7[%player% &7teleported &eALL &7players to themselves.]"
+  FreezeOn: "&7[%player% &7has frozen %target%&7.]"
+  FreezeOff: "&7[%player% &7has unfrozen %target%&7.]"
+  ModmodeOnSelf: "&7[%player% &7has entered modmode&7.]"
+  ModmodeOffSelf: "&7[%player% &7has exited modmode&7.]"
+  ModmodeOnOther: "&7[%player% &7has put %target% &7into modmode&7.]"
+  ModmodeOffOther: "&7[%player% &7has taken %target% &7out of modmode&7.]"
 
 Vanish:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -454,3 +464,48 @@ MuteChat:
   MessageOn: "&bChat has been &3muted &bby %executor%&b."
   MessageOff: "&bChat has been &3unmuted &bby %executor%&b."
   AttemptToSpeak: "&cYou cannot speak as chat is muted."
+
+Fly:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /fly [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessageOn: "&bYou have put %target% &binto fly mode.."
+  TargetMessageOn: "&bYou are now in fly mode."
+  ExecutorMessageOff: "&bYou have taken %target% &bout of fly mode.."
+  TargetMessageOff: "&bYou are no longer in fly mode."
+
+Teleport:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /tp <player> [player]"
+  IncorrectUsageHere: "&cIncorrect Usage! /tphere <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  Teleport: "&bYou have teleported to %target%&b."
+  TeleportHere: "&bYou have teleported %target% &bto yourself."
+  TeleportTwo: "&bYou have teleported %target1% &bto %target2%&b."
+  TeleportAll: "&bYou have teleported &3ALL &bplayers to you."
+
+Freeze:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /ss <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessageOn: "&bYou have &3frozen %target%&b."
+  ExecutorMessageOff: "&bYou have &3unfrozen %target%&b."
+  TargetMessageOn: |-
+    &7&m------------------------------
+    &6&l<!> &cYou have been &4frozen&c! &6&l<!>
+    &cPlease join the discord server.
+    &b&n<discord link here>
+    &7&m------------------------------
+  TargetMessageOff: "&aYou are no longer frozen."
+
+Modmode:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /modmode [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessageOn: "&bYou have put %target% &binto &3modmode&b."
+  TargetMessageOn: "&bYou have entered &3modmode&b."
+  ExecutorMessageOff: "&bYou have taken %target% &bout of &3modmode&b."
+  TargetMessageOff: "&bYou have exited &3modmode&b."

@@ -71,15 +71,22 @@ public class PlayerLogListener implements Listener {
         }
 
         if (plugin.getConfig().getBoolean("JoinMessage.Staff.Enabled")) {
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff"))
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Staff.Message")
-                            .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+            if (!plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+                    && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
+                if (event.getPlayer().hasPermission("yocore.chats.staff")) {
+                    for (Player staff : Bukkit.getOnlinePlayers()) {
+                        if (staff.hasPermission("yocore.chats.staff"))
+                            staff.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Staff.Message")
+                                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                    }
+                }
             }
         }
 
         if (plugin.getConfig().getBoolean("JoinMessage.Enabled")) {
-            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setJoinMessage("");
+            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())
+                    || plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+                    || !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) event.setJoinMessage("");
             else event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
         }
     }
@@ -90,15 +97,22 @@ public class PlayerLogListener implements Listener {
             playerManagement.setupPlayer(event.getPlayer());
 
         if (plugin.getConfig().getBoolean("QuitMessage.Staff.Enabled")) {
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff"))
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
-                            .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+            if (!plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+                    && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
+                if (event.getPlayer().hasPermission("yocore.chats.staff")) {
+                    for (Player staff : Bukkit.getOnlinePlayers()) {
+                        if (staff.hasPermission("yocore.chats.staff"))
+                            staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
+                                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                    }
+                }
             }
         }
 
         if (plugin.getConfig().getBoolean("QuitMessage.Enabled"))
-            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setQuitMessage("");
+            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())
+                    || plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+                    || !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) event.setQuitMessage("");
             else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
     }
 }

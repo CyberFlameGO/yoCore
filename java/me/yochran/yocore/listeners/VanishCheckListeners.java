@@ -4,11 +4,8 @@ import me.yochran.yocore.yoCore;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.potion.PotionEffect;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class VanishCheckListeners implements Listener {
 
@@ -46,10 +43,8 @@ public class VanishCheckListeners implements Listener {
     }
 
     @EventHandler
-    public void onPickup(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player) {
-            if (plugin.vanished_players.contains(event.getEntity().getUniqueId()))
-                event.setCancelled(true);
-        }
+    public void onPickup(PlayerPickupItemEvent event) {
+        if (plugin.vanished_players.contains(event.getPlayer().getUniqueId()))
+            event.setCancelled(true);
     }
 }

@@ -13,6 +13,7 @@ import me.yochran.yocore.runnables.GrantUpdater;
 import me.yochran.yocore.runnables.MuteUpdater;
 import me.yochran.yocore.runnables.VanishUpdater;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,6 +55,13 @@ public final class yoCore extends JavaPlugin {
     public List<UUID> vanished_players = new ArrayList<>();
     public List<UUID> staff_alerts = new ArrayList<>();
 
+    public List<UUID> frozen_players = new ArrayList<>();
+    public Map<UUID, List<Double>> frozen_coordinates = new HashMap<>();
+
+    public List<UUID> modmode_players = new ArrayList<>();
+    public Map<UUID, ItemStack[]> inventory_contents = new HashMap<>();
+    public Map<UUID, ItemStack[]> armor_contents = new HashMap<>();
+
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<String, String> blacklisted_ips = new HashMap<>();
@@ -71,6 +79,8 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new GUIClickListener(), this);
         manager.registerEvents(new GUIExitListener(), this);
         manager.registerEvents(new VanishCheckListeners(), this);
+        manager.registerEvents(new ModmodeListeners(), this);
+        manager.registerEvents(new FreezeListener(), this);
     }
 
     private void runRunnables() {
@@ -168,5 +178,11 @@ public final class yoCore extends JavaPlugin {
         getCommand("Clear").setExecutor(new ClearCommand());
         getCommand("ClearChat").setExecutor(new ClearChatCommand());
         getCommand("MuteChat").setExecutor(new MuteChatCommand());
+        getCommand("Fly").setExecutor(new FlyCommand());
+        getCommand("Teleport").setExecutor(new TeleportCommands());
+        getCommand("TeleportHere").setExecutor(new TeleportCommands());
+        getCommand("TeleportAll").setExecutor(new TeleportCommands());
+        getCommand("Modmode").setExecutor(new ModmodeCommand());
+        getCommand("Freeze").setExecutor(new FreezeCommand());
     }
 }
