@@ -16,6 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+
 public class GUIClickListener implements Listener {
 
     private final yoCore plugin;
@@ -61,7 +63,9 @@ public class GUIClickListener implements Listener {
                 event.getWhoClicked().closeInventory();
                 new BukkitRunnable() {
                     @Override
-                    public void run() { grantCommand.openDurationGUI((Player) event.getWhoClicked(), target); }
+                    public void run() {
+                        grantCommand.openDurationGUI((Player) event.getWhoClicked(), target);
+                    }
                 }.runTaskLater(plugin, 5);
             } else {
                 event.setCancelled(true);
@@ -73,7 +77,9 @@ public class GUIClickListener implements Listener {
             event.getWhoClicked().closeInventory();
             new BukkitRunnable() {
                 @Override
-                public void run() { grantCommand.openReasonGUI((Player) event.getWhoClicked(), target); }
+                public void run() {
+                    grantCommand.openReasonGUI((Player) event.getWhoClicked(), target);
+                }
             }.runTaskLater(plugin, 5);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a reason."))) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
@@ -82,7 +88,9 @@ public class GUIClickListener implements Listener {
             event.getWhoClicked().closeInventory();
             new BukkitRunnable() {
                 @Override
-                public void run() { grantCommand.openConfirmGUI((Player) event.getWhoClicked(), target, plugin.grant_rank.get(event.getWhoClicked().getUniqueId()), plugin.grant_duration.get(event.getWhoClicked().getUniqueId()), plugin.grant_reason.get(event.getWhoClicked().getUniqueId())); }
+                public void run() {
+                    grantCommand.openConfirmGUI((Player) event.getWhoClicked(), target, plugin.grant_rank.get(event.getWhoClicked().getUniqueId()), plugin.grant_duration.get(event.getWhoClicked().getUniqueId()), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()));
+                }
             }.runTaskLater(plugin, 5);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aConfirm the grant."))) {
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&2&lConfirm Grant"))) {
@@ -119,11 +127,34 @@ public class GUIClickListener implements Listener {
                 plugin.grant_reason.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_duration.remove(event.getWhoClicked().getUniqueId());
             }
+        } else if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&aClick to revoke this grant."))) {
+            List<String> itemLore = event.getCurrentItem().getItemMeta().getLore();
+
+            OfflinePlayer target = Bukkit.getOfflinePlayer(ChatColor.stripColor(event.getView().getTitle().replace("'s grant history.", "")));
+
+            String idLore = ChatColor.stripColor(itemLore.get(6));
+            int id = Integer.parseInt(idLore.replace("ID: ", ""));
+
+            plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + id + ".Status", "Revoked");
+            plugin.grantData.saveData();
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
+
+            event.getWhoClicked().closeInventory();
+            event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));
+        } else if (event.getCurrentItem().getItemMeta().hasLore()
+                && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&7&m----------------------------"))
+                && event.getInventory().getSize() == 54) {
+            event.setCancelled(true);
+        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a chat color."))) {
+            plugin.chat_color.remove(event.getWhoClicked().getUniqueId());
+
+            event.getWhoClicked().closeInventory();
+            event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("ChatColor.SelectedColor")
+                    .replace("%color%", event.getCurrentItem().getItemMeta().getDisplayName())));
+
+            plugin.chat_color.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aInventory Inspect")))
             event.setCancelled(true);
 
-        if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&7&m----------------------------"))
-                && event.getInventory().getSize() == 54)
-            event.setCancelled(true);
     }
 }

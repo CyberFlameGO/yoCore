@@ -65,6 +65,8 @@ public final class yoCore extends JavaPlugin {
     public List<UUID> message_toggled = new ArrayList<>();
     public Map<UUID, UUID> reply = new HashMap<>();
 
+    public Map<UUID, String> chat_color = new HashMap<>();
+
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<String, String> blacklisted_ips = new HashMap<>();
@@ -199,5 +201,8 @@ public final class yoCore extends JavaPlugin {
         getCommand("Alts").setExecutor(new AltsCommand());
         getCommand("OnlinePlayers").setExecutor(new ListCommand());
         getCommand("Invsee").setExecutor(new InvseeCommand());
+        getCommand("Rank").setExecutor(new RankCommand());
+        getCommand("ChatColor").setExecutor(new ChatColorCommand());
+        getCommand("Broadcast").setExecutor(new BroadcastCommand());
     }
 }

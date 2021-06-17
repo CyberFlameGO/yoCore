@@ -83,7 +83,6 @@ commands:
     aliases: ci
   ClearChat:
     description: Clear the chat.
-    aliases: cc
   MuteChat:
     description: Mute the chat.
     aliases: mgc
@@ -125,3 +124,11 @@ commands:
     aliases: [list, whois]
   Invsee:
     description: See a players inventory.
+  Rank:
+    description: Add or remove ranks.
+  ChatColor:
+    description: Change your chat color.
+    aliases: cc
+  Broadcast:
+    description: Broadcast a message to the server.
+    aliases: [alert, bc]

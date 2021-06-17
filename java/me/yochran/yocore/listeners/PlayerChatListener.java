@@ -71,10 +71,30 @@ public class PlayerChatListener implements Listener {
             event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("MuteChat.AttemptToSpeak")));
         }
 
+        String message = event.getMessage().replace("&", "");
+        if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId())) {
+            switch (plugin.chat_color.get(event.getPlayer().getUniqueId()).toLowerCase()) {
+                case "dark red": message = "&4" + message; break;
+                case "light red": message = "&c" + message; break;
+                case "orange": message = "&6" + message; break;
+                case "yellow": message = "&e" + message; break;
+                case "lime": message = "&a" + message; break;
+                case "green": message = "&2" + message; break;
+                case "aqua": message = "&b" + message; break;
+                case "blue": message = "&9" + message; break;
+                case "dark blue": message = "&1" + message; break;
+                case "purple": message = "&5" + message; break;
+                case "pink": message = "&d" + message; break;
+                case "white": message = "&r" + message; break;
+                case "bold": message = "&l" + message; break;
+                case "italics": message = "&o" + message; break;
+            }
+        }
+
         String format = plugin.getConfig().getString("ChatFormat")
                 .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))
                 .replace("%player_color%", playerManagement.getPlayerColor(event.getPlayer()))
-                .replace("%message%", ChatColor.stripColor(event.getMessage()));
+                .replace("%message%", message);
 
         event.setFormat(Utils.translate(format));
     }

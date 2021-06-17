@@ -34,7 +34,7 @@ Ranks:
   SENIOR-MOD:
     Prefix: "&7[&6&oSenior-Mod&7] &6&o"
     Color: "&6&o"
-    Display: "&6&oMod"
+    Display: "&6&oSenior-Mod"
     Priority: 5
     GrantItem: "ORANGE_WOOL"
     GrantPermission: "yocore.grant.seniormod"
@@ -82,6 +82,17 @@ QuitMessage:
   Staff:
     Enabled: true
     Message: "&b[SC] %player% &bleft &3the server."
+
+RankCommand:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /rank <add/remove/prefix/color/display/priority> <rank> [prefix/color/display/priority]"
+  InvalidRank: "&cInvalid Rank!"
+  CreatedRank: "&bCreated rank &3%rank%&b."
+  RemovedRank: "&bRemoved rank %rank%&b."
+  PrefixChanged: "%rank%&b's prefix has been changed to &3%prefix%&b."
+  ColorChanged: "%rank%&b's color has been changed to &3%color%&b."
+  DisplayChanged: "%rank%&b's display name has been changed to &3%display%&b."
+  PriorityChanged: "%rank%&b's priority has been changed to &3%priority%&b."
 
 SetRank:
   IncorrectUsage: "&cIncorrect Usage! /setrank <player> <rank>"
@@ -342,13 +353,14 @@ Grant:
       - "&eDuration: &6%duration%"
       - "&eReason: &6%reason%"
       - "&7&m----------------------------------"
-    CancelledGrant: "&c&lGrant has been cancelled."
+    CancelledGrant: "&cGrant has been cancelled."
     ConfirmedGrant: |-
       &a&lGrant has been confirmed.
       &eGranted User: %target%
       &eGranted Rank: &6%rank%
       &eGrant Duration: &6%duration%
       &eGrant Reason: &6%reason%
+  RevokedGrant: "&cGrant has been revoked."
 
 GrantHistory:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -411,6 +423,7 @@ StaffAlerts:
   ModmodeOffSelf: "&7[%player% &7has exited modmode&7.]"
   ModmodeOnOther: "&7[%player% &7has put %target% &7into modmode&7.]"
   ModmodeOffOther: "&7[%player% &7has taken %target% &7out of modmode&7.]"
+  Broadcast: "&7[%player% &7broadcasted: &e%message%&7]"
 
 Vanish:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -550,6 +563,16 @@ Invsee:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /invsee <player>"
   InvalidPlayer: "&cInvalid Player!"
+
+ChatColor:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  SelectedColor: "&bYou have set your chat color to %color%&b."
+
+Broadcast:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /broadcast <message>"
+  Message: "&7[&4&lALERT&7] &f%message%"
 
 Scoreboard:
   Enabled: false

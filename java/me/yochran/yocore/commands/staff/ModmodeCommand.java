@@ -89,7 +89,7 @@ public class ModmodeCommand implements CommandExecutor {
                         .replace("%target%", playerManagement.getPlayerColor(target))));
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Modmode.TargetMessageOn")));
 
-                enterModmode((Player) sender);
+                enterModmode(target);
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
@@ -109,8 +109,8 @@ public class ModmodeCommand implements CommandExecutor {
 
                 target.getInventory().clear();
 
-                target.getInventory().setContents(plugin.inventory_contents.get(((Player) sender).getUniqueId()));
-                target.getInventory().setArmorContents(plugin.armor_contents.get(((Player) sender).getUniqueId()));
+                target.getInventory().setContents(plugin.inventory_contents.get(target.getUniqueId()));
+                target.getInventory().setArmorContents(plugin.armor_contents.get(target.getUniqueId()));
 
                 target.updateInventory();
 

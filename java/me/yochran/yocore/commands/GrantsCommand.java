@@ -88,15 +88,17 @@ public class GrantsCommand implements CommandExecutor {
                         break;
                 }
 
-                String rank = plugin.getConfig().getString("Ranks." + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Rank").toUpperCase() + ".Display");
+                String rank = "";
+                if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants.." + grant + ".Rank").equalsIgnoreCase("(Removed Rank)"))
+                    rank = "&4(Removed Rank)";
+                else plugin.getConfig().getString("Ranks." + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Rank").toUpperCase() + ".Display");
                 String executor = playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Executor"))));
                 String duration;
-                if (plugin.grantData.config.get(target.getUniqueId().toString() + ".Grants." + grant + ".Duration").equals("Permanent")) {
-                    duration = "Permanent";
-                } else {
-                    duration = Utils.getExpirationDate(plugin.grantData.config.getLong(target.getUniqueId().toString() + ".Grants." + grant + ".Duration"));
-                }
+                if (plugin.grantData.config.get(target.getUniqueId().toString() + ".Grants." + grant + ".Duration").equals("Permanent")) duration = "Permanent";
+                else duration = Utils.getExpirationDate(plugin.grantData.config.getLong(target.getUniqueId().toString() + ".Grants." + grant + ".Duration"));
                 String reason = plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Reason");
+                String previousRank = plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".PreviousRank");
+                String previousRankDisplay = plugin.getConfig().getString("Ranks." + previousRank.toUpperCase() + ".Display");
                 String ID = String.valueOf(plugin.grantData.config.getInt(target.getUniqueId().toString() + ".Grants." + grant + ".ID"));
 
                 List<String> itemLore = new ArrayList<>();
@@ -105,6 +107,7 @@ public class GrantsCommand implements CommandExecutor {
                 itemLore.add(Utils.translate("&eExecutor: &f" + executor));
                 itemLore.add(Utils.translate("&eReason: &f" + reason));
                 itemLore.add(Utils.translate("&eDuration: &f" + duration));
+                itemLore.add(Utils.translate("&ePrevious Rank: &f" + previousRankDisplay));
                 itemLore.add(Utils.translate("&eID: &f" + ID));
                 itemLore.add(Utils.translate("&7&m----------------------------"));
                 if (revokable) {
