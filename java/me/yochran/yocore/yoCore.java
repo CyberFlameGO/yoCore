@@ -8,10 +8,8 @@ import me.yochran.yocore.data.PlayerData;
 import me.yochran.yocore.data.PunishmentData;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PunishmentManagement;
-import me.yochran.yocore.runnables.BanUpdater;
-import me.yochran.yocore.runnables.GrantUpdater;
-import me.yochran.yocore.runnables.MuteUpdater;
-import me.yochran.yocore.runnables.VanishUpdater;
+import me.yochran.yocore.runnables.*;
+import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -62,6 +60,11 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, ItemStack[]> inventory_contents = new HashMap<>();
     public Map<UUID, ItemStack[]> armor_contents = new HashMap<>();
 
+    public List<UUID> buildmode_players = new ArrayList<>();
+
+    public List<UUID> message_toggled = new ArrayList<>();
+    public Map<UUID, UUID> reply = new HashMap<>();
+
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<String, String> blacklisted_ips = new HashMap<>();
@@ -81,6 +84,9 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new VanishCheckListeners(), this);
         manager.registerEvents(new ModmodeListeners(), this);
         manager.registerEvents(new FreezeListener(), this);
+        manager.registerEvents(new BuildModeListener(), this);
+        manager.registerEvents(new ListCommand(), this);
+        manager.registerEvents(new ScoreboardSetter(), this);
     }
 
     private void runRunnables() {
@@ -88,6 +94,7 @@ public final class yoCore extends JavaPlugin {
         new BanUpdater().runTaskTimer(this, 10, 20);
         new GrantUpdater().runTaskTimer(this, 10, 20);
         new VanishUpdater().runTaskTimer(this, 10, 10);
+        new ScoreboardUpdater().runTaskTimer(this, 10, 5);
     }
 
     private void registerData() {
@@ -184,5 +191,13 @@ public final class yoCore extends JavaPlugin {
         getCommand("TeleportAll").setExecutor(new TeleportCommands());
         getCommand("Modmode").setExecutor(new ModmodeCommand());
         getCommand("Freeze").setExecutor(new FreezeCommand());
+        getCommand("Report").setExecutor(new ReportCommand());
+        getCommand("BuildMode").setExecutor(new BuildModeCommand());
+        getCommand("Message").setExecutor(new MessageCommand());
+        getCommand("Reply").setExecutor(new ReplyCommand());
+        getCommand("ToggleMessages").setExecutor(new ToggleMessagesCommand());
+        getCommand("Alts").setExecutor(new AltsCommand());
+        getCommand("OnlinePlayers").setExecutor(new ListCommand());
+        getCommand("Invsee").setExecutor(new InvseeCommand());
     }
 }

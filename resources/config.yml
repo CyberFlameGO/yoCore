@@ -80,7 +80,7 @@ QuitMessage:
   Enabled: true
   Message: "&7(&c-&7) %player%"
   Staff:
-    Enabled: false
+    Enabled: true
     Message: "&b[SC] %player% &bleft &3the server."
 
 SetRank:
@@ -509,3 +509,73 @@ Modmode:
   TargetMessageOn: "&bYou have entered &3modmode&b."
   ExecutorMessageOff: "&bYou have taken %target% &bout of &3modmode&b."
   TargetMessageOff: "&bYou have exited &3modmode&b."
+
+Report:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /report <player> <reason>"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have reported %target% &bfor &3%reason%&b."
+  StaffAlert: "&b[SC] %player% &3has reported %target% &3for &b%reason%."
+
+BuildMode:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  MessageOn: "&bYou have turned your build mode &3on&b."
+  MessageOff: "&bYou have turned your build mode &3off&b."
+  BlockPlace: "&cYou cannot build or break blocks as your build mode is off!"
+
+Message:
+  MustBePlayer: "&cYou must be a player to use that command."
+  IncorrectUsageMessage: "&cIncorrect Usage! /msg <player> <message>"
+  IncorrectUsageReply: "&cIncorrect Usage! /r <message>"
+  InvalidPlayer: "&cInvalid Player!"
+  NotMessaging: "&cYou're not currently messaging anyone!"
+  MessagesOffSelf: "&cYou cannot send messages as your messages are off!"
+  MessagesOffOther: "&cYou cannot send messages to this player!"
+  ToggleOn: "&bYou have turned private messages &3on&b."
+  ToggleOff: "&bYou have turned private messages &3off&b."
+  ExecutorMessage: "&7(To %target%&7) %message%"
+  TargetMessage: "&7(From %player%&7) %message%"
+
+Alts:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /alts <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  GatheringMessage: "&bGathering %target%&b's alts... &7(This could take some time)"
+  ExecutorMessage: "%target%&b's alts &7(Offline, &aOnline&7, &6Muted&7, &cBanned&7, &4Blacklisted&7): &3%alts%"
+
+Invsee:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /invsee <player>"
+  InvalidPlayer: "&cInvalid Player!"
+
+Scoreboard:
+  Enabled: false
+  Global:
+    Enabled: true
+    Title: "&3&lyoCore &7| &bScoreboard"
+    Board:
+      - "&7&m-----------------------"
+      - "&3&lOnline:"
+      - "&r %online%"
+      - "&r "
+      - "&3&lRank:"
+      - "&r %rank%"
+      - "&f "
+      - "&7&oyoCore v1.0"
+      - "&7&o&m-----------------------"
+  Worlds:
+    world:
+      Title: "&3&lyoCore &7| &bScoreboard"
+      Board:
+        - "&7&m-----------------------"
+        - "&3&lOnline:"
+        - "&r %online%"
+        - "&r "
+        - "&3&lRank:"
+        - "&r %rank%"
+        - "&f "
+        - "&7&oyoCore v1.0"
+        - "&7&o&m-----------------------"

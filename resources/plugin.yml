@@ -104,3 +104,24 @@ commands:
   Modmode:
     description: Put you or another player into modmode.
     aliases: mod
+  Report:
+    description: Report a player for breaking the rules.
+  BuildMode:
+    description: Toggle your build mode.
+    aliases: build
+  Message:
+    description: Privately message another player.
+    aliases: [msg, whisper, w, tell, t]
+  Reply:
+    description: Reply to a player messaging you.
+    aliases: r
+  ToggleMessages:
+    description: Toggle your private messages.
+    aliases: tpm
+  Alts:
+    description: Get a players alternate accounts.
+  OnlinePlayers:
+    description: Get all online players.
+    aliases: [list, whois]
+  Invsee:
+    description: See a players inventory.
