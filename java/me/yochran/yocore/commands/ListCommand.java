@@ -28,9 +28,11 @@ public class ListCommand implements CommandExecutor, Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<String> players = new ArrayList<>();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!plugin.vanished_players.contains(player.getUniqueId())) {
-                players.add(playerManagement.getPlayerColor(player));
+        for (String rank : plugin.ranks) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!plugin.vanished_players.contains(player.getUniqueId()) && plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank)) {
+                    players.add(playerManagement.getPlayerColor(player));
+                }
             }
         }
 

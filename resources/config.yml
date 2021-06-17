@@ -85,14 +85,17 @@ QuitMessage:
 
 RankCommand:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /rank <add/remove/prefix/color/display/priority> <rank> [prefix/color/display/priority]"
+  IncorrectUsage: "&cIncorrect Usage! /rank <add/remove/prefix/color/display/priority/item/permission> <rank> [prefix/color/display/priority/permission]"
   InvalidRank: "&cInvalid Rank!"
+  InvalidItem: "&cInvalid Item! (Hold it in your hand)"
   CreatedRank: "&bCreated rank &3%rank%&b."
   RemovedRank: "&bRemoved rank %rank%&b."
   PrefixChanged: "%rank%&b's prefix has been changed to &3%prefix%&b."
   ColorChanged: "%rank%&b's color has been changed to &3%color%&b."
   DisplayChanged: "%rank%&b's display name has been changed to &3%display%&b."
   PriorityChanged: "%rank%&b's priority has been changed to &3%priority%&b."
+  GrantItemChanged: "%rank%&b's grant item has been changed to &3%item%&b."
+  GrantPermissionChanged: "%rank%&b's grant permission has been changed to &3%permission%&b."
 
 SetRank:
   IncorrectUsage: "&cIncorrect Usage! /setrank <player> <rank>"
@@ -573,32 +576,3 @@ Broadcast:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /broadcast <message>"
   Message: "&7[&4&lALERT&7] &f%message%"
-
-Scoreboard:
-  Enabled: false
-  Global:
-    Enabled: true
-    Title: "&3&lyoCore &7| &bScoreboard"
-    Board:
-      - "&7&m-----------------------"
-      - "&3&lOnline:"
-      - "&r %online%"
-      - "&r "
-      - "&3&lRank:"
-      - "&r %rank%"
-      - "&f "
-      - "&7&oyoCore v1.0"
-      - "&7&o&m-----------------------"
-  Worlds:
-    world:
-      Title: "&3&lyoCore &7| &bScoreboard"
-      Board:
-        - "&7&m-----------------------"
-        - "&3&lOnline:"
-        - "&r %online%"
-        - "&r "
-        - "&3&lRank:"
-        - "&r %rank%"
-        - "&f "
-        - "&7&oyoCore v1.0"
-        - "&7&o&m-----------------------"

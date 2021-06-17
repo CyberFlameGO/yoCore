@@ -1,12 +1,14 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.utils.Utils;
+import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -37,7 +39,9 @@ public class RankCommand implements CommandExecutor {
                 && !args[0].equalsIgnoreCase("prefix")
                 && !args[0].equalsIgnoreCase("color")
                 && !args[0].equalsIgnoreCase("display")
-                && !args[0].equalsIgnoreCase("priority")) {
+                && !args[0].equalsIgnoreCase("priority")
+                && !args[0].equalsIgnoreCase("item")
+                && !args[0].equalsIgnoreCase("permission")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
             return true;
         }
@@ -201,6 +205,55 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Priority", Integer.parseInt(args[2]));
                 plugin.saveConfig();
+
+                break;
+            case "item":
+            case "grantitem":
+                if (args.length != 2) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                    return true;
+                }
+
+                if (!plugin.ranks.contains(args[1].toUpperCase())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidRank")));
+                    return true;
+                }
+
+                if (((Player) sender).getInventory().getItemInHand().getType() == XMaterial.AIR.parseMaterial()) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidItem")));
+                    return true;
+                }
+
+                ItemStack item = ((Player) sender).getInventory().getItemInHand();
+
+                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantItem", item.getType().toString());
+                plugin.saveConfig();
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantItemChanged")
+                        .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
+                        .replace("%item%", item.getType().toString())));
+
+                break;
+            case "permission":
+            case "grantpermission":
+                if (args.length != 3) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                    return true;
+                }
+
+                if (!plugin.ranks.contains(args[1].toUpperCase())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidRank")));
+                    return true;
+                }
+
+                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantPermission", args[2]);
+                plugin.saveConfig();
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantPermissionChanged")
+                        .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
+                        .replace("%permission%", args[2])));
+
+                break;
         }
 
         return true;

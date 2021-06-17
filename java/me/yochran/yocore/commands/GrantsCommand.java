@@ -88,10 +88,11 @@ public class GrantsCommand implements CommandExecutor {
                         break;
                 }
 
-                String rank = "";
-                if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants.." + grant + ".Rank").equalsIgnoreCase("(Removed Rank)"))
+                String rank;
+                if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Rank").equalsIgnoreCase("(Removed Rank)"))
                     rank = "&4(Removed Rank)";
-                else plugin.getConfig().getString("Ranks." + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Rank").toUpperCase() + ".Display");
+                else
+                    rank = plugin.getConfig().getString("Ranks." + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Rank").toUpperCase() + ".Display");
                 String executor = playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Executor"))));
                 String duration;
                 if (plugin.grantData.config.get(target.getUniqueId().toString() + ".Grants." + grant + ".Duration").equals("Permanent")) duration = "Permanent";
