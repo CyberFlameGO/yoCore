@@ -427,6 +427,8 @@ StaffAlerts:
   ModmodeOnOther: "&7[%player% &7has put %target% &7into modmode&7.]"
   ModmodeOffOther: "&7[%player% &7has taken %target% &7out of modmode&7.]"
   Broadcast: "&7[%player% &7broadcasted: &e%message%&7]"
+  SudoCommand: "&7[%player% &7sudod %target% &7to run: &e%command%&7]"
+  SudoMessage: "&7[%player% &7sudod %target% &7to type: &e%message%&7]"
 
 Vanish:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -486,10 +488,27 @@ Fly:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /fly [player]"
   InvalidPlayer: "&cInvalid Player!"
-  ExecutorMessageOn: "&bYou have put %target% &binto fly mode.."
+  ExecutorMessageOn: "&bYou have put %target% &binto fly mode."
   TargetMessageOn: "&bYou are now in fly mode."
-  ExecutorMessageOff: "&bYou have taken %target% &bout of fly mode.."
+  ExecutorMessageOff: "&bYou have taken %target% &bout of fly mode."
   TargetMessageOff: "&bYou are no longer in fly mode."
+
+Speed:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /speed <speed> [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidSpeed: "&cInvalid Speed! Must be between -1 and 1."
+  ExecutorMessage: "&bYou have set %target%&b's speed to &3%speed%&b."
+  TargetMessage: "&bYour speed has been set to &3%speed%&b."
+
+Sudo:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /sudo <player> <command/message>"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessageCommand: "&bYou have sudod %target% &bto run &3%command%&b."
+  ExecutorMessageMessage: "&bYou have sudod %target% &bto type &3%message%&b."
 
 Teleport:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -576,3 +595,11 @@ Broadcast:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /broadcast <message>"
   Message: "&7[&4&lALERT&7] &f%message%"
+
+Settings:
+  MustBePlayer: "&cYou must be a player to use that command."
+  GlobalChatOn: "&bYou have toggled global chat &3on&b."
+  GlobalChatOff: "&bYou have toggled global chat &3off&b."
+  MessageSoundsOn: "&bYou have toggled messaging sounds &3on&b."
+  MessageSoundsOff: "&bYou have toggled messaging sounds &3off&b."
+  GlobalChatAttempt: "&cYou cannot speak as you have global chat disabled. (/settings)"

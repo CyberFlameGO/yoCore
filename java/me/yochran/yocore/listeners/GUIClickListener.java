@@ -153,6 +153,32 @@ public class GUIClickListener implements Listener {
                     .replace("%color%", event.getCurrentItem().getItemMeta().getDisplayName())));
 
             plugin.chat_color.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aPlayer settings."))) {
+            if (event.getCurrentItem().getItemMeta().getDisplayName().contains(Utils.translate("&bPrivate Messages:"))) {
+                Bukkit.getPlayer(event.getWhoClicked().getUniqueId()).performCommand("tpm");
+                event.getWhoClicked().closeInventory();
+            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&bToggle Scoreboard"))) {
+                Bukkit.getPlayer(event.getWhoClicked().getUniqueId()).performCommand("tsb");
+                event.getWhoClicked().closeInventory();
+            } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(Utils.translate("&bMessage Sounds:"))) {
+                if (!plugin.message_sounds_toggled.contains(event.getWhoClicked().getUniqueId())) {
+                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.MessageSoundsOff")));
+                    plugin.message_sounds_toggled.add(event.getWhoClicked().getUniqueId());
+                } else {
+                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.MessageSoundsOn")));
+                    plugin.message_sounds_toggled.remove(event.getWhoClicked().getUniqueId());
+                }
+                event.getWhoClicked().closeInventory();
+            } else if (event.getCurrentItem().getItemMeta().getDisplayName().contains(Utils.translate("&bGlobal Chat:"))) {
+                if (!plugin.chat_toggled.contains(event.getWhoClicked().getUniqueId())) {
+                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.GlobalChatOff")));
+                    plugin.chat_toggled.add(event.getWhoClicked().getUniqueId());
+                } else {
+                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.GlobalChatOn")));
+                    plugin.chat_toggled.remove(event.getWhoClicked().getUniqueId());
+                }
+                event.getWhoClicked().closeInventory();
+            }
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aInventory Inspect")))
             event.setCancelled(true);
 

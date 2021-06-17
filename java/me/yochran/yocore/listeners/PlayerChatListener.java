@@ -71,6 +71,11 @@ public class PlayerChatListener implements Listener {
             event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("MuteChat.AttemptToSpeak")));
         }
 
+        if (plugin.chat_toggled.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.GlobalChatAttempt")));
+        }
+
         String message = event.getMessage().replace("&", "");
         if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId())) {
             switch (plugin.chat_color.get(event.getPlayer().getUniqueId()).toLowerCase()) {
@@ -97,5 +102,10 @@ public class PlayerChatListener implements Listener {
                 .replace("%message%", message);
 
         event.setFormat(Utils.translate(format));
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (plugin.chat_toggled.contains(player.getUniqueId()))
+                event.getRecipients().remove(player);
+        }
     }
 }

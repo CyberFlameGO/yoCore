@@ -62,6 +62,8 @@ public final class yoCore extends JavaPlugin {
     public List<UUID> buildmode_players = new ArrayList<>();
 
     public List<UUID> message_toggled = new ArrayList<>();
+    public List<UUID> message_sounds_toggled = new ArrayList<>();
+    public List<UUID> chat_toggled = new ArrayList<>();
     public Map<UUID, UUID> reply = new HashMap<>();
 
     public Map<UUID, String> chat_color = new HashMap<>();
@@ -201,5 +203,8 @@ public final class yoCore extends JavaPlugin {
         getCommand("Rank").setExecutor(new RankCommand());
         getCommand("ChatColor").setExecutor(new ChatColorCommand());
         getCommand("Broadcast").setExecutor(new BroadcastCommand());
+        getCommand("Settings").setExecutor(new SettingsCommand());
+        getCommand("Speed").setExecutor(new SpeedCommand());
+        getCommand("Sudo").setExecutor(new SudoCommand());
     }
 }

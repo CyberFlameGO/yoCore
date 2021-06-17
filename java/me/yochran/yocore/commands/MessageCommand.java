@@ -2,6 +2,7 @@ package me.yochran.yocore.commands;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
+import me.yochran.yocore.utils.XSound;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -57,6 +58,9 @@ public class MessageCommand implements CommandExecutor {
         target.sendMessage(Utils.translate(plugin.getConfig().getString("Message.TargetMessage")
                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                 .replace("%message%", message)));
+
+        if (!plugin.message_sounds_toggled.contains(target.getUniqueId()))
+            target.playSound(target.getLocation(), XSound.ENTITY_ARROW_HIT_PLAYER.parseSound(), 100, (float) 0.1);
 
         plugin.reply.remove(((Player) sender).getUniqueId());
         plugin.reply.put(((Player) sender).getUniqueId(), target.getUniqueId());

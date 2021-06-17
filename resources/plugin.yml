@@ -132,3 +132,10 @@ commands:
   Broadcast:
     description: Broadcast a message to the server.
     aliases: [alert, bc]
+  Settings:
+    description: Change your player settings.
+    aliases: options
+  Speed:
+    description: Change your or another players speed.
+  Sudo:
+    description: Make a player run a command or type something in chat.
