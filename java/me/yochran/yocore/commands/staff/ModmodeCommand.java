@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ModmodeCommand implements CommandExecutor {
 
@@ -177,5 +178,9 @@ public class ModmodeCommand implements CommandExecutor {
         player.setFoodLevel(20);
 
         player.updateInventory();
+
+        new BukkitRunnable() {
+            public void run() { player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()); }
+        }.runTaskLater(plugin, 0);
     }
 }
