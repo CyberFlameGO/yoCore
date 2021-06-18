@@ -90,4 +90,44 @@ public class Utils {
         Optional<XMaterial> mat = XMaterial.matchXMaterial(name);
         return mat.map(XMaterial::parseItem).orElse(null);
     }
+
+    public static String getColoredItemData(ItemStack item, String name) {
+        switch (item.getType()) {
+            case WHITE_WOOL: name = "WHITE_WOOL"; break;
+            case RED_WOOL: name = "RED_WOOL"; break;
+            case ORANGE_WOOL: name = "ORANGE_WOOL"; break;
+            case YELLOW_WOOL: name = "YELLOW_WOOL"; break;
+            case LIME_WOOL: name = "LIME_WOOL"; break;
+            case GREEN_WOOL: name = "GREEN_WOOL"; break;
+            case LIGHT_BLUE_WOOL: name = "LIGHT_BLUE_WOOL"; break;
+            case BLUE_WOOL: name = "BLUE_WOOL"; break;
+            case PURPLE_WOOL: name = "PURPLE_WOOL"; break;
+            case PINK_WOOL: name = "PINK_WOOL"; break;
+            case BROWN_WOOL: name = "BROWN_WOOL"; break;
+            case CYAN_WOOL: name = "CYAN_WOOL"; break;
+            case LIGHT_GRAY_WOOL: name = "LIGHT_GRAY_WOOL"; break;
+            case GRAY_WOOL: name = "GRAY_WOOL"; break;
+            case BLACK_WOOL: name = "BLACK_WOOL"; break;
+            case MAGENTA_WOOL: name = "MAGENTA_WOOL"; break;
+
+            case WHITE_TERRACOTTA: name = "WHITE_TERRACOTTA"; break;
+            case RED_TERRACOTTA: name = "RED_TERRACOTTA"; break;
+            case ORANGE_TERRACOTTA: name = "ORANGE_TERRACOTTA"; break;
+            case YELLOW_TERRACOTTA: name = "YELLOW_TERRACOTTA"; break;
+            case LIME_TERRACOTTA: name = "LIME_TERRACOTTA"; break;
+            case GREEN_TERRACOTTA: name = "GREEN_TERRACOTTA"; break;
+            case LIGHT_BLUE_TERRACOTTA: name = "LIGHT_BLUE_TERRACOTTA"; break;
+            case BLUE_TERRACOTTA: name = "BLUE_TERRACOTTA"; break;
+            case PURPLE_TERRACOTTA: name = "PURPLE_TERRACOTTA"; break;
+            case PINK_TERRACOTTA: name = "PINK_TERRACOTTA"; break;
+            case BROWN_TERRACOTTA: name = "BROWN_TERRACOTTA"; break;
+            case CYAN_TERRACOTTA: name = "CYAN_TERRACOTTA"; break;
+            case LIGHT_GRAY_TERRACOTTA: name = "LIGHT_GRAY_TERRACOTTA"; break;
+            case GRAY_TERRACOTTA: name = "GRAY_TERRACOTTA"; break;
+            case BLACK_TERRACOTTA: name = "BLACK_TERRACOTTA"; break;
+            case MAGENTA_TERRACOTTA: name = "MAGENTA_TERRACOTTA"; break;
+        }
+
+        return name;
+    }
 }

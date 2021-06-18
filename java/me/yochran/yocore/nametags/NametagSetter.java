@@ -51,7 +51,7 @@ public class NametagSetter {
             Team team = scoreboard.registerNewTeam(String.valueOf(priority.get(rank)));
             team.setPrefix(Utils.translate(plugin.getConfig().getString("Ranks." + rank + ".Color")));
             try { team.setColor(ChatColor.getByChar(plugin.getConfig().getString("Ranks." + rank + ".Color").replace("&", "")));
-            } catch (NoSuchMethodError error) { Bukkit.getConsoleSender().sendMessage("[yoNametags] 1.13+ Method `team.setColor()` unavailable due to old version. Ignoring this line of code."); }
+            } catch (NoSuchMethodError ignored) {}
             scoreboard.getTeam(String.valueOf(priority.get(rank))).addPlayer(player);
         }
     }
@@ -69,7 +69,7 @@ public class NametagSetter {
             Team team = scoreboard.registerNewTeam("a");
             team.setPrefix(Utils.translate("&7[V] &7"));
             try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.Vanish.Color")));
-            } catch (NoSuchMethodError error) { Bukkit.getConsoleSender().sendMessage("[yoNametags] 1.13+ Method `team.setColor()` unavailable due to old server version. Ignoring this line of code."); }
+            } catch (NoSuchMethodError ignored) {}
             scoreboard.getTeam("a").addPlayer(player);
         }
     }
@@ -87,7 +87,7 @@ public class NametagSetter {
             Team team = scoreboard.registerNewTeam("b");
             team.setPrefix(Utils.translate("&7[M] &7"));
             try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.ModMode.Color")));
-            } catch (NoSuchMethodError error) { Bukkit.getConsoleSender().sendMessage("[yoNametags] 1.13+ Method `team.setColor()` unavailable due to old server version. Ignoring this line of code."); }
+            } catch (NoSuchMethodError ignored) {}
             scoreboard.getTeam("b").addPlayer(player);
         }
     }

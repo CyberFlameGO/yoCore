@@ -4,11 +4,15 @@ import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Wool;
+import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
@@ -74,6 +78,11 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.ranks.add(args[1].toUpperCase());
 
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
+
                 break;
             case "remove":
             case "delete":
@@ -125,6 +134,11 @@ public class RankCommand implements CommandExecutor {
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase(), null);
                 plugin.saveConfig();
 
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
+
                 plugin.ranks.remove(args[1].toUpperCase());
 
 
@@ -148,6 +162,11 @@ public class RankCommand implements CommandExecutor {
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Prefix", prefix);
                 plugin.saveConfig();
 
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
+
                 break;
             case "color":
                 if (args.length != 3) {
@@ -166,6 +185,11 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Color", args[2]);
                 plugin.saveConfig();
+
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
 
                 break;
             case "display":
@@ -187,6 +211,11 @@ public class RankCommand implements CommandExecutor {
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Display", display);
                 plugin.saveConfig();
 
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
+
                 break;
             case "priority":
                 if (args.length != 3) {
@@ -205,6 +234,11 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Priority", Integer.parseInt(args[2]));
                 plugin.saveConfig();
+
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
 
                 break;
             case "item":
@@ -225,13 +259,19 @@ public class RankCommand implements CommandExecutor {
                 }
 
                 ItemStack item = ((Player) sender).getInventory().getItemInHand();
+                String name = Utils.getColoredItemData(item, item.getType().toString());
 
-                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantItem", item.getType().toString());
+                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantItem", name);
                 plugin.saveConfig();
+
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantItemChanged")
                         .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
-                        .replace("%item%", item.getType().toString())));
+                        .replace("%item%", name)));
 
                 break;
             case "permission":
@@ -248,6 +288,11 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantPermission", args[2]);
                 plugin.saveConfig();
+
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantPermissionChanged")
                         .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
