@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -201,5 +203,17 @@ public class ModmodeListeners implements Listener {
                     ((Player) event.getWhoClicked()).performCommand("tp " + players.getName());
             }
         }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (plugin.modmode_players.contains(event.getPlayer().getUniqueId()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (plugin.modmode_players.contains(event.getPlayer().getUniqueId()))
+            event.setCancelled(true);
     }
 }
