@@ -1,8 +1,6 @@
 package me.yochran.yocore.listeners;
 
-import me.yochran.yocore.management.GrantManagement;
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.management.*;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -18,6 +16,8 @@ public class PlayerLogListener implements Listener {
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final PunishmentManagement punishmentManagement = new PunishmentManagement();
     private final GrantManagement grantManagement = new GrantManagement();
+    private final EconomyManagement economyManagement = new EconomyManagement();
+    private final StatsManagement statsManagement = new StatsManagement();
 
     public PlayerLogListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -64,6 +64,12 @@ public class PlayerLogListener implements Listener {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".IP", event.getPlayer().getAddress().getAddress().getHostAddress());
             plugin.playerData.saveData();
         }
+
+        if (!economyManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer()))
+            economyManagement.setupPlayer(event.getPlayer());
+
+        if (!statsManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer()))
+            statsManagement.setupPlayer(event.getPlayer());
 
         if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) {
             for (Player players : Bukkit.getOnlinePlayers())

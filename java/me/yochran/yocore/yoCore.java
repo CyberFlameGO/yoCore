@@ -1,14 +1,20 @@
 package me.yochran.yocore;
 
 import me.yochran.yocore.commands.*;
+import me.yochran.yocore.commands.economy.BalanceCommand;
+import me.yochran.yocore.commands.economy.BountyCommand;
+import me.yochran.yocore.commands.economy.PayCommand;
+import me.yochran.yocore.commands.economy.staff.EconomyCommand;
+import me.yochran.yocore.commands.economy.staff.UnbountyCommand;
 import me.yochran.yocore.commands.punishments.*;
 import me.yochran.yocore.commands.staff.*;
-import me.yochran.yocore.data.GrantData;
-import me.yochran.yocore.data.PlayerData;
-import me.yochran.yocore.data.PunishmentData;
+import me.yochran.yocore.commands.stats.StatsCommand;
+import me.yochran.yocore.commands.stats.staff.ResetStatsCommand;
+import me.yochran.yocore.data.*;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.runnables.*;
+import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -22,6 +28,8 @@ public final class yoCore extends JavaPlugin {
     public PlayerData playerData;
     public PunishmentData punishmentData;
     public GrantData grantData;
+    public StatsData statsData;
+    public EconomyData economyData;
 
     private PunishmentManagement punishmentManagement;
 
@@ -68,6 +76,8 @@ public final class yoCore extends JavaPlugin {
 
     public Map<UUID, String> chat_color = new HashMap<>();
 
+    public List<UUID> tsb = new ArrayList<>();
+
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<String, String> blacklisted_ips = new HashMap<>();
@@ -89,6 +99,10 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new FreezeListener(), this);
         manager.registerEvents(new BuildModeListener(), this);
         manager.registerEvents(new ListCommand(), this);
+        manager.registerEvents(new PlayerLogListener(), this);
+        manager.registerEvents(new PlayerDeathListener(), this);
+        manager.registerEvents(new ScoreboardSetter(), this);
+        manager.registerEvents(new WorldChangeListener(), this);
     }
 
     private void runRunnables() {
@@ -96,6 +110,10 @@ public final class yoCore extends JavaPlugin {
         new BanUpdater().runTaskTimer(this, 10, 20);
         new GrantUpdater().runTaskTimer(this, 10, 20);
         new VanishUpdater().runTaskTimer(this, 10, 10);
+        if (getConfig().getBoolean("Nametags.Enabled"))
+            new NametagUpdater().runTaskTimer(this, 0, 5);
+        if (getConfig().getBoolean("Scoreboard.Enabled"))
+            new ScoreboardUpdater().runTaskTimer(this, 0, 5);
     }
 
     private void registerData() {
@@ -117,6 +135,16 @@ public final class yoCore extends JavaPlugin {
         grantData.saveData();
         grantData.reloadData();
 
+        statsData = new StatsData();
+        statsData.setupData();
+        statsData.saveData();
+        statsData.reloadData();
+
+        economyData = new EconomyData();
+        economyData.setupData();
+        economyData.saveData();
+        economyData.reloadData();
+
         new BukkitRunnable() {
             @Override
             public void run() { playerData.saveData(); }
@@ -128,6 +156,14 @@ public final class yoCore extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() { grantData.saveData(); }
+        }.runTaskLater(this, 10);
+        new BukkitRunnable() {
+            @Override
+            public void run() { statsData.saveData(); }
+        }.runTaskLater(this, 10);
+        new BukkitRunnable() {
+            @Override
+            public void run() { economyData.saveData(); }
         }.runTaskLater(this, 10);
     }
 
@@ -206,5 +242,13 @@ public final class yoCore extends JavaPlugin {
         getCommand("Settings").setExecutor(new SettingsCommand());
         getCommand("Speed").setExecutor(new SpeedCommand());
         getCommand("Sudo").setExecutor(new SudoCommand());
+        getCommand("Balance").setExecutor(new BalanceCommand());
+        getCommand("Bounty").setExecutor(new BountyCommand());
+        getCommand("Unbounty").setExecutor(new UnbountyCommand());
+        getCommand("Pay").setExecutor(new PayCommand());
+        getCommand("Economy").setExecutor(new EconomyCommand());
+        getCommand("Stats").setExecutor(new StatsCommand());
+        getCommand("ResetStats").setExecutor(new ResetStatsCommand());
+        getCommand("ToggleScoreboard").setExecutor(new ToggleScoreboardCommand());
     }
 }

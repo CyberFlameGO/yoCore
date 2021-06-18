@@ -139,3 +139,22 @@ commands:
     description: Change your or another players speed.
   Sudo:
     description: Make a player run a command or type something in chat.
+  Balance:
+    description: Get your or another players balance.
+    aliases: [bal, money]
+  Bounty:
+    description: Bounty a player.
+  Pay:
+    description: Pay a player.
+  Unbounty:
+    description: Unbounty a player.
+  Economy:
+    description: Manage the economy.
+    aliases: eco
+  Stats:
+    description: View a players stats.
+  ResetStats:
+    description: Reset a players stats.
+  ToggleScoreboard:
+    description: Toggle on or off the server scoreboard.
+    aliases: tsb

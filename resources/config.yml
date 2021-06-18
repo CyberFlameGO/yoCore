@@ -603,3 +603,158 @@ Settings:
   MessageSoundsOn: "&bYou have toggled messaging sounds &3on&b."
   MessageSoundsOff: "&bYou have toggled messaging sounds &3off&b."
   GlobalChatAttempt: "&cYou cannot speak as you have global chat disabled. (/settings)"
+
+Nametags:
+  Enabled: true
+  Vanish:
+    Enabled: true
+    Prefix: "&7[V] &7"
+    Color: "GRAY"
+  ModMode:
+    Enabled: true
+    Prefix: "&7[M] &7"
+    Color: "GRAY"
+
+Economy:
+  EnabledWorlds:
+    - world
+  StartingAmount: 100.0
+  # Warning: Going over this maximum amount will cause the plugin to break. In future version,
+  # it will be able to be more than this.
+  MaximumAmount: 999999999999999
+  MoneyPerKill:
+    EnabledWorlds:
+      - world
+    Highest: 20.5
+    Lowest: 12.5
+  MoneyOnKillMessage: "&bYou have killed %target% &bfor &3$%amount%&b."
+  NotEnabledMessage: "&cThe economy is not enabled in this world."
+  # Economy Command
+  Command:
+    MustBePlayer: "&cYou must be a player to use that command."
+    IncorrectUsage: "&cIncorrect Usage! /eco <set/give/take/reset> <player> [amount]"
+    InvalidPlayer: "&cInvalid Player!"
+    InvalidAmount: "&cInvalid Amount! Must be less than %maximum%."
+    Format:
+      Set: "&bYou have set %target%&b's balance to &3$%amount%&b."
+      Give: "&bYou have added &3$%amount% &bto %target%&b's balance."
+      Take: "&bYou have removed &3$%amount% &bfrom %target%&b's balance."
+      Reset: "&bYou have reset %target%&b's balance to &3$%amount%&b."
+    FormatTarget: "&bYour balance has been set to &3$%balance%&b."
+
+Balance:
+  MustBePlayer: "&cYou must be a player to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /bal <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  Format: "%player%&b's balance: &3$%balance%&b."
+
+Pay:
+  MustBePlayer: "&cYou must be a player to use that command."
+  MinimumAmount: 10
+  IncorrectUsage: "&cIncorrect Usage! /pay <player> <amount>"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidAmount: "&cInvalid Amount! Must be at least $%minimum%, must be less than $%maximum%."
+  NotEnoughMoney: "&cYou don't have enough money for that."
+  FormatSender: "&bYou have paid %target% &3$%amount%&b."
+  FormatTarget: "&bYou have been sent &3$%amount% &bfrom %player%&b."
+
+Bounty:
+  EnabledWorlds:
+    - world
+  MustBePlayer: "&cYou must be a player to use that command."
+  NotEnabledMessage: "&cBounty is not enabled in this world."
+  MinimumAmount: 100
+  RemoveFee: 1000
+  IncorrectUsage: "&cIncorrect Usage! /bounty <player> <amount>"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidAmount: "&cInvalid Amount! Must be more than $%minimum%, must be less than $%maximum%!"
+  NotEnoughMoney: "&cYou don't have enough money for that."
+  Format: "&bYou have placed a bounty on %target% &bfor &3$%amount%&b."
+  FormatIncreased: "&bYou have increased the bounty on %target% &bto &3$%amount%&b."
+  Broadcast: "%player% &bhas placed a &3$%amount% &bbounty on %target%&b!\n&bKill them to receive this money."
+  BroadcastIncreased: "%player% &bhas increased then bounty on %target% &bto &3$%amount%&b!\n&bKill them to receive this money."
+  Completed: "%player% &bhas killed %target% &band claimed a &3$%amount% &bbounty!"
+
+Unbounty:
+  MustBePlayer: "&cYou must be a player to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /unbounty <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  PlayerNotBountied: "&cPlayer is not bountied!"
+  Format: "&bYou have removed the bounty on %target%&b."
+
+Stats:
+  EnabledWorlds:
+    - world
+  KilledMessage: "&bYou were killed by %player%&b."
+  NotEnabledMessage: "&cStats are not enabled in this world."
+  MinimumStreakEndBroadcast: 10
+  StreakEndBroadcast: "&3&l<!> %player% &bhas ended %target%&b's &3%streak% &bkillstreak. &3&l<!>"
+  Command:
+    MustBePlayer: "&cYou must be a player to use that command."
+    IncorrectUsage: "&cIncorrect Usage! /stats [player]"
+    InvalidPlayer: "&cInvalid Player!"
+    Format: |-
+      &7&m-----------------------
+      %player%&b's Stats:
+      &7- -
+      &bKills: &3%kills%
+      &bDeaths: &3%deaths%
+      &bKDR: &3%kdr%
+      &bStreak: &3%streak%
+      &7&m-----------------------
+ResetStats:
+  MustBePlayer: "&cYou must be a player to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /resetstats <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  Format: "&bYou have successfully reset %target%&b's &3stats&b."
+
+Scoreboard:
+  Enabled: true
+  Global:
+    Enabled: true
+    Title: "&3&lyoCore &7| &bScoreboard"
+    Board:
+      - "&7&m-----------------------"
+      - "&3&lOnline:"
+      - "&r %online%"
+      - "&r "
+      - "&3&lRank:"
+      - "&r %rank%"
+      - "&f "
+      - "&7&oyoCore v1.0"
+      - "&7&o&m-----------------------"
+  ModMode:
+    Enabled: true
+    Title: "&3&lyoCore &7| &bMod-Mode"
+    Board:
+      - "&7&m-----------------------"
+      - "&3 * &f&lRank: &b%rank%"
+      - "&3 * &f&lVanish: &b%vanish%"
+      - "&3 * &f&lOnline: &b%online%"
+      - "&3 * &f&lStaff: &b%online_staff%"
+      - "&f "
+      - "&7&oyoCore v1.0"
+      - "&7&o&m-----------------------"
+  Worlds:
+    world:
+      Title: "&3&lyoCore &7| &bKitPvP"
+      Board:
+        - "&7&m-----------------------"
+        - "&3&lStats:"
+        - "&3 * &f&lKills: &b%kills%"
+        - "&3 * &f&lDeaths: &b%deaths%"
+        - "&3 * &f&lKDR: &b%kdr%"
+        - "&3 * &f&lStreak: &b%streak%"
+        - "&r "
+        - "&3&lYou:"
+        - "&3 * &f&lRank: &b%rank%"
+        - "&3 * &f&lMoney: &b$%balance%"
+        - "&3 * &f&lBounty: &b%bounty%"
+        - "&f "
+        - "&7&oyoCore v1.0"
+        - "&7&o&m-----------------------"
+
+ToggleScoreboard:
+  MustBePlayer: "&cYou must be a player to use that command."
+  ToggleOn: "&bYou have toggled the scoreboard &3on&b."
+  ToggleOff: "&bYou have toggled the scoreboard &3off&b."
