@@ -22,14 +22,18 @@ public class NametagSetter {
     public void setNametag(Player player1, Player player2) {
         Scoreboard scoreboard = player1.getScoreboard();
 
-        if (!plugin.vanished_players.contains(player2.getUniqueId()) && !plugin.modmode_players.contains(player2.getUniqueId()))
-            rankNametag(scoreboard, player2);
+        if (plugin.frozen_players.contains(player2.getUniqueId())) {
+            frozenNametag(scoreboard, player2);
+        } else {
+            if (!plugin.vanished_players.contains(player2.getUniqueId()) && !plugin.modmode_players.contains(player2.getUniqueId()))
+                rankNametag(scoreboard, player2);
 
-        if (plugin.vanished_players.contains(player2.getUniqueId()) && plugin.getConfig().getBoolean("Nametags.Vanish.Enabled"))
-            vanishNametag(scoreboard, player2);
+            if (plugin.vanished_players.contains(player2.getUniqueId()) && plugin.getConfig().getBoolean("Nametags.Vanish.Enabled"))
+                vanishNametag(scoreboard, player2);
 
-        if (plugin.modmode_players.contains(player2.getUniqueId()) && !plugin.vanished_players.contains(player2.getUniqueId()) && plugin.getConfig().getBoolean("Nametags.ModMode.Enabled"))
-            modmodeNametag(scoreboard, player2);
+            if (plugin.modmode_players.contains(player2.getUniqueId()) && !plugin.vanished_players.contains(player2.getUniqueId()) && plugin.getConfig().getBoolean("Nametags.ModMode.Enabled"))
+                modmodeNametag(scoreboard, player2);
+        }
     }
 
     public void rankNametag(Scoreboard scoreboard, Player player) {
@@ -89,6 +93,24 @@ public class NametagSetter {
             try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.ModMode.Color")));
             } catch (NoSuchMethodError ignored) {}
             scoreboard.getTeam("b").addPlayer(player);
+        }
+    }
+
+    public void frozenNametag(Scoreboard scoreboard, Player player) {
+        if (scoreboard.getTeam("c") != null) {
+            if (!scoreboard.getTeam("c").hasPlayer(player)) {
+                for (Team teams : scoreboard.getTeams()) {
+                    if (teams.hasPlayer(player)) teams.removePlayer(player);
+                }
+
+                scoreboard.getTeam("c").addPlayer(player);
+            }
+        } else {
+            Team team = scoreboard.registerNewTeam("c");
+            team.setPrefix(Utils.translate("&c[F] &c"));
+            try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.Frozen.Color")));
+            } catch (NoSuchMethodError ignored) {}
+            scoreboard.getTeam("c").addPlayer(player);
         }
     }
 }

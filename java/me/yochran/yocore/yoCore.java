@@ -88,6 +88,8 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, String> grant_duration = new HashMap<>();
     public Map<UUID, String> grant_reason = new HashMap<>();
 
+    public List<UUID> grant_custom_reason = new ArrayList<>();
+
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new PlayerLogListener(), this);
@@ -103,6 +105,7 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new PlayerDeathListener(), this);
         manager.registerEvents(new ScoreboardSetter(), this);
         manager.registerEvents(new WorldChangeListener(), this);
+        manager.registerEvents(new GrantCustomReasonListener(), this);
     }
 
     private void runRunnables() {

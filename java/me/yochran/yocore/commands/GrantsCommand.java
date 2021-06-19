@@ -103,14 +103,16 @@ public class GrantsCommand implements CommandExecutor {
                 String ID = String.valueOf(plugin.grantData.config.getInt(target.getUniqueId().toString() + ".Grants." + grant + ".ID"));
 
                 List<String> itemLore = new ArrayList<>();
-                itemLore.add(Utils.translate("&7&m----------------------------"));
-                itemLore.add(Utils.translate("&eRank: &f" + rank));
-                itemLore.add(Utils.translate("&eExecutor: &f" + executor));
-                itemLore.add(Utils.translate("&eReason: &f" + reason));
+                itemLore.add(Utils.translate("&e&m----------------------------"));
+                itemLore.add(Utils.translate("&eTarget: &f" + playerManagement.getPlayerColor(target)));
                 itemLore.add(Utils.translate("&eDuration: &f" + duration));
+                itemLore.add(Utils.translate("&e&m----------------------------"));
+                itemLore.add(Utils.translate("&eIssued Rank: &f" + rank));
+                itemLore.add(Utils.translate("&eIssued By: &f" + executor));
+                itemLore.add(Utils.translate("&eIssued Reason: &f" + reason));
                 itemLore.add(Utils.translate("&ePrevious Rank: &f" + previousRankDisplay));
-                itemLore.add(Utils.translate("&eID: &f" + ID));
-                itemLore.add(Utils.translate("&7&m----------------------------"));
+                itemLore.add(Utils.translate("&eGrant ID: &f" + ID));
+                itemLore.add(Utils.translate("&e&m----------------------------"));
                 if (revokable) {
                     itemLore.add(Utils.translate("&aClick to revoke this grant."));
                 }

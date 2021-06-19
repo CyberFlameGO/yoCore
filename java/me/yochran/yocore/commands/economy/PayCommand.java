@@ -62,8 +62,8 @@ public class PayCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.isUnderPayMinimum(Double.parseDouble(args[1])) || economyManagement.isOverMaximum(Double.parseDouble(args[1]))
-                || economyManagement.isOverMaximum(Double.parseDouble(args[1]) + economyManagement.getMoney(((Player) sender).getWorld().getName(), target))) {
+        if (economyManagement.isUnderPayMinimum(Double.parseDouble(args[1])) || economyManagement.isOverMaximum(Double.parseDouble(args[1]))
+                || economyManagement.isOverMaximum(Double.parseDouble(args[1]) + economyManagement.getMoney(((Player) sender).getWorld().getName(), (Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Pay.InvalidAmount")
                     .replace("%minimum%", df.format(plugin.getConfig().getDouble("Pay.MinimumAmount")))
                     .replace("%maximum%", df.format(plugin.getConfig().getDouble("Economy.MaximumAmount")))));

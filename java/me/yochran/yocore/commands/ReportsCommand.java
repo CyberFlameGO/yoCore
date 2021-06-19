@@ -65,10 +65,12 @@ public class ReportsCommand implements CommandExecutor {
                 itemMeta.setDisplayName(Utils.translate("&a&l(Active) " + Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".Report." + report  + ".Date"))));
 
                 List<String> itemLore = new ArrayList<>();
-                itemLore.add(Utils.translate("&7&m----------------------------"));
-                itemLore.add(Utils.translate("&eExecutor: &f" + playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Executor"))))));
-                itemLore.add(Utils.translate("&eReason: &f" + plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Reason")));
-                itemLore.add(Utils.translate("&7&m----------------------------"));
+                itemLore.add(Utils.translate("&e&m----------------------------"));
+                itemLore.add(Utils.translate("&eTarget: &f" + playerManagement.getPlayerColor(target)));
+                itemLore.add(Utils.translate("&e&m----------------------------"));
+                itemLore.add(Utils.translate("&eIssued By: &f" + playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Executor"))))));
+                itemLore.add(Utils.translate("&eIssued Reason: &f" + plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Reason")));
+                itemLore.add(Utils.translate("&e&m----------------------------"));
 
                 itemMeta.setLore(itemLore);
                 item.setItemMeta(itemMeta);

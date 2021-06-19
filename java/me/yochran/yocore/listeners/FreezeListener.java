@@ -5,6 +5,7 @@ import me.yochran.yocore.yoCore;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.List;
@@ -35,5 +36,11 @@ public class FreezeListener implements Listener {
             event.getPlayer().teleport(location);
             event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.TargetMessageOn")));
         }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (plugin.frozen_players.contains(event.getEntity().getUniqueId()))
+            event.setCancelled(true);
     }
 }

@@ -150,7 +150,7 @@ public class GrantCommand implements CommandExecutor {
         noItemMeta.setDisplayName(Utils.translate("&c&lCancel Grant"));
 
         List<String> lore = new ArrayList<>();
-        for (String line : plugin.getConfig().getStringList("Grant.ConfirmationMenu.Lore")) {
+        for (String line : plugin.getConfig().getStringList("Grant.Confirm.Lore")) {
             lore.add(Utils.translate(line
                     .replace("%target%", playerManagement.getPlayerColor(target))
                     .replace("%rank%", rank)

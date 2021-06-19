@@ -13,10 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -216,5 +213,13 @@ public class ModmodeListeners implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if (plugin.modmode_players.contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        if (plugin.modmode_players.contains(event.getEntity().getUniqueId())) {
+            event.getDrops().clear();
+            plugin.modmode_players.remove(event.getEntity().getUniqueId());
+        }
     }
 }

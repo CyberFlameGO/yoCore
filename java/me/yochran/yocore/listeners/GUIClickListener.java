@@ -85,6 +85,14 @@ public class GUIClickListener implements Listener {
             }.runTaskLater(plugin, 5);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a reason."))) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
+
+            if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate(plugin.getConfig().getString("Grant.Reason.Items.Custom.Name")))) {
+                event.getWhoClicked().closeInventory();
+                plugin.grant_custom_reason.add(event.getWhoClicked().getUniqueId());
+                event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.Reason.CustomReasonChatMessage")));
+                return;
+            }
+
             plugin.grant_reason.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
 
             event.getWhoClicked().closeInventory();
@@ -134,8 +142,8 @@ public class GUIClickListener implements Listener {
 
             OfflinePlayer target = Bukkit.getOfflinePlayer(ChatColor.stripColor(event.getView().getTitle().replace("'s grant history.", "")));
 
-            String idLore = ChatColor.stripColor(itemLore.get(6));
-            int id = Integer.parseInt(idLore.replace("ID: ", ""));
+            String idLore = ChatColor.stripColor(itemLore.get(8));
+            int id = Integer.parseInt(idLore.replace("Grant ID: ", ""));
 
             plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + id + ".Status", "Revoked");
             plugin.grantData.saveData();
@@ -144,7 +152,7 @@ public class GUIClickListener implements Listener {
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));
         } else if (event.getCurrentItem().getItemMeta().hasLore()
-                && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&7&m----------------------------"))
+                && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&e&m----------------------------"))
                 && event.getInventory().getSize() == 54) {
             event.setCancelled(true);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a chat color."))) {
