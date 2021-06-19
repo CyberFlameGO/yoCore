@@ -188,11 +188,11 @@ Ban:
     TargetMessage: |-
       &cYou've been &4banned &cfrom this server.
       &cYou were banned for&7: &f%reason%&7.
-      &cThis bann will expire on&7: &f%expiration%&7.
+      &cThis ban will expire on&7: &f%expiration%&7.
     TargetJoinScreen: |-
       &cYou cannot join this server as you are &4banned&c.
       &cYou were banned for&7: &f%reason%&7.
-      &cThis bann will expire on&7: &f%expiration%&7.
+      &cThis ban will expire on&7: &f%expiration%&7.
     ReBanIncorrectUsage: "&cIncorrect Usage! /retempban <player> <duration> [-s] <reason>"
     ReBanExecutorMessage: "&bYou have re-banned %target% &bfor &3%reason%&b. &7(%duration%)"
 
@@ -350,10 +350,10 @@ Grant:
         Name: "&3Testing"
         ID: "Testing"
         Slot: 15
-      Other:
+      Custom:
         Item: "GREEN_WOOL"
-        Name: "&2Other"
-        ID: "Other"
+        Name: "&2Custom Reason"
+        ID: "Custom Reason"
         Slot: 16
     Lore:
       - "&7&m----------------------------------------"
@@ -361,6 +361,8 @@ Grant:
       - "&r"
       - "&7(%target%&7)"
       - "&7&m----------------------------------------"
+    CustomReasonChatMessage: "&bEnter a custom reason."
+    CustomReasonCommandAttempt: "&cYou cannot use commands right now."
   Confirm:
     Lore:
       - "&7&m----------------------------------"
@@ -666,6 +668,10 @@ Nametags:
     Enabled: true
     Prefix: "&7[M] &7"
     Color: "GRAY"
+  Frozen:
+    Enabled: true
+    Prefix: "&c[F] &c"
+    Color: "RED"
 
 Economy:
   EnabledWorlds:
