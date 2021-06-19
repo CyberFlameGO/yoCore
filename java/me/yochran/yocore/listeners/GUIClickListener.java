@@ -13,7 +13,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -179,8 +181,9 @@ public class GUIClickListener implements Listener {
                 }
                 event.getWhoClicked().closeInventory();
             }
+        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aEnder Chest."))) {
+            event.setCancelled(true);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aInventory Inspect")))
             event.setCancelled(true);
-
     }
 }

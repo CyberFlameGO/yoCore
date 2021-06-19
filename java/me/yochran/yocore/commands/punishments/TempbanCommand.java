@@ -39,8 +39,8 @@ public class TempbanCommand implements CommandExecutor {
             return true;
         }
 
-        if (plugin.muted_players.containsKey(target.getUniqueId())) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ban.Temporary.TargetIsMuted")));
+        if (plugin.banned_players.containsKey(target.getUniqueId())) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ban.TargetIsBanned")));
             return true;
         }
 

@@ -5,50 +5,46 @@ import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TempmuteCommand implements CommandExecutor {
+public class ReWarnCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
-    public TempmuteCommand() {
+    public ReWarnCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("yocore.mute")) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.NoPermission")));
+        if (!sender.hasPermission("yocore.warn")) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.NoPermission")));
             return true;
         }
 
-        if (args.length < 3) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.IncorrectUsage")));
+        if (args.length < 2) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.ReWarnIncorrectUsage")));
             return true;
         }
 
-        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-        if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.InvalidPlayer")));
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.InvalidPlayer")));
             return true;
         }
 
-        if (plugin.muted_players.containsKey(target.getUniqueId())) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.TargetIsMuted")));
+        if (punishmentManagement.getInfractionAmount(target, "Warn") < 1) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.InvalidPlayer")));
             return true;
         }
-
-        long durationMS = Utils.getDurationMS(args[1]);
-        String durationStr = Utils.getDurationString(args[1]);
 
         String reason = "";
-        for (int i = 2; i < args.length; i++) {
+        for (int i = 1; i < args.length; i++) {
             reason = reason + args[i] + " ";
         }
 
@@ -68,36 +64,30 @@ public class TempmuteCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Mute", target, executor, reason, System.currentTimeMillis(), durationMS, silent);
-        punishmentManagement.addMute(target, true);
+        punishmentManagement.redoInfraction("Warn", punishmentManagement.getInfractionAmount(target, "Warn"), target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
 
         if (silent) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.ExecutorMessage")
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.ReWarnExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%reason%", reason)
-                    .replace("%duration%", durationStr)));
+                    .replace("%reason%", reason)));
         } else {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.ExecutorMessage")
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.ReWarnExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%reason%", reason)
-                    .replace("%duration%", durationStr)));
+                    .replace("%reason%", reason)));
         }
 
-        if (target.isOnline()) {
-            Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.TargetMessage")
-                    .replace("%reason%", reason)
-                    .replace("%duration%", durationStr)));
-        }
+        target.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.TargetMessage")
+                .replace("%reason%", reason)));
 
         for (Player players : Bukkit.getOnlinePlayers()) {
             if (silent) {
                 if (players.hasPermission("yocore.silent")) {
-                    players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.BroadcastMessage")
+                    players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.BroadcastMessage")
                             .replace("%executor%", executorName)
                             .replace("%target%", playerManagement.getPlayerColor(target))));
                 }
             } else {
-                players.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.BroadcastMessage")
+                players.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.BroadcastMessage")
                         .replace("%executor%", executorName)
                         .replace("%target%", playerManagement.getPlayerColor(target))));
             }

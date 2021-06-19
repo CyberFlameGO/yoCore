@@ -1,8 +1,6 @@
 package me.yochran.yocore.management;
 
-import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -18,6 +16,7 @@ public class PlayerManagement {
         plugin.playerData.config.set(player.getUniqueId().toString() + ".Name", player.getName());
         plugin.playerData.config.set(player.getUniqueId().toString() + ".Rank", "DEFAULT");
         plugin.playerData.config.set(player.getUniqueId().toString() + ".IP", player.getAddress().getAddress().getHostAddress());
+        plugin.playerData.config.set(player.getUniqueId().toString() + ".ReportsAmount", 0);
         plugin.playerData.saveData();
     }
 
@@ -36,4 +35,18 @@ public class PlayerManagement {
     }
 
     public boolean checkIP(OfflinePlayer player, String ip) { return (plugin.playerData.config.getString(player.getUniqueId().toString() + ".IP").equalsIgnoreCase(ip)); }
+
+    public int getReportsAmount(OfflinePlayer target) {
+        return plugin.playerData.config.getInt(target.getUniqueId().toString() + ".ReportsAmount");
+    }
+
+    public void addReport(OfflinePlayer target, String executor, String reason, long date) {
+        int ID = getReportsAmount(target) + 1;
+
+        plugin.playerData.config.set(target.getUniqueId().toString() + ".Report." + ID + ".Executor", executor);
+        plugin.playerData.config.set(target.getUniqueId().toString() + ".Report." + ID + ".Reason", reason);
+        plugin.playerData.config.set(target.getUniqueId().toString() + ".Report." + ID + ".Date", date);
+
+        plugin.playerData.saveData();
+    }
 }

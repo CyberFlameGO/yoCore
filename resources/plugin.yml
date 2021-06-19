@@ -158,3 +158,29 @@ commands:
   ToggleScoreboard:
     description: Toggle on or off the server scoreboard.
     aliases: tsb
+  EnderChest:
+    description: View a players ender chest.
+    aliases: echest
+  ReWarn:
+    description: Rewarn a player.
+  ReMute:
+    description: Remute a player.
+  ReTempMute:
+    description: Temporarily remute a player.
+  ReBan:
+    description: Reban a player.
+  ReTempBan:
+    description: Temporarily reban a player.
+  ReBlacklist:
+    description: Reblacklist a player.
+  ServerManager:
+    description: Manage the server.
+    aliases: sm
+  Ping:
+    description: Get a players ping.
+  Reports:
+    description: View a players report history.
+    aliases: cr
+  ClearReports:
+    description: Clear a players report history.
+    aliases: crh

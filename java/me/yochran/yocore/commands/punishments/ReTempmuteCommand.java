@@ -11,13 +11,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TempmuteCommand implements CommandExecutor {
+public class ReTempmuteCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
-    public TempmuteCommand() {
+    public ReTempmuteCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
@@ -29,7 +29,7 @@ public class TempmuteCommand implements CommandExecutor {
         }
 
         if (args.length < 3) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.IncorrectUsage")));
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.ReMuteIncorrectUsage")));
             return true;
         }
 
@@ -39,8 +39,8 @@ public class TempmuteCommand implements CommandExecutor {
             return true;
         }
 
-        if (plugin.muted_players.containsKey(target.getUniqueId())) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.TargetIsMuted")));
+        if (!plugin.muted_players.containsKey(target.getUniqueId())) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.TargetNotMuted")));
             return true;
         }
 
@@ -68,16 +68,16 @@ public class TempmuteCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Mute", target, executor, reason, System.currentTimeMillis(), durationMS, silent);
-        punishmentManagement.addMute(target, true);
+        punishmentManagement.redoInfraction("Mute", punishmentManagement.getInfractionAmount(target, "Mute"), target, executor, reason, System.currentTimeMillis(), durationMS, silent);
+        punishmentManagement.redoMute(target, true);
 
         if (silent) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.ExecutorMessage")
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.ReMuteExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))
                     .replace("%reason%", reason)
                     .replace("%duration%", durationStr)));
         } else {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.ExecutorMessage")
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.ReMuteExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))
                     .replace("%reason%", reason)
                     .replace("%duration%", durationStr)));

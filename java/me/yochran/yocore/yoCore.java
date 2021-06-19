@@ -250,5 +250,16 @@ public final class yoCore extends JavaPlugin {
         getCommand("Stats").setExecutor(new StatsCommand());
         getCommand("ResetStats").setExecutor(new ResetStatsCommand());
         getCommand("ToggleScoreboard").setExecutor(new ToggleScoreboardCommand());
+        getCommand("EnderChest").setExecutor(new EnderChestCommand());
+        getCommand("ReWarn").setExecutor(new ReWarnCommand());
+        getCommand("ReMute").setExecutor(new ReMuteCommand());
+        getCommand("ReTempMute").setExecutor(new ReTempmuteCommand());
+        getCommand("ReBan").setExecutor(new ReBanCommand());
+        getCommand("ReTempBan").setExecutor(new ReTempbanCommand());
+        getCommand("ReBlacklist").setExecutor(new ReBlacklistCommand());
+        getCommand("ServerManager").setExecutor(new ServerManagerCommand());
+        getCommand("Ping").setExecutor(new PingCommand());
+        getCommand("Reports").setExecutor(new ReportsCommand());
+        getCommand("ClearReports").setExecutor(new ClearReportsCommand());
     }
 }

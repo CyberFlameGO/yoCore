@@ -60,6 +60,18 @@ public class PunishmentManagement {
         plugin.punishmentData.saveData();
     }
 
+    public void redoInfraction(String type, int ID, OfflinePlayer target, String executor, String reason, long date, Object duration, boolean silent) {
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Executor", executor);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Reason", reason);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Silent", silent);
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Date", System.currentTimeMillis());
+        plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Duration", duration);
+        if (type.equalsIgnoreCase("Kick")) plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Status", "Expired");
+        else plugin.punishmentData.config.set(target.getUniqueId().toString() + "." + type + "." + ID + ".Status", "Active");
+
+        plugin.punishmentData.saveData();
+    }
+
     public void addMute(OfflinePlayer target, boolean temporary) {
         plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
         plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString() + ".Temporary", temporary);
@@ -67,6 +79,13 @@ public class PunishmentManagement {
         plugin.punishmentData.saveData();
 
         plugin.muted_players.put(target.getUniqueId(), temporary);
+    }
+
+    public void redoMute(OfflinePlayer target, boolean temporary) {
+        plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
+        plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString() + ".Temporary", temporary);
+
+        plugin.punishmentData.saveData();
     }
 
     public void addBan(OfflinePlayer target, boolean temporary) {
@@ -78,12 +97,26 @@ public class PunishmentManagement {
         plugin.banned_players.put(target.getUniqueId(), temporary);
     }
 
+    public void redoBan(OfflinePlayer target, boolean temporary) {
+        plugin.punishmentData.config.set("BannedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
+        plugin.punishmentData.config.set("BannedPlayers." + target.getUniqueId().toString() + ".Temporary", temporary);
+
+        plugin.punishmentData.saveData();
+    }
+
     public void addBlacklist(OfflinePlayer target, String targetIP, String reason) {
         plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
         plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".IP", targetIP);
         plugin.punishmentData.saveData();
 
         plugin.blacklisted_ips.put(targetIP, reason);
+    }
+
+    public void redoBlacklist(OfflinePlayer target, String targetIP, String reason) {
+        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
+        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".IP", targetIP);
+
+        plugin.punishmentData.saveData();
     }
 
     public void clearHistory(OfflinePlayer target) {
@@ -99,7 +132,7 @@ public class PunishmentManagement {
             for (String muted : plugin.punishmentData.config.getConfigurationSection("MutedPlayers").getKeys(false)) {
                 if (muted.equalsIgnoreCase(target.getUniqueId().toString())) {
                     plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString(), null);
-                    plugin.banned_players.remove(target.getUniqueId());
+                    plugin.muted_players.remove(target.getUniqueId());
                 }
             }
         }

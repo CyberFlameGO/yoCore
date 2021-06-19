@@ -41,6 +41,8 @@ public class ReportCommand implements CommandExecutor {
             reason = reason + args[i] + " ";
         }
 
+        playerManagement.addReport(target, ((Player) sender).getUniqueId().toString(), reason, System.currentTimeMillis());
+
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Report.ExecutorMessage")
                 .replace("%target%", playerManagement.getPlayerColor(target))
                 .replace("%reason%", reason)));

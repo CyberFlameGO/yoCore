@@ -11,44 +11,43 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TempmuteCommand implements CommandExecutor {
+public class ReBlacklistCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
-    public TempmuteCommand() {
+    public ReBlacklistCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("yocore.mute")) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.NoPermission")));
+        if (!sender.hasPermission("yocore.blacklist")) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.NoPermission")));
             return true;
         }
 
-        if (args.length < 3) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.IncorrectUsage")));
+        if (args.length < 2) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.ReBlacklistIncorrectUsage")));
             return true;
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.InvalidPlayer")));
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.InvalidPlayer")));
             return true;
         }
 
-        if (plugin.muted_players.containsKey(target.getUniqueId())) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.TargetIsMuted")));
+        String targetIP = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
+
+        if (!plugin.blacklisted_ips.containsKey(targetIP)) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.TargetNotBlacklisted")));
             return true;
         }
-
-        long durationMS = Utils.getDurationMS(args[1]);
-        String durationStr = Utils.getDurationString(args[1]);
 
         String reason = "";
-        for (int i = 2; i < args.length; i++) {
+        for (int i = 1; i < args.length; i++) {
             reason = reason + args[i] + " ";
         }
 
@@ -68,36 +67,40 @@ public class TempmuteCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Mute", target, executor, reason, System.currentTimeMillis(), durationMS, silent);
-        punishmentManagement.addMute(target, true);
+        punishmentManagement.redoInfraction("Blacklist", punishmentManagement.getInfractionAmount(target, "Blacklist"), target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
+        punishmentManagement.redoBlacklist(target, targetIP, reason);
 
         if (silent) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.ExecutorMessage")
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.ReBlacklistExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%reason%", reason)
-                    .replace("%duration%", durationStr)));
+                    .replace("%reason%", reason)));
         } else {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.ExecutorMessage")
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.ReBlacklistExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%reason%", reason)
-                    .replace("%duration%", durationStr)));
+                    .replace("%reason%", reason)));
         }
 
         if (target.isOnline()) {
-            Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.TargetMessage")
-                    .replace("%reason%", reason)
-                    .replace("%duration%", durationStr)));
+            Bukkit.getPlayer(target.getName()).kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetMessage")
+                    .replace("%reason%", reason)));
+        }
+
+        for (Player players : Bukkit.getOnlinePlayers()) {
+            if (players.getAddress().getAddress().getHostAddress().equals(targetIP)) {
+                players.kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetMessage")
+                        .replace("%reason%", reason)));
+            }
         }
 
         for (Player players : Bukkit.getOnlinePlayers()) {
             if (silent) {
                 if (players.hasPermission("yocore.silent")) {
-                    players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.BroadcastMessage")
+                    players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.BroadcastMessage")
                             .replace("%executor%", executorName)
                             .replace("%target%", playerManagement.getPlayerColor(target))));
                 }
             } else {
-                players.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.BroadcastMessage")
+                players.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.BroadcastMessage")
                         .replace("%executor%", executorName)
                         .replace("%target%", playerManagement.getPlayerColor(target))));
             }

@@ -7,6 +7,7 @@ import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerDeathListener implements Listener {
 
@@ -22,6 +25,7 @@ public class PlayerDeathListener implements Listener {
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
     private final StatsManagement statsManagement = new StatsManagement();
+    private final List<EntityDamageEvent.DamageCause> causes = new ArrayList<>();
 
     public PlayerDeathListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -32,8 +36,20 @@ public class PlayerDeathListener implements Listener {
         if (!(event.getEntity() instanceof Player) || event.getEntity().getKiller() == null)
             return;
 
+        if (event.getEntity().getKiller() == event.getEntity())
+            return;
+
+        causes.add(EntityDamageEvent.DamageCause.ENTITY_ATTACK);
+        causes.add(EntityDamageEvent.DamageCause.PROJECTILE);
+        causes.add(EntityDamageEvent.DamageCause.FALL);
+        causes.add(EntityDamageEvent.DamageCause.MAGIC);
+        causes.add(EntityDamageEvent.DamageCause.LAVA);
+        causes.add(EntityDamageEvent.DamageCause.FIRE);
+        causes.add(EntityDamageEvent.DamageCause.FIRE_TICK);
+        causes.add(EntityDamageEvent.DamageCause.VOID);
+
         EntityDamageEvent.DamageCause cause = event.getEntity().getLastDamageCause().getCause();
-        if (cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK)
+        if (!causes.contains(cause))
             return;
 
         if (economyManagement.economyIsEnabled(event.getEntity().getKiller().getWorld().getName())) {

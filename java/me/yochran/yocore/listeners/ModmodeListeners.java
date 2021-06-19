@@ -67,9 +67,8 @@ public class ModmodeListeners implements Listener {
 
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&6&lLauncher"))) {
             double X = event.getPlayer().getLocation().getDirection().getX() * 7.0;
-            double Y = event.getPlayer().getLocation().getDirection().getY() * 2.0;
             double Z = event.getPlayer().getLocation().getDirection().getZ() * 7.0;
-            Vector vector = new Vector(X, Y, Z);
+            Vector vector = new Vector(X, 1.35, Z);
             vector = vector.normalize();
             event.getPlayer().setVelocity(vector.multiply(2.25));
             event.getPlayer().setSprinting(true);
@@ -139,9 +138,11 @@ public class ModmodeListeners implements Listener {
             return;
 
         if (event.getPlayer().getInventory().getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&6&lFreeze"))) {
-            if (event.getRightClicked() instanceof Player) {
+            if (event.getRightClicked() instanceof Player)
                 event.getPlayer().performCommand("freeze " + event.getRightClicked().getName());
-            }
+        } else if (event.getPlayer().getInventory().getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&6&lInspect Player"))) {
+            if (event.getRightClicked() instanceof Player)
+                event.getPlayer().performCommand("invsee " + event.getRightClicked().getName());
         }
     }
 

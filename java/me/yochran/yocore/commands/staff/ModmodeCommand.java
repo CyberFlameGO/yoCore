@@ -169,8 +169,14 @@ public class ModmodeCommand implements CommandExecutor {
         onlinePlayersMeta.setDisplayName(Utils.translate("&6&lOnline Players"));
         onlinePlayers.setItemMeta(onlinePlayersMeta);
 
+        ItemStack inspect = XMaterial.BOOK.parseItem();
+        ItemMeta inspectMeta = inspect.getItemMeta();
+        inspectMeta.setDisplayName(Utils.translate("&6&lInspect Player"));
+        inspect.setItemMeta(inspectMeta);
+
         player.getInventory().setItem(0, launcher);
         player.getInventory().setItem(1, freeze);
+        player.getInventory().setItem(2, inspect);
         player.getInventory().setItem(7, vanish);
         player.getInventory().setItem(8, onlinePlayers);
 

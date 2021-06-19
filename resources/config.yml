@@ -114,6 +114,8 @@ Warn:
   ExecutorMessage: "&bYou have warned %target% &bfor &3%reason%&b."
   TargetMessage: "&6&l<!> &cYou have been warned for &4%reason%&c. &6&l<!>"
   BroadcastMessage: "%executor% &bhas warned %target%&b."
+  ReWarnIncorrectUsage: "&cIncorrect Usage! /rewarn <player> [-s] <reason>"
+  ReWarnExecutorMessage: "&bYou have re-warned %target% &bfor &3%reason%&b."
 
 Kick:
   NoPermission: "&cYou do not have permission to use that command."
@@ -129,6 +131,7 @@ Mute:
   NoPermission: "&cYou do not have permission to use that command."
   InvalidPlayer: "&cInvalid Player!"
   TargetIsMuted: "&cTarget is already muted!"
+  TargetNotMuted: "&cTarget is not muted!"
   Permanent:
     IncorrectUsage: "&cIncorrect Usage! /mute <player> [-s] <reason>"
     ExecutorMessage: "&bYou have permanently muted %target% &bfor &3%reason%&b."
@@ -137,6 +140,8 @@ Mute:
     TargetAttemptToSpeak: |-
       &cYou cannot speak as you are muted for &4%reason%&c.
       &cThis mute will &4not &cexpire.
+    ReMuteIncorrectUsage: "&cIncorrect Usage! /remute <player> [-s] <reason>"
+    ReMuteExecutorMessage: "&bYou have re-muted %target% &bfor &3%reason%&b."
   Temporary:
     IncorrectUsage: "&cIncorrect Usage! /tempmute <player> <duration> [-s] <reason>"
     ExecutorMessage: "&bYou have temporarily muted %target% &bfor &3%reason%&b. &7(%duration%)"
@@ -145,6 +150,8 @@ Mute:
     TargetAttemptToSpeak: |-
       &cYou cannot speak as you are muted for &4%reason%&c.
       &cThis mute will expire on &4%expiration%&c.
+    ReMuteIncorrectUsage: "&cIncorrect Usage! /retempmute <player> <duration> [-s] <reason>"
+    ReMuteExecutorMessage: "&bYou have re-muted %target% &bfor &3%reason%&b. &7(%duration%)"
 
 Unmute:
   NoPermission: "&cYou do not have permission to use that command."
@@ -159,6 +166,7 @@ Ban:
   NoPermission: "&cYou do not have permission to use that command."
   InvalidPlayer: "&cInvalid Player!"
   TargetIsBanned: "&cTarget is already banned!"
+  TargetNotBanned: "&cTarget is not banned!"
   Permanent:
     IncorrectUsage: "&cIncorrect Usage! /ban <player> [-s] <reason>"
     ExecutorMessage: "&bYou have permanently banned %target% &bfor &3%reason%&b."
@@ -171,6 +179,8 @@ Ban:
       &cYou cannot join this server as you are &4banned&c.
       &cYou were banned for&7: &f%reason%&7.
       &cThis ban will &4not &cexpire.
+    ReBanIncorrectUsage: "&cIncorrect Usage! /reban <player> [-s] <reason>"
+    ReBanExecutorMessage: "&bYou have re-banned %target% &bfor &3%reason%&b."
   Temporary:
     IncorrectUsage: "&cIncorrect Usage! /tempban <player> <duration> [-s] <reason>"
     ExecutorMessage: "&bYou have temporarily banned %target% &bfor &3%reason%&b. &7(%duration%)"
@@ -183,6 +193,8 @@ Ban:
       &cYou cannot join this server as you are &4banned&c.
       &cYou were banned for&7: &f%reason%&7.
       &cThis bann will expire on&7: &f%expiration%&7.
+    ReBanIncorrectUsage: "&cIncorrect Usage! /retempban <player> <duration> [-s] <reason>"
+    ReBanExecutorMessage: "&bYou have re-banned %target% &bfor &3%reason%&b. &7(%duration%)"
 
 Unban:
   NoPermission: "&cYou do not have permission to use that command."
@@ -196,6 +208,7 @@ Blacklist:
   NoPermission: "&cYou do not have permission to use that command."
   InvalidPlayer: "&cInvalid Player!"
   TargetIsBlacklisted: "&cTarget is already blacklisted!"
+  TargetNotBlacklisted: "&cTarget is not blacklisted!"
   IncorrectUsage: "&cIncorrect Usage! /blacklist <player> [-s] <reason>"
   ExecutorMessage: "&bYou have permanently blacklisted %target% &bfor &3%reason%&b."
   BroadcastMessage: "%executor% &bhas permanently blacklisted %target%&b."
@@ -207,6 +220,8 @@ Blacklist:
     &cYou cannot join this server as you are &4blacklisted&c.
     &cYou were blacklisted for&7: &f%reason%&7.
     &cThis blacklist will &4not &cexpire.
+  ReBlacklistIncorrectUsage: "&cIncorrect Usage! /reblacklist <player> [-s] <reason>"
+  ReBlacklistExecutorMessage: "&bYou have re-blacklisted %target% &bfor &3%reason%&b."
 
 Unblacklist:
   NoPermission: "&cYou do not have permission to use that command."
@@ -553,6 +568,19 @@ Report:
   ExecutorMessage: "&bYou have reported %target% &bfor &3%reason%&b."
   StaffAlert: "&b[SC] %player% &3has reported %target% &3for &b%reason%."
 
+Reports:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /reports <player>"
+  InvalidPlayer: "&cInvalid Player!"
+
+ClearReports:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /clearreports <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  Format: "&bYou have cleared %target%&b's report history."
+
 BuildMode:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
@@ -586,6 +614,12 @@ Invsee:
   IncorrectUsage: "&cIncorrect Usage! /invsee <player>"
   InvalidPlayer: "&cInvalid Player!"
 
+EnderChest:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /echest <player>"
+  InvalidPlayer: "&cInvalid Player!"
+
 ChatColor:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
@@ -603,6 +637,24 @@ Settings:
   MessageSoundsOn: "&bYou have toggled messaging sounds &3on&b."
   MessageSoundsOff: "&bYou have toggled messaging sounds &3off&b."
   GlobalChatAttempt: "&cYou cannot speak as you have global chat disabled. (/settings)"
+
+ServerManager:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /servermanager <runcmd/info/> [command]"
+  InfoFormat: |-
+    &7&m-----------------------
+    &bServer Version: &3%version%
+    &bServer TPS: &3%tps%
+    &bOnline Players: &3%online%
+    &7&m-----------------------
+  CommandRan: "&bYou have run &3%command% &bfrom the console."
+
+Ping:
+  MustBePlayer: "&cYou must be a player to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /ping [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  Format: "%player%&b's ping: &3%ping%&b."
 
 Nametags:
   Enabled: true
