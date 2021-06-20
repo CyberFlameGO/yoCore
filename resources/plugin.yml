@@ -184,3 +184,6 @@ commands:
   ClearReports:
     description: Clear a players report history.
     aliases: crh
+  Seen:
+    description: Get info on a player.
+    aliases: [player, pinfo, pi, playerinfo]

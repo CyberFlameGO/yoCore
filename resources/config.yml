@@ -248,136 +248,155 @@ Grant:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /grant <player>"
   InvalidPlayer: "&cInvalid Player!"
+  NoPermissionItem: "GRAY_DYE"
   Rank:
     Lore:
-      - "&7&m----------------------------------------"
-      - "&eSelecting this will grant %target% &ethe %rank% &erank."
-      - "&r"
-      - "%permission%"
-      - "&7&m----------------------------------------"
+      - "&e&m----------------------------"
+      - "&ePriority: &f%priority%"
+      - "&ePrefix: &f%prefix%"
+      - "&eDisplay Name: &f%display%"
+      - "&7&m----------------------------"
+      - "&eType: &fRank"
+      - "&e&m----------------------------"
+      - "%has_permission%"
+  Permission:
+    Lore:
+      - "&e&m----------------------------"
+      - "&ePermission: &f%permission%"
+      - "&e&m----------------------------"
+      - "&eType: &fPermission"
+      - "&e&m----------------------------"
+      - "%has_permission%"
+    Items:
+      '1':
+        Item: "PAPER"
+        Name: "&fMute Chat Bypass"
+        Permission: "yocore.mutechat.bypass"
+      '2':
+        Item: "PAPER"
+        Name: "&fWorldguard Bypass"
+        Permission: "worldguard.region.bypass.*"
+      '3':
+        Item: "PAPER"
+        Name: "&fGamemode"
+        Permission: "yocore.gamemode"
+      '4':
+        Item: "PAPER"
+        Name: "&fHeal"
+        Permission: "yocore.heal"
+      '5':
+        Item: "PAPER"
+        Name: "&fFeed"
+        Permission: "yocore.feed"
+      '6':
+        Item: "PAPER"
+        Name: "&fInvsee"
+        Permission: "yocore.invsee"
   Duration:
     Items:
       TenSeconds:
         Item: "WHITE_WOOL"
         Name: "&f10 Seconds"
-        ID: "10 Seconds"
         Slot: 10
       OneMinute:
         Item: "YELLOW_WOOL"
         Name: "&e1 Minute"
-        ID: "1 Minute"
         Slot: 11
       FiveMinutes:
         Item: "ORANGE_WOOL"
         Name: "&65 Minutes"
-        ID: "5 Minutes"
         Slot: 12
       ThirtyMinutes:
         Item: "RED_WOOL"
         Name: "&c30 Minutes"
-        ID: "30 Minutes"
         Slot: 13
       OneHour:
         Item: "GREEN_WOOL"
         Name: "&21 Hour"
-        ID: "1 Hour"
         Slot: 14
       ThreeHours:
         Item: "LIME_WOOL"
         Name: "&a3 Hours"
-        ID: "3 Hours"
         Slot: 15
       OneDay:
         Item: "BLUE_WOOL"
         Name: "&91 Day"
-        ID: "1 Day"
         Slot: 16
       OneWeek:
         Item: "CYAN_WOOL"
         Name: "&31 Week"
-        ID: "1 Week"
         Slot: 20
       OneMonth:
         Item: "LIGHT_BLUE_WOOL"
         Name: "&b1 Month"
-        ID: "1 Month"
         Slot: 21
       OneYear:
         Item: "PURPLE_WOOL"
         Name: "&51 Year"
-        ID: "1 Year"
         Slot: 23
       Permanent:
         Item: "BEDROCK"
         Name: "&8Permanent"
-        ID: "Permanent"
         Slot: 24
     Lore:
-      - "&7&m----------------------------------------"
+      - "&e&m----------------------------------------"
       - "&eSelecting this will set the duration to %duration%."
       - "&r"
       - "&7(%target%&7)"
-      - "&7&m----------------------------------------"
+      - "&e&m----------------------------------------"
   Reason:
     Items:
       NoReason:
         Item: "BEDROCK"
         Name: "&8No Reason"
-        ID: "No Reason"
         Slot: 10
       Promoted:
         Item: "LIME_WOOL"
         Name: "&aPromoted"
-        ID: "Promoted"
         Slot: 11
       Demoted:
         Item: "RED_WOOL"
         Name: "&cDemoted"
-        ID: "Demoted"
         Slot: 12
       Famous:
         Item: "PINK_WOOL"
         Name: "&dFamous"
-        ID: "Famous"
         Slot: 13
       Whitelisted:
         Item: "WHITE_WOOL"
         Name: "&fWhitelisted"
-        ID: "Whitelisted"
         Slot: 14
       Testing:
         Item: "CYAN_WOOL"
         Name: "&3Testing"
-        ID: "Testing"
         Slot: 15
       Custom:
         Item: "GREEN_WOOL"
         Name: "&2Custom Reason"
-        ID: "Custom Reason"
         Slot: 16
     Lore:
-      - "&7&m----------------------------------------"
+      - "&e&m----------------------------------------"
       - "&eSelecting this will set the reason to %reason%."
       - "&r"
       - "&7(%target%&7)"
-      - "&7&m----------------------------------------"
+      - "&e&m----------------------------------------"
     CustomReasonChatMessage: "&bEnter a custom reason."
     CustomReasonCommandAttempt: "&cYou cannot use commands right now."
   Confirm:
     Lore:
-      - "&7&m----------------------------------"
+      - "&e&m----------------------------------"
       - "&6&lDetails:"
       - "&e "
       - "&eTarget: &6%target%"
-      - "&eRank: &6%rank%"
+      - "&eGrant: &6%grant%"
       - "&eDuration: &6%duration%"
       - "&eReason: &6%reason%"
-      - "&7&m----------------------------------"
+      - "&e&m----------------------------------"
     CancelledGrant: "&cGrant has been cancelled."
     ConfirmedGrant: |-
       &a&lGrant has been confirmed.
       &eGranted User: %target%
-      &eGranted Rank: &6%rank%
+      &eGranted Rank/Permission: &6%grant%
       &eGrant Duration: &6%duration%
       &eGrant Reason: &6%reason%
   RevokedGrant: "&cGrant has been revoked."
@@ -643,7 +662,7 @@ Settings:
 ServerManager:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /servermanager <runcmd/info/> [command]"
+  IncorrectUsage: "&cIncorrect Usage! /servermanager <runcmd/info> [command]"
   InfoFormat: |-
     &7&m-----------------------
     &bServer Version: &3%version%
@@ -657,6 +676,18 @@ Ping:
   IncorrectUsage: "&cIncorrect Usage! /ping [player]"
   InvalidPlayer: "&cInvalid Player!"
   Format: "%player%&b's ping: &3%ping%&b."
+
+Seen:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /player <player>"
+  Format: |-
+    &7&m-----------------------
+    %target%&3's info:
+    &bUsername: &3%name%
+    &bRank: &3%rank%
+    &bIP: &3%ip%
+    &bFirst Joined: &3%firstjoined%
+    &7&m-----------------------
 
 Nametags:
   Enabled: true
