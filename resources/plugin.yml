@@ -187,3 +187,10 @@ commands:
   Seen:
     description: Get info on a player.
     aliases: [player, pinfo, pi, playerinfo]
+  RankDisguise:
+    description: Disguise a players rank.
+  Nickname:
+    description: Set your or another players nickname.
+    aliases: nick
+  RealName:
+    description: Get the real name behind a nickname.

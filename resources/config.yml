@@ -401,6 +401,34 @@ Grant:
       &eGrant Reason: &6%reason%
   RevokedGrant: "&cGrant has been revoked."
 
+RankDisguise:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /rankdisguise <player> <rank/off>"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidRank: "&cInvalid Rank!"
+  TargetNotDisguised: "&cTarget is not disguised!"
+  FormatOn: "&bYou have rank-disguised %target% &bas %rank%&b."
+  FormatOff: "&bYou have rank-undisguised %target%&b."
+
+Nickname:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /nick <nick/off> [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  NotNicked: "&cTarget is not nicked!"
+  CannotNickAsPlayer: "&cCannot nick as this player!"
+  NickIsTaken: "&cThis nickname is taken!"
+  NickPrefix: "* "
+  FormatOnSelf: "&bYou have set your nickname to &3%nickname%&b."
+  FormatOffSelf: "&bYou have removed your nickname."
+  FormatOnOther: "&bYou have set %target%&b's nickname to &3%nickname%&b."
+  FormatOffOther: "&bYou have removed %target%&b's nickname."
+
+RealName:
+  IncorrectUsage: "&cIncorrect Usage! /realname <player>"
+  InvalidNick: "&cNo one has that nickname."
+  Format: "%target% &bis nicked as &3%nickname%&b."
+
 GrantHistory:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
