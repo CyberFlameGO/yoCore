@@ -25,14 +25,31 @@ public class PlayerManagement {
         if (!plugin.playerData.config.contains(player.getUniqueId().toString()))
             return "&4&lNULL";
 
-        return plugin.getConfig().getString("Ranks." + plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").toUpperCase() + ".Color") + player.getName();
+        String color;
+        if (plugin.rank_disguise.containsKey(player.getUniqueId())) color = plugin.getConfig().getString("Ranks." + plugin.rank_disguise.get(player.getUniqueId()) + ".Color");
+        else color = plugin.getConfig().getString("Ranks." + plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").toUpperCase() + ".Color");
+
+        String name;
+        if (plugin.nickname.containsKey(player.getUniqueId())) name = plugin.getConfig().getString("Nickname.NickPrefix") + plugin.nickname.get(player.getUniqueId());
+        else name = player.getName();
+
+        return color + name;
     }
 
     public String getPlayerPrefix(OfflinePlayer player) {
         if (!plugin.playerData.config.contains(player.getUniqueId().toString()))
             return "&4&lNULL";
 
-        return plugin.getConfig().getString("Ranks." + plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").toUpperCase() + ".Prefix") + player.getName();
+        String prefix;
+        if (plugin.rank_disguise.containsKey(player.getUniqueId())) prefix = plugin.getConfig().getString("Ranks." + plugin.rank_disguise.get(player.getUniqueId()) + ".Prefix");
+        else prefix = plugin.getConfig().getString("Ranks." + plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").toUpperCase() + ".Prefix");
+        String name;
+        if (plugin.nickname.containsKey(player.getUniqueId())) name = plugin.getConfig().getString("Nickname.NickPrefix") + plugin.nickname.get(player.getUniqueId());
+        else name = player.getName();
+
+        System.out.println(name);
+
+        return prefix + name;
     }
 
     public boolean checkIP(OfflinePlayer player, String ip) { return (plugin.playerData.config.getString(player.getUniqueId().toString() + ".IP").equalsIgnoreCase(ip)); }
