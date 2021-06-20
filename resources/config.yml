@@ -713,8 +713,10 @@ Seen:
     %target%&3's info:
     &bUsername: &3%name%
     &bRank: &3%rank%
-    &bIP: &3%ip%
     &bFirst Joined: &3%firstjoined%
+    &bCurrent IP: &3%ip%
+    &bAll IPs:
+    %all_ips%
     &7&m-----------------------
 
 Nametags:
