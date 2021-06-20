@@ -50,7 +50,8 @@ public class GrantCommand implements CommandExecutor {
         }
 
         plugin.grant_player.remove(((Player) sender).getUniqueId());
-        plugin.grant_rank.remove(((Player) sender).getUniqueId());
+        plugin.grant_grant.remove(((Player) sender).getUniqueId());
+        plugin.grant_type.remove(((Player) sender).getUniqueId());
         plugin.grant_reason.remove(((Player) sender).getUniqueId());
         plugin.grant_duration.remove(((Player) sender).getUniqueId());
 
@@ -61,7 +62,7 @@ public class GrantCommand implements CommandExecutor {
     }
 
     public void openGrantGUI(Player player, OfflinePlayer target) {
-        Inventory inventory = Bukkit.createInventory(player, 54, Utils.translate("&aSelect a rank."));
+        Inventory inventory = Bukkit.createInventory(player, 54, Utils.translate("&aSelect a grant."));
 
         for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false)) {
             ItemStack item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Ranks." + rank + ".GrantItem"));
@@ -70,22 +71,45 @@ public class GrantCommand implements CommandExecutor {
 
             List<String> itemLore = new ArrayList<>();
             String permission;
-            if (player.hasPermission(plugin.getConfig().getString("Ranks." + rank + ".GrantPermission"))) {
-                permission = "&aYou can grant this rank.";
-            } else {
-                permission = "&cYou do not have permission to grant this rank.";
+            if (player.hasPermission(plugin.getConfig().getString("Ranks." + rank + ".GrantPermission"))) { permission = "&a&lYou can grant this rank."; } else {
+                permission = "&c&lYou cannot grant this rank.";
+                item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem"));
             }
 
             for (String line : plugin.getConfig().getStringList("Grant.Rank.Lore")) {
                 itemLore.add(Utils.translate(line
-                        .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%rank%", plugin.getConfig().getString("Ranks." + rank + ".Display"))
-                        .replace("%permission%", permission)));
+                        .replace("%priority%", String.valueOf(plugin.getConfig().getInt("Ranks." + rank + ".Priority")))
+                        .replace("%prefix%", plugin.getConfig().getString("Ranks." + rank + ".Prefix"))
+                        .replace("%display%", plugin.getConfig().getString("Ranks." + rank + ".Display"))
+                        .replace("%has_permission%", permission)));
             }
 
             itemMeta.setLore(itemLore);
             item.setItemMeta(itemMeta);
             inventory.setItem(plugin.getConfig().getInt("Ranks." + rank + ".Priority") - 1, item);
+        }
+
+        for (String perm : plugin.getConfig().getConfigurationSection("Grant.Permission.Items").getKeys(false)) {
+            ItemStack item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Item"));
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.setDisplayName(Utils.translate(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Name")));
+
+            List<String> itemLore = new ArrayList<>();
+            String permission;
+            if (player.hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))) { permission = "&a&lYou can grant this permission."; } else {
+                permission = "&c&lYou cannot grant this permission.";
+                item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem"));
+            }
+
+            for (String line : plugin.getConfig().getStringList("Grant.Permission.Lore")) {
+                itemLore.add(Utils.translate(line
+                        .replace("%permission%", plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))
+                        .replace("%has_permission%", permission)));
+            }
+
+            itemMeta.setLore(itemLore);
+            item.setItemMeta(itemMeta);
+            inventory.addItem(item);
         }
 
         player.openInventory(inventory);
@@ -137,7 +161,7 @@ public class GrantCommand implements CommandExecutor {
         player.openInventory(inventory);
     }
 
-    public void openConfirmGUI(Player player, OfflinePlayer target, String rank, String duration, String reason) {
+    public void openConfirmGUI(Player player, OfflinePlayer target, String grant, String duration, String reason) {
         Inventory inventory = Bukkit.createInventory(player,  54, Utils.translate("&aConfirm the grant."));
 
         ItemStack yesItem = XMaterial.GREEN_TERRACOTTA.parseItem();
@@ -153,7 +177,7 @@ public class GrantCommand implements CommandExecutor {
         for (String line : plugin.getConfig().getStringList("Grant.Confirm.Lore")) {
             lore.add(Utils.translate(line
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%rank%", rank)
+                    .replace("%grant%", grant)
                     .replace("%duration%", duration)
                     .replace("%reason%", reason)));
         }

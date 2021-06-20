@@ -34,7 +34,7 @@ public class GrantCustomReasonListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    grantCommand.openConfirmGUI(event.getPlayer(), target, plugin.grant_rank.get(event.getPlayer().getUniqueId()), plugin.grant_duration.get(event.getPlayer().getUniqueId()), plugin.grant_reason.get(event.getPlayer().getUniqueId()));
+                    grantCommand.openConfirmGUI(event.getPlayer(), target, plugin.grant_grant.get(event.getPlayer().getUniqueId()), plugin.grant_duration.get(event.getPlayer().getUniqueId()), plugin.grant_reason.get(event.getPlayer().getUniqueId()));
                 }
             }.runTaskLater(plugin, 5);
 

@@ -57,21 +57,40 @@ public class GUIClickListener implements Listener {
                 event.getWhoClicked().closeInventory();
                 historyCommand.openPunishmentType("Blacklist", (Player) event.getWhoClicked(), target);
             }
-        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a rank."))) {
-            if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Ranks." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName().toUpperCase()) + ".GrantPermission"))) {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
-                plugin.grant_rank.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a grant."))) {
+            OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
 
-                event.getWhoClicked().closeInventory();
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        grantCommand.openDurationGUI((Player) event.getWhoClicked(), target);
+            if (event.getCurrentItem().getItemMeta().hasLore()
+                    && event.getCurrentItem().getItemMeta().getLore().size() == plugin.getConfig().getStringList("Grant.Permission.Lore").size()) {
+                for (String permission : plugin.getConfig().getConfigurationSection("Grant.Permission.Items").getKeys(false)) {
+                    if (plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Permission: ", "")))) {
+                        if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"))) {
+                            System.out.println(plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"));
+                            plugin.grant_grant.put(event.getWhoClicked().getUniqueId(), plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"));
+                            plugin.grant_type.put(event.getWhoClicked().getUniqueId(), "PERMISSION");
+                        } else {
+                            event.setCancelled(true);
+                            return;
+                        }
                     }
-                }.runTaskLater(plugin, 5);
+                }
             } else {
-                event.setCancelled(true);
+                if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Ranks." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName().toUpperCase()) + ".GrantPermission"))) {
+                    plugin.grant_grant.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+                    plugin.grant_type.put(event.getWhoClicked().getUniqueId(), "RANK");
+                } else {
+                    event.setCancelled(true);
+                    return;
+                }
             }
+
+            event.getWhoClicked().closeInventory();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    grantCommand.openDurationGUI((Player) event.getWhoClicked(), target);
+                }
+            }.runTaskLater(plugin, 5);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a duration."))) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
             plugin.grant_duration.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
@@ -99,30 +118,37 @@ public class GUIClickListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    grantCommand.openConfirmGUI((Player) event.getWhoClicked(), target, plugin.grant_rank.get(event.getWhoClicked().getUniqueId()), plugin.grant_duration.get(event.getWhoClicked().getUniqueId()), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()));
+                    System.out.println(plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
+                    grantCommand.openConfirmGUI((Player) event.getWhoClicked(), target, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), plugin.grant_duration.get(event.getWhoClicked().getUniqueId()), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()));
                 }
             }.runTaskLater(plugin, 5);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aConfirm the grant."))) {
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&2&lConfirm Grant"))) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
-                String previousRank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
 
                 event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.Confirm.ConfirmedGrant")
                         .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%rank%", plugin.grant_rank.get(event.getWhoClicked().getUniqueId()))
+                        .replace("%grant%", plugin.grant_grant.get(event.getWhoClicked().getUniqueId()))
                         .replace("%duration%", plugin.grant_duration.get(event.getWhoClicked().getUniqueId()))
                         .replace("%reason%", plugin.grant_reason.get(event.getWhoClicked().getUniqueId()))));
 
-                if (plugin.grant_duration.get(event.getWhoClicked().getUniqueId()).equalsIgnoreCase("Permanent")) {
-                    grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), plugin.grant_rank.get(event.getWhoClicked().getUniqueId()), "Permanent", System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
+                String previousRank;
+                String type = plugin.grant_type.get(event.getWhoClicked().getUniqueId());
+
+                if (plugin.grant_type.get(event.getWhoClicked().getUniqueId()).equalsIgnoreCase("RANK")) {
+                    previousRank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
                 } else {
-                    grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), plugin.grant_rank.get(event.getWhoClicked().getUniqueId()), grantManagement.getGrantDuration(plugin.grant_duration.get(event.getWhoClicked().getUniqueId())), System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
+                    previousRank = "N/A";
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + target.getName() + " add " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
                 }
 
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grant_rank.get(event.getWhoClicked().getUniqueId()));
+                if (plugin.grant_duration.get(event.getWhoClicked().getUniqueId()).equalsIgnoreCase("Permanent")) grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), type, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), "Permanent", System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
+                else grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), type, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), grantManagement.getGrantDuration(plugin.grant_duration.get(event.getWhoClicked().getUniqueId())), System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
 
                 plugin.grant_player.remove(event.getWhoClicked().getUniqueId());
-                plugin.grant_rank.remove(event.getWhoClicked().getUniqueId());
+                plugin.grant_type.remove(event.getWhoClicked().getUniqueId());
+                plugin.grant_grant.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_reason.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_duration.remove(event.getWhoClicked().getUniqueId());
 
@@ -133,7 +159,8 @@ public class GUIClickListener implements Listener {
                 event.getWhoClicked().closeInventory();
 
                 plugin.grant_player.remove(event.getWhoClicked().getUniqueId());
-                plugin.grant_rank.remove(event.getWhoClicked().getUniqueId());
+                plugin.grant_type.remove(event.getWhoClicked().getUniqueId());
+                plugin.grant_grant.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_reason.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_duration.remove(event.getWhoClicked().getUniqueId());
             }
@@ -142,12 +169,14 @@ public class GUIClickListener implements Listener {
 
             OfflinePlayer target = Bukkit.getOfflinePlayer(ChatColor.stripColor(event.getView().getTitle().replace("'s grant history.", "")));
 
-            String idLore = ChatColor.stripColor(itemLore.get(8));
+            String idLore = ChatColor.stripColor(itemLore.get(9));
             int id = Integer.parseInt(idLore.replace("Grant ID: ", ""));
 
             plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + id + ".Status", "Revoked");
             plugin.grantData.saveData();
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
+
+            if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Type").equalsIgnoreCase("RANK")) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
+            else Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"pex user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
 
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));

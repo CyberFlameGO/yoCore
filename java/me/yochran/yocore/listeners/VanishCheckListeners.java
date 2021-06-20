@@ -1,10 +1,12 @@
 package me.yochran.yocore.listeners;
 
+import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 import me.yochran.yocore.yoCore;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class VanishCheckListeners implements Listener {
@@ -44,6 +46,12 @@ public class VanishCheckListeners implements Listener {
 
     @EventHandler
     public void onPickup(PlayerPickupItemEvent event) {
+        if (plugin.vanished_players.contains(event.getPlayer().getUniqueId()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onAchievementGet(PlayerAdvancementCriterionGrantEvent event) {
         if (plugin.vanished_players.contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
     }

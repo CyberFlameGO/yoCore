@@ -84,7 +84,8 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, UUID> selected_history = new HashMap<>();
     public Map<UUID, UUID> selected_grant_history = new HashMap<>();
     public Map<UUID, UUID> grant_player = new HashMap<>();
-    public Map<UUID, String> grant_rank = new HashMap<>();
+    public Map<UUID, String> grant_grant = new HashMap<>();
+    public Map<UUID, String> grant_type = new HashMap<>();
     public Map<UUID, String> grant_duration = new HashMap<>();
     public Map<UUID, String> grant_reason = new HashMap<>();
 
@@ -264,5 +265,6 @@ public final class yoCore extends JavaPlugin {
         getCommand("Ping").setExecutor(new PingCommand());
         getCommand("Reports").setExecutor(new ReportsCommand());
         getCommand("ClearReports").setExecutor(new ClearReportsCommand());
+        getCommand("Seen").setExecutor(new SeenCommand());
     }
 }

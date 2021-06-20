@@ -30,12 +30,13 @@ public class GrantManagement {
         return plugin.grantData.config.getInt(target.getUniqueId().toString() + ".GrantsAmount");
     }
 
-    public void addGrant(OfflinePlayer target, String executor, String rank, Object duration, long date, String reason, String previousRank) {
+    public void addGrant(OfflinePlayer target, String executor, String type, String grant, Object duration, long date, String reason, String previousRank) {
         int ID = getGrantsAmount(target) + 1;
 
         plugin.grantData.config.set(target.getUniqueId().toString() + ".GrantsAmount", ID);
         plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".ID", ID);
-        plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".Rank", rank);
+        plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".Type", type);
+        plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".Grant", grant);
         plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".Executor", executor);
         plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".Duration", duration);
         plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + ID + ".Date", date);
@@ -80,7 +81,9 @@ public class GrantManagement {
         plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants." + id + ".Status", "Revoked");
         plugin.grantData.saveData();
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
+        if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Type").equalsIgnoreCase("RANK"))
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
+        else Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
     }
 
     public void clearHistory(OfflinePlayer target) {

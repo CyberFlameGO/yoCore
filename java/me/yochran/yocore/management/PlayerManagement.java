@@ -17,6 +17,7 @@ public class PlayerManagement {
         plugin.playerData.config.set(player.getUniqueId().toString() + ".Rank", "DEFAULT");
         plugin.playerData.config.set(player.getUniqueId().toString() + ".IP", player.getAddress().getAddress().getHostAddress());
         plugin.playerData.config.set(player.getUniqueId().toString() + ".ReportsAmount", 0);
+        plugin.playerData.config.set(player.getUniqueId().toString() + ".FirstJoined", System.currentTimeMillis());
         plugin.playerData.saveData();
     }
 

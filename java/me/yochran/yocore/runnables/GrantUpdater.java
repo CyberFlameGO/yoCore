@@ -24,7 +24,10 @@ public class GrantUpdater extends BukkitRunnable {
                     if (plugin.grantData.config.getLong(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".Duration") <= System.currentTimeMillis() && plugin.grantData.config.getString(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".Status").equalsIgnoreCase("Active")) {
                         plugin.grantData.config.set(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".Status", "Expired");
                         plugin.grantData.saveData();
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + Bukkit.getOfflinePlayer(UUID.fromString(entry)).getName() + " " + plugin.grantData.config.getString(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".PreviousRank"));
+                        if (plugin.grantData.config.getString(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".Type").equalsIgnoreCase("RANK"))
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + Bukkit.getOfflinePlayer(UUID.fromString(entry)).getName() + " " + plugin.grantData.config.getString(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".PreviousRank"));
+                        else
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + Bukkit.getOfflinePlayer(UUID.fromString(entry)).getName() + " remove " + plugin.grantData.config.getString(entry + ".Grants." + grantManagement.getGrantsAmount(Bukkit.getOfflinePlayer(UUID.fromString(entry))) + ".Grant"));
                     }
                 }
             }
