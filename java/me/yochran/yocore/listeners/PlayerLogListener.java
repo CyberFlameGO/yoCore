@@ -25,6 +25,12 @@ public class PlayerLogListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString())) playerManagement.setupPlayer(event.getPlayer());
+        if (!plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString())) punishmentManagement.setupPlayer(event.getPlayer());
+        if (!plugin.grantData.config.contains(event.getPlayer().getUniqueId().toString())) grantManagement.setupPlayer(event.getPlayer());
+        if (!economyManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer())) economyManagement.setupPlayer(event.getPlayer());
+        if (!statsManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer())) statsManagement.setupPlayer(event.getPlayer());
+
         if (plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()) && !plugin.playerData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".Name", event.getPlayer().getName());
             plugin.playerData.saveData();
@@ -35,41 +41,26 @@ public class PlayerLogListener implements Listener {
             plugin.punishmentData.saveData();
         }
 
-        if (plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())) {
-            event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
-                    .replace("%reason%", plugin.blacklisted_ips.get(event.getPlayer().getAddress().getAddress().getHostAddress()))));
-        }
-
-        if (plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
-            if (plugin.banned_players.get(event.getPlayer().getUniqueId())) {
-                event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Temporary.TargetJoinScreen")
-                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))
-                        .replace("%expiration%", Utils.getExpirationDate(plugin.punishmentData.config.getLong(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Duration")))));
-            } else {
-                event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Permanent.TargetJoinScreen")
-                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))));
-            }
-        }
-
-        if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()))
-            playerManagement.setupPlayer(event.getPlayer());
-
-        if (!plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString()))
-            punishmentManagement.setupPlayer(event.getPlayer());
-
-        if (!plugin.grantData.config.contains(event.getPlayer().getUniqueId().toString()))
-            grantManagement.setupPlayer(event.getPlayer());
-
         if (!playerManagement.checkIP(event.getPlayer(), event.getPlayer().getAddress().getAddress().getHostAddress())) {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".IP", event.getPlayer().getAddress().getAddress().getHostAddress());
+            plugin.playerData.config.getStringList(event.getPlayer().getUniqueId().toString() + ".TotalIPs").add(event.getPlayer().getAddress().getAddress().getHostAddress());
             plugin.playerData.saveData();
         }
 
-        if (!economyManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer()))
-            economyManagement.setupPlayer(event.getPlayer());
+        if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())) {
+            event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
+                    .replace("%reason%", plugin.blacklisted_players.get(event.getPlayer().getUniqueId()))));
+        }
 
-        if (!statsManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer()))
-            statsManagement.setupPlayer(event.getPlayer());
+        if (plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
+            if (plugin.banned_players.get(event.getPlayer().getUniqueId()))
+                event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Temporary.TargetJoinScreen")
+                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))
+                        .replace("%expiration%", Utils.getExpirationDate(plugin.punishmentData.config.getLong(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Duration")))));
+            else
+                event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Permanent.TargetJoinScreen")
+                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))));
+        }
 
         if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) {
             for (Player players : Bukkit.getOnlinePlayers())
@@ -77,7 +68,7 @@ public class PlayerLogListener implements Listener {
         }
 
         if (plugin.getConfig().getBoolean("JoinMessage.Staff.Enabled")) {
-            if (!plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+            if (!plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                     && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
                 if (event.getPlayer().hasPermission("yocore.chats.staff")) {
                     for (Player staff : Bukkit.getOnlinePlayers()) {
@@ -91,7 +82,7 @@ public class PlayerLogListener implements Listener {
 
         if (plugin.getConfig().getBoolean("JoinMessage.Enabled")) {
             if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())
-                    || plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+                    || plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                     || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) event.setJoinMessage("");
             else event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
         }
@@ -103,7 +94,7 @@ public class PlayerLogListener implements Listener {
             playerManagement.setupPlayer(event.getPlayer());
 
         if (plugin.getConfig().getBoolean("QuitMessage.Staff.Enabled")) {
-            if (!plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+            if (!plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                     && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
                 if (event.getPlayer().hasPermission("yocore.chats.staff")) {
                     for (Player staff : Bukkit.getOnlinePlayers()) {
@@ -118,7 +109,7 @@ public class PlayerLogListener implements Listener {
 
         if (plugin.getConfig().getBoolean("QuitMessage.Enabled"))
             if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())
-                    || plugin.blacklisted_ips.containsKey(event.getPlayer().getAddress().getAddress().getHostAddress())
+                    || plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                     || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) event.setQuitMessage("");
             else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
     }

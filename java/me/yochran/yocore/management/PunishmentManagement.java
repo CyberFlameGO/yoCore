@@ -104,17 +104,18 @@ public class PunishmentManagement {
         plugin.punishmentData.saveData();
     }
 
-    public void addBlacklist(OfflinePlayer target, String targetIP, String reason) {
+    public void addBlacklist(OfflinePlayer target, String reason) {
         plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
-        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".IP", targetIP);
+        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".Reason", reason);
+
         plugin.punishmentData.saveData();
 
-        plugin.blacklisted_ips.put(targetIP, reason);
+        plugin.blacklisted_players.put(target.getUniqueId(), reason);
     }
 
-    public void redoBlacklist(OfflinePlayer target, String targetIP, String reason) {
+    public void redoBlacklist(OfflinePlayer target, String reason) {
         plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".Name", target.getName());
-        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".IP", targetIP);
+        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString() + ".Reason", reason);
 
         plugin.punishmentData.saveData();
     }
@@ -150,7 +151,7 @@ public class PunishmentManagement {
             for (String blacklisted : plugin.punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false)) {
                 if (blacklisted.equalsIgnoreCase(target.getUniqueId().toString())) {
                     plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString(), null);
-                    plugin.blacklisted_ips.remove(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP"));
+                    plugin.blacklisted_players.remove(target.getUniqueId());
                 }
             }
         }

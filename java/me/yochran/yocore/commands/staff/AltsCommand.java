@@ -46,14 +46,18 @@ public class AltsCommand implements CommandExecutor {
         List<String> alts = new ArrayList<>();
 
         for (String alt : plugin.playerData.config.getKeys(false)) {
-            if (plugin.playerData.config.getString(alt + ".IP").equalsIgnoreCase(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")) && !target.getName().equalsIgnoreCase(plugin.playerData.config.getString(alt + ".Name"))) {
-                String display = "&7" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
-                if (Bukkit.getOfflinePlayer(alt).isOnline()) display = "&a" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
-                if (plugin.muted_players.containsKey(UUID.fromString(alt))) display = "&6" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
-                if (plugin.banned_players.containsKey(UUID.fromString(alt))) display = "&c" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
-                if (plugin.blacklisted_ips.containsKey(plugin.playerData.config.getString(alt + ".IP"))) display = "&4" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
+            if (plugin.playerData.config.getString(alt + ".IP").equalsIgnoreCase(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP"))
+                    || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(alt + ".IP"))
+                    || plugin.playerData.config.getStringList(alt + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
+                if (!target.getName().equalsIgnoreCase(plugin.playerData.config.getString(alt + ".Name"))) {
+                    String display = "&7" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
+                    if (Bukkit.getOfflinePlayer(UUID.fromString(alt)).isOnline()) display = "&a" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
+                    if (plugin.muted_players.containsKey(UUID.fromString(alt))) display = "&6" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
+                    if (plugin.banned_players.containsKey(UUID.fromString(alt))) display = "&c" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
+                    if (plugin.blacklisted_players.containsKey(UUID.fromString(alt))) display = "&4" + Bukkit.getOfflinePlayer(UUID.fromString(alt)).getName();
 
-                alts.add(display);
+                    alts.add(display);
+                }
             }
         }
 

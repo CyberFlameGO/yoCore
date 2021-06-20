@@ -11,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class BlacklistCommand implements CommandExecutor {
 
     private final yoCore plugin;
@@ -41,7 +43,7 @@ public class BlacklistCommand implements CommandExecutor {
 
         String targetIP = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
 
-        if (plugin.blacklisted_ips.containsKey(targetIP)) {
+        if (plugin.blacklisted_players.containsKey(target.getUniqueId())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.TargetIsBlacklisted")));
             return true;
         }
@@ -68,7 +70,7 @@ public class BlacklistCommand implements CommandExecutor {
         }
 
         punishmentManagement.addInfraction("Blacklist", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
-        punishmentManagement.addBlacklist(target, targetIP, reason);
+        punishmentManagement.addBlacklist(target, reason);
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.ExecutorMessage")
@@ -89,6 +91,15 @@ public class BlacklistCommand implements CommandExecutor {
             if (players.getAddress().getAddress().getHostAddress().equals(targetIP)) {
                 players.kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetMessage")
                         .replace("%reason%", reason)));
+            }
+        }
+
+        for (String players : plugin.playerData.config.getKeys(false)) {
+            if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)) {
+                if (!plugin.playerData.config.getString(players + ".Name").equalsIgnoreCase(target.getName())) {
+                    punishmentManagement.addInfraction("Blacklist", Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, reason + "(Linked to " + target.getName() + ")", System.currentTimeMillis(), "Permanent", silent);
+                    punishmentManagement.addBlacklist(Bukkit.getOfflinePlayer(UUID.fromString(players)), reason + "(Linked to " + target.getName() + ")");
+                }
             }
         }
 

@@ -4,6 +4,9 @@ import me.yochran.yocore.yoCore;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerManagement {
 
     private yoCore plugin;
@@ -18,6 +21,9 @@ public class PlayerManagement {
         plugin.playerData.config.set(player.getUniqueId().toString() + ".IP", player.getAddress().getAddress().getHostAddress());
         plugin.playerData.config.set(player.getUniqueId().toString() + ".ReportsAmount", 0);
         plugin.playerData.config.set(player.getUniqueId().toString() + ".FirstJoined", System.currentTimeMillis());
+        List<String> totalIPs = new ArrayList<>();
+        totalIPs.add(player.getAddress().getAddress().getHostAddress());
+        plugin.playerData.config.set(player.getUniqueId().toString() + ".TotalIPs", totalIPs);
         plugin.playerData.saveData();
     }
 
