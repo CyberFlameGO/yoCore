@@ -91,6 +91,9 @@ public final class yoCore extends JavaPlugin {
 
     public List<UUID> grant_custom_reason = new ArrayList<>();
 
+    public Map<UUID, String> rank_disguise = new HashMap<>();
+    public Map<UUID, String> nickname = new HashMap<>();
+
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new PlayerLogListener(), this);
@@ -266,5 +269,8 @@ public final class yoCore extends JavaPlugin {
         getCommand("Reports").setExecutor(new ReportsCommand());
         getCommand("ClearReports").setExecutor(new ClearReportsCommand());
         getCommand("Seen").setExecutor(new SeenCommand());
+        getCommand("RankDisguise").setExecutor(new RankDisguiseCommand());
+        getCommand("Nickname").setExecutor(new NickCommand());
+        getCommand("RealName").setExecutor(new RealNameCommand());
     }
 }
