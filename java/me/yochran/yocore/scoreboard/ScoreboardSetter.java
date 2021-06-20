@@ -95,7 +95,9 @@ public class ScoreboardSetter implements Listener {
         if (plugin.tsb.contains(player.getUniqueId()))
             return;
 
-        String rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
+        String rank;
+        if (plugin.rank_disguise.containsKey(player.getUniqueId())) rank = plugin.rank_disguise.get(player.getUniqueId());
+        else rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
         String rankDisplay = plugin.getConfig().getString("Ranks." + rank.toUpperCase() + ".Display");
         String bounty;
         if (economyManagement.isBountied(player.getWorld().getName(), player)) {
