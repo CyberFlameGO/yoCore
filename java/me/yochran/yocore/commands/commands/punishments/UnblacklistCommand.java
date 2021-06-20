@@ -11,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class UnblacklistCommand implements CommandExecutor {
 
     private final yoCore plugin;
@@ -41,7 +43,7 @@ public class UnblacklistCommand implements CommandExecutor {
 
         String targetIP = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
 
-        if (!plugin.punishmentData.config.contains("BlacklistedPlayers." + target.getUniqueId().toString())) {
+        if (!plugin.blacklisted_players.containsKey(target.getUniqueId())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unblacklist.TargetIsNotBlacklisted")));
             return true;
         }
@@ -58,10 +60,16 @@ public class UnblacklistCommand implements CommandExecutor {
             silent = true;
         }
 
-        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Blacklist." + punishmentManagement.getInfractionAmount(target, "Blacklist") + ".Status", "Revoked");
-        plugin.punishmentData.config.set("BlacklistedPlayers." + target.getUniqueId().toString(), null);
-        plugin.punishmentData.saveData();
-        plugin.blacklisted_ips.remove(targetIP);
+        for (String players : plugin.playerData.config.getKeys(false)) {
+            if (plugin.blacklisted_players.containsKey(UUID.fromString(players))) {
+                if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)) {
+                    plugin.punishmentData.config.set(players + ".Blacklist." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Blacklist") + ".Status", "Revoked");
+                    plugin.punishmentData.config.set("BlacklistedPlayers." + players, null);
+                    plugin.punishmentData.saveData();
+                    plugin.blacklisted_players.remove(UUID.fromString(players));
+                }
+            }
+        }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Unblacklist.ExecutorMessage")

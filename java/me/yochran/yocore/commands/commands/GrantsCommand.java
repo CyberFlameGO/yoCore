@@ -107,6 +107,11 @@ public class GrantsCommand implements CommandExecutor {
                 else previousRankDisplay = "&cN/A (Permission Grant)";
                 String ID = String.valueOf(plugin.grantData.config.getInt(target.getUniqueId().toString() + ".Grants." + grant + ".ID"));
 
+                String revokePermission;
+                if (previousRank.equalsIgnoreCase("N/A")) revokePermission = issuedGrant;
+                else revokePermission = plugin.getConfig().getString("Ranks." + previousRank + ".GrantPermission");
+
+
                 List<String> itemLore = new ArrayList<>();
                 itemLore.add(Utils.translate("&e&m----------------------------"));
                 itemLore.add(Utils.translate("&eTarget: &f" + playerManagement.getPlayerColor(target)));
@@ -120,7 +125,9 @@ public class GrantsCommand implements CommandExecutor {
                 itemLore.add(Utils.translate("&eGrant ID: &f" + ID));
                 itemLore.add(Utils.translate("&e&m----------------------------"));
                 if (revokable) {
-                    itemLore.add(Utils.translate("&aClick to revoke this grant."));
+                    if (player.hasPermission(revokePermission))
+                        itemLore.add(Utils.translate("&aClick to revoke this grant."));
+                    else itemLore.add(Utils.translate("&cYou cannot remove this grant."));
                 }
 
                 itemMeta.setLore(itemLore);

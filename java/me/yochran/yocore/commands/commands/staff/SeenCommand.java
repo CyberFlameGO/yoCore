@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class SeenCommand implements CommandExecutor {
 
     private final yoCore plugin;
@@ -45,13 +47,19 @@ public class SeenCommand implements CommandExecutor {
         }
         String rank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
         String rankDisplay = plugin.getConfig().getString("Ranks." + rank + ".Display");
+        String allIPsMessage = "";
+        for (String entry : plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs")) {
+            if (allIPsMessage.equalsIgnoreCase("")) allIPsMessage = "&7- " + entry;
+            else allIPsMessage = allIPsMessage + "\n&7- " + entry;
+        }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Seen.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))
                 .replace("%name%", target.getName())
                 .replace("%rank%", rankDisplay)
                 .replace("%ip%", ip)
-                .replace("%firstjoined%", Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".FirstJoined")))));
+                .replace("%firstjoined%", Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".FirstJoined")))
+                .replace("%all_ips%", allIPsMessage)));
 
         return true;
     }
