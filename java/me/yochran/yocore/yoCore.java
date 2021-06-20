@@ -80,7 +80,7 @@ public final class yoCore extends JavaPlugin {
 
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
-    public Map<String, String> blacklisted_ips = new HashMap<>();
+    public Map<UUID, String> blacklisted_players = new HashMap<>();
     public Map<UUID, UUID> selected_history = new HashMap<>();
     public Map<UUID, UUID> selected_grant_history = new HashMap<>();
     public Map<UUID, UUID> grant_player = new HashMap<>();
@@ -190,8 +190,8 @@ public final class yoCore extends JavaPlugin {
         }
 
         if (punishmentData.config.contains("BlacklistedPlayers")) {
-            for (String uuid : punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false)) {
-                blacklisted_ips.put(punishmentData.config.getString("BlacklistedPlayers." + uuid + ".IP"), punishmentData.config.getString(uuid + ".Blacklist." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(uuid)), "Blacklist") + ".Reason"));
+            for (String player : punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false)) {
+                banned_players.put(UUID.fromString(player), punishmentData.config.getBoolean("BlacklistedPlayers." + player + ".Reason"));;
             }
         }
     }
