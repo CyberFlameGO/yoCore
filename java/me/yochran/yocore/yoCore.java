@@ -46,6 +46,7 @@ public final class yoCore extends JavaPlugin {
         registerListeners();
         runRunnables();
         registerRanks();
+        registerTags();
 
         punishmentManagement = new PunishmentManagement();
 
@@ -57,6 +58,7 @@ public final class yoCore extends JavaPlugin {
     }
 
     public List<String> ranks = new ArrayList<>();
+    public List<String> tags = new ArrayList<>();
     public List<UUID> vanished_players = new ArrayList<>();
     public List<UUID> staff_alerts = new ArrayList<>();
 
@@ -180,6 +182,11 @@ public final class yoCore extends JavaPlugin {
             ranks.add(getConfig().getString("Ranks." + rank + ".ID"));
     }
 
+    private void registerTags() {
+        for (String tag : getConfig().getConfigurationSection("Tags").getKeys(false))
+            tags.add(getConfig().getString("Tags." + tag + ".ID"));
+    }
+
     private void refreshPunishments() {
         if (punishmentData.config.contains("MutedPlayers")) {
             for (String player : punishmentData.config.getConfigurationSection("MutedPlayers").getKeys(false)) {
@@ -276,6 +283,7 @@ public final class yoCore extends JavaPlugin {
         getCommand("RankDisguise").setExecutor(new RankDisguiseCommand());
         getCommand("Nickname").setExecutor(new NickCommand());
         getCommand("RealName").setExecutor(new RealNameCommand());
+        getCommand("Tags").setExecutor(new TagsCommand());
         getCommand("Tag").setExecutor(new TagCommand());
     }
 }
