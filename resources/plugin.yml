@@ -194,3 +194,6 @@ commands:
     aliases: nick
   RealName:
     description: Get the real name behind a nickname.
+  Tag:
+    description: Set your tag.
+    aliases: tags
