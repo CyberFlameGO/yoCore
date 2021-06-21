@@ -93,6 +93,7 @@ public final class yoCore extends JavaPlugin {
 
     public Map<UUID, String> rank_disguise = new HashMap<>();
     public Map<UUID, String> nickname = new HashMap<>();
+    public Map<UUID, String> tag = new HashMap<>();
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
@@ -174,7 +175,10 @@ public final class yoCore extends JavaPlugin {
         }.runTaskLater(this, 10);
     }
 
-    private void registerRanks() { ranks.addAll(getConfig().getConfigurationSection("Ranks").getKeys(false)); }
+    private void registerRanks() {
+        for (String rank : getConfig().getConfigurationSection("Ranks").getKeys(false))
+            ranks.add(getConfig().getString("Ranks." + rank + ".ID"));
+    }
 
     private void refreshPunishments() {
         if (punishmentData.config.contains("MutedPlayers")) {
@@ -272,5 +276,6 @@ public final class yoCore extends JavaPlugin {
         getCommand("RankDisguise").setExecutor(new RankDisguiseCommand());
         getCommand("Nickname").setExecutor(new NickCommand());
         getCommand("RealName").setExecutor(new RealNameCommand());
+        getCommand("Tag").setExecutor(new TagCommand());
     }
 }

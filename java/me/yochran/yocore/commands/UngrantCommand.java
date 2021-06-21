@@ -46,6 +46,12 @@ public class UngrantCommand implements CommandExecutor {
             grantIDs.add(plugin.grantData.config.getInt(target.getUniqueId().toString() + ".Grants." + grant + ".ID"));
         }
 
+        try { Integer.parseInt(args[1]); }
+        catch (NumberFormatException ignored) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.IncorrectUsage")));
+            return true;
+        }
+
         if (!grantIDs.contains(Integer.parseInt(args[1]))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.InvalidGrant")));
             return true;

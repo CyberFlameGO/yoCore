@@ -62,7 +62,9 @@ public class UnblacklistCommand implements CommandExecutor {
 
         for (String players : plugin.playerData.config.getKeys(false)) {
             if (plugin.blacklisted_players.containsKey(UUID.fromString(players))) {
-                if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)) {
+                if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)
+                        || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players + ".IP"))
+                        || plugin.playerData.config.getStringList(players + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
                     plugin.punishmentData.config.set(players + ".Blacklist." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Blacklist") + ".Status", "Revoked");
                     plugin.punishmentData.config.set("BlacklistedPlayers." + players, null);
                     plugin.punishmentData.saveData();

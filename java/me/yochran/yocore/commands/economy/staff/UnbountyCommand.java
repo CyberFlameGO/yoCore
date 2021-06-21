@@ -36,7 +36,7 @@ public class UnbountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.hasPermission("yoeconomy.unbounty")) {
+        if (!sender.hasPermission("yocore.unbounty")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unbounty.NoPermission")));
             return true;
         }

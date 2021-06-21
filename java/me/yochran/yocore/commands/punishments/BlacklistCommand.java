@@ -88,14 +88,18 @@ public class BlacklistCommand implements CommandExecutor {
         }
 
         for (Player players : Bukkit.getOnlinePlayers()) {
-            if (players.getAddress().getAddress().getHostAddress().equals(targetIP)) {
+            if (players.getAddress().getAddress().getHostAddress().equals(targetIP)
+                    || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players.getUniqueId().toString() + ".IP"))
+                    || plugin.playerData.config.getStringList(players.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
                 players.kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetMessage")
                         .replace("%reason%", reason)));
             }
         }
 
         for (String players : plugin.playerData.config.getKeys(false)) {
-            if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)) {
+            if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)
+                    || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players + ".IP"))
+                    || plugin.playerData.config.getStringList(players + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
                 if (!plugin.playerData.config.getString(players + ".Name").equalsIgnoreCase(target.getName())) {
                     punishmentManagement.addInfraction("Blacklist", Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, reason + "(Linked to " + target.getName() + ")", System.currentTimeMillis(), "Permanent", silent);
                     punishmentManagement.addBlacklist(Bukkit.getOfflinePlayer(UUID.fromString(players)), reason + "(Linked to " + target.getName() + ")");

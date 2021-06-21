@@ -44,7 +44,8 @@ public class StaffChatCommand implements CommandExecutor {
             if (staff.hasPermission("yocore.chats.staff")) {
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%message%", message)));
+                        .replace("%message%", message)
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
             }
         }
 

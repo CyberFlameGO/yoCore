@@ -40,18 +40,17 @@ public class SeenCommand implements CommandExecutor {
         }
 
         String ip;
-        if (sender.hasPermission("yocore.seen.ip")) {
-            ip = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
-        } else {
-            ip = "Hidden";
-        }
+        if (sender.hasPermission("yocore.seen.ip")) { ip = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
+        } else { ip = "Hidden"; }
         String rank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
         String rankDisplay = plugin.getConfig().getString("Ranks." + rank + ".Display");
         String allIPsMessage = "";
-        for (String entry : plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs")) {
-            if (allIPsMessage.equalsIgnoreCase("")) allIPsMessage = "&7- " + entry;
-            else allIPsMessage = allIPsMessage + "\n&7- " + entry;
-        }
+        if (sender.hasPermission("yocore.seen.ip")) {
+            for (String entry : plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs")) {
+                if (allIPsMessage.equalsIgnoreCase("")) allIPsMessage = "&7- " + entry;
+                else allIPsMessage = allIPsMessage + "\n&7- " + entry;
+            }
+        } else { allIPsMessage = "Hidden"; }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Seen.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))

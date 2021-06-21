@@ -76,13 +76,15 @@ public class GrantCommand implements CommandExecutor {
                 item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem"));
             }
 
-            for (String line : plugin.getConfig().getStringList("Grant.Rank.Lore")) {
-                itemLore.add(Utils.translate(line
-                        .replace("%priority%", String.valueOf(plugin.getConfig().getInt("Ranks." + rank + ".Priority")))
-                        .replace("%prefix%", plugin.getConfig().getString("Ranks." + rank + ".Prefix"))
-                        .replace("%display%", plugin.getConfig().getString("Ranks." + rank + ".Display"))
-                        .replace("%has_permission%", permission)));
-            }
+            itemLore.add(Utils.translate("&e&m----------------------------"));
+            itemLore.add(Utils.translate("&eID: &f" + plugin.getConfig().getString("Ranks." + rank + ".ID")));
+            itemLore.add(Utils.translate("&ePriority: &f" + plugin.getConfig().getInt("Ranks." + rank + ".Priority")));
+            itemLore.add(Utils.translate("&ePrefix: &f" + plugin.getConfig().getString("Ranks." + rank + ".Prefix")));
+            itemLore.add(Utils.translate("&eDisplay Name: &f" + plugin.getConfig().getString("Ranks." + rank + ".Display")));
+            itemLore.add(Utils.translate("&e&m----------------------------"));
+            itemLore.add(Utils.translate("&eType: &fRank"));
+            itemLore.add(Utils.translate("&e&m----------------------------"));
+            itemLore.add(Utils.translate(permission));
 
             itemMeta.setLore(itemLore);
             item.setItemMeta(itemMeta);
@@ -172,6 +174,9 @@ public class GrantCommand implements CommandExecutor {
 
         yesItemMeta.setDisplayName(Utils.translate("&2&lConfirm Grant"));
         noItemMeta.setDisplayName(Utils.translate("&c&lCancel Grant"));
+
+        if (plugin.grant_type.get(player.getUniqueId()).equalsIgnoreCase("RANK"))
+            grant = plugin.getConfig().getString("Ranks." + grant + ".Display");
 
         List<String> lore = new ArrayList<>();
         for (String line : plugin.getConfig().getStringList("Grant.Confirm.Lore")) {

@@ -44,7 +44,8 @@ public class ManagementChatCommand implements CommandExecutor {
             if (managers.hasPermission("yocore.chats.management")) {
                 managers.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%message%", message)));
+                        .replace("%message%", message)
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
             }
         }
 

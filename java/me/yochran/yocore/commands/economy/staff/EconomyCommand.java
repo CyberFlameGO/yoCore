@@ -36,7 +36,7 @@ public class EconomyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.hasPermission("yoeconomy.economycommand")) {
+        if (!sender.hasPermission("yocore.economycommand")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.NoPermission")));
             return true;
         }

@@ -44,7 +44,8 @@ public class AdminChatCommand implements CommandExecutor {
             if (admins.hasPermission("yocore.chats.admin")) {
                 admins.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%message%", message)));
+                        .replace("%message%", message)
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
             }
         }
 

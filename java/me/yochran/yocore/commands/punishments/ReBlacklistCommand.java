@@ -88,7 +88,9 @@ public class ReBlacklistCommand implements CommandExecutor {
         }
 
         for (Player players : Bukkit.getOnlinePlayers()) {
-            if (players.getAddress().getAddress().getHostAddress().equals(targetIP)) {
+            if (players.getAddress().getAddress().getHostAddress().equals(targetIP)
+                    || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players.getUniqueId().toString() + ".IP"))
+                    || plugin.playerData.config.getStringList(players.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
                 players.kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetMessage")
                         .replace("%reason%", reason)));
             }

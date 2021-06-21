@@ -38,7 +38,8 @@ public class ReportCommand implements CommandExecutor {
 
         String reason = "";
         for (int i = 1; i < args.length; i++) {
-            reason = reason + args[i] + " ";
+            if (reason.equalsIgnoreCase("")) reason = args[i];
+            else reason = reason + " " + args[i];
         }
 
         playerManagement.addReport(target, ((Player) sender).getUniqueId().toString(), reason, System.currentTimeMillis());
@@ -52,7 +53,8 @@ public class ReportCommand implements CommandExecutor {
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("Report.StaffAlert")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%reason%", reason)));
+                        .replace("%reason%", reason)
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
         }
 
         return true;
