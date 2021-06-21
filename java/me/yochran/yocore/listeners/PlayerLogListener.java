@@ -68,13 +68,13 @@ public class PlayerLogListener implements Listener {
         }
 
         if (plugin.getConfig().getBoolean("JoinMessage.Staff.Enabled")) {
-            if (!plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
-                    && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
+            if (!plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId()) && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
                 if (event.getPlayer().hasPermission("yocore.chats.staff")) {
                     for (Player staff : Bukkit.getOnlinePlayers()) {
                         if (staff.hasPermission("yocore.chats.staff"))
                             staff.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Staff.Message")
-                                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
+                                    .replace("%server%", plugin.getConfig().getString("ServerName"))));
                     }
                 }
             }
@@ -93,24 +93,25 @@ public class PlayerLogListener implements Listener {
         if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()))
             playerManagement.setupPlayer(event.getPlayer());
 
+        if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId()) || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
+            event.setQuitMessage("");
+            return;
+        }
+
         if (plugin.getConfig().getBoolean("QuitMessage.Staff.Enabled")) {
-            if (!plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
-                    && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
-                if (event.getPlayer().hasPermission("yocore.chats.staff")) {
-                    for (Player staff : Bukkit.getOnlinePlayers()) {
-                        if (staff.hasPermission("yocore.chats.staff")) {
-                            staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
-                                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
-                        }
+            if (event.getPlayer().hasPermission("yocore.chats.staff")) {
+                for (Player staff : Bukkit.getOnlinePlayers()) {
+                    if (staff.hasPermission("yocore.chats.staff")) {
+                        staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
+                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
+                                .replace("%server%", plugin.getConfig().getString("ServerName"))));
                     }
                 }
             }
         }
 
         if (plugin.getConfig().getBoolean("QuitMessage.Enabled"))
-            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())
-                    || plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
-                    || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) event.setQuitMessage("");
+            if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setQuitMessage("");
             else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
     }
 }

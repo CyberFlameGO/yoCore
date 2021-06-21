@@ -5,7 +5,6 @@ import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,7 +41,8 @@ public class PlayerChatListener implements Listener {
                 if (staff.hasPermission("yocore.chats.staff"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                            .replace("%message%", event.getMessage().replaceFirst("# ", ""))));
+                            .replace("%message%", event.getMessage().replaceFirst("# ", ""))
+                            .replace("%server%", plugin.getConfig().getString("ServerName"))));
             }
         }
 
@@ -52,7 +52,8 @@ public class PlayerChatListener implements Listener {
                 if (staff.hasPermission("yocore.chats.admin"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                            .replace("%message%", event.getMessage().replaceFirst("@ ", ""))));
+                            .replace("%message%", event.getMessage().replaceFirst("@ ", ""))
+                            .replace("%server%", plugin.getConfig().getString("ServerName"))));
             }
         }
 
@@ -62,7 +63,8 @@ public class PlayerChatListener implements Listener {
                 if (staff.hasPermission("yocore.chats.management"))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                            .replace("%message%", event.getMessage().replaceFirst("! ", ""))));
+                            .replace("%message%", event.getMessage().replaceFirst("! ", ""))
+                            .replace("%server%", plugin.getConfig().getString("ServerName"))));
             }
         }
 
@@ -96,10 +98,15 @@ public class PlayerChatListener implements Listener {
             }
         }
 
+        String tag = "";
+        if (plugin.tag.containsKey(event.getPlayer().getUniqueId()))
+            tag = " " + plugin.getConfig().getString("Tags." + plugin.tag.get(event.getPlayer().getUniqueId()) + ".Prefix");
+
         String format = plugin.getConfig().getString("ChatFormat")
-                .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))
-                .replace("%player_color%", playerManagement.getPlayerColor(event.getPlayer()))
-                .replace("%message%", message);
+                    .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))
+                    .replace("%player_color%", playerManagement.getPlayerColor(event.getPlayer()))
+                    .replace("%message%", message)
+                    .replace("%player_tag%", tag);
 
         event.setFormat(Utils.translate(format));
 

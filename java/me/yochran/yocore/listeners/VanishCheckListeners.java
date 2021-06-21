@@ -49,10 +49,4 @@ public class VanishCheckListeners implements Listener {
         if (plugin.vanished_players.contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
     }
-
-    @EventHandler
-    public void onAchievementGet(PlayerAdvancementCriterionGrantEvent event) {
-        if (plugin.vanished_players.contains(event.getPlayer().getUniqueId()))
-            event.setCancelled(true);
-    }
 }

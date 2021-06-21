@@ -13,9 +13,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -60,27 +58,28 @@ public class GUIClickListener implements Listener {
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a grant."))) {
             OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
 
-            if (event.getCurrentItem().getItemMeta().hasLore()
-                    && event.getCurrentItem().getItemMeta().getLore().size() == plugin.getConfig().getStringList("Grant.Permission.Lore").size()) {
-                for (String permission : plugin.getConfig().getConfigurationSection("Grant.Permission.Items").getKeys(false)) {
-                    if (plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Permission: ", "")))) {
-                        if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"))) {
-                            System.out.println(plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"));
-                            plugin.grant_grant.put(event.getWhoClicked().getUniqueId(), plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"));
-                            plugin.grant_type.put(event.getWhoClicked().getUniqueId(), "PERMISSION");
-                        } else {
-                            event.setCancelled(true);
-                            return;
+            if (event.getCurrentItem().getItemMeta().hasLore()) {
+                if (event.getCurrentItem().getItemMeta().getLore().size() == plugin.getConfig().getStringList("Grant.Permission.Lore").size()) {
+                    for (String permission : plugin.getConfig().getConfigurationSection("Grant.Permission.Items").getKeys(false)) {
+                        if (plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Permission: ", "")))) {
+                            if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"))) {
+                                System.out.println(plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"));
+                                plugin.grant_grant.put(event.getWhoClicked().getUniqueId(), plugin.getConfig().getString("Grant.Permission.Items." + permission + ".Permission"));
+                                plugin.grant_type.put(event.getWhoClicked().getUniqueId(), "PERMISSION");
+                            } else {
+                                event.setCancelled(true);
+                                return;
+                            }
                         }
                     }
-                }
-            } else {
-                if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Ranks." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName().toUpperCase()) + ".GrantPermission"))) {
-                    plugin.grant_grant.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
-                    plugin.grant_type.put(event.getWhoClicked().getUniqueId(), "RANK");
                 } else {
-                    event.setCancelled(true);
-                    return;
+                    if (event.getWhoClicked().hasPermission(plugin.getConfig().getString("Ranks." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("ID: ", "")) + ".GrantPermission"))) {
+                        plugin.grant_grant.put(event.getWhoClicked().getUniqueId(), plugin.getConfig().getString("Ranks." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("ID: ", "")) + ".ID"));
+                        plugin.grant_type.put(event.getWhoClicked().getUniqueId(), "RANK");
+                    } else {
+                        event.setCancelled(true);
+                        return;
+                    }
                 }
             }
 
@@ -126,9 +125,14 @@ public class GUIClickListener implements Listener {
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&2&lConfirm Grant"))) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
 
+                String grant;
+                if (plugin.grant_type.get(event.getWhoClicked().getUniqueId()).equalsIgnoreCase("RANK"))
+                    grant = plugin.getConfig().getString("Ranks." + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()) + ".Display");
+                else grant = plugin.grant_grant.get(event.getWhoClicked().getUniqueId());
+
                 event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.Confirm.ConfirmedGrant")
                         .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%grant%", plugin.grant_grant.get(event.getWhoClicked().getUniqueId()))
+                        .replace("%grant%", grant)
                         .replace("%duration%", plugin.grant_duration.get(event.getWhoClicked().getUniqueId()))
                         .replace("%reason%", plugin.grant_reason.get(event.getWhoClicked().getUniqueId()))));
 
@@ -142,6 +146,8 @@ public class GUIClickListener implements Listener {
                     previousRank = "N/A";
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + target.getName() + " add " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
                 }
+
+                System.out.println(plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
 
                 if (plugin.grant_duration.get(event.getWhoClicked().getUniqueId()).equalsIgnoreCase("Permanent")) grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), type, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), "Permanent", System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
                 else grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), type, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), grantManagement.getGrantDuration(plugin.grant_duration.get(event.getWhoClicked().getUniqueId())), System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
@@ -217,6 +223,16 @@ public class GUIClickListener implements Listener {
                     plugin.chat_toggled.remove(event.getWhoClicked().getUniqueId());
                 }
                 event.getWhoClicked().closeInventory();
+            }
+        } else if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&aClick to select this tag."))) {
+            plugin.tag.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")));
+
+            event.getWhoClicked().closeInventory();
+            for (String tag : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
+                if (plugin.getConfig().getString("Tags." + tag + ".ID").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")))) {
+                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("TagCommand.FormatOn")
+                            .replace("%tag%", plugin.getConfig().getString("Tags." + tag + ".Display"))));
+                }
             }
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aEnder Chest."))) {
             event.setCancelled(true);

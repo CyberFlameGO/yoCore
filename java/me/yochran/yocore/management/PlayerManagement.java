@@ -67,6 +67,7 @@ public class PlayerManagement {
     public void addReport(OfflinePlayer target, String executor, String reason, long date) {
         int ID = getReportsAmount(target) + 1;
 
+        plugin.playerData.config.set(target.getUniqueId().toString() + ".ReportsAmount", ID);
         plugin.playerData.config.set(target.getUniqueId().toString() + ".Report." + ID + ".Executor", executor);
         plugin.playerData.config.set(target.getUniqueId().toString() + ".Report." + ID + ".Reason", reason);
         plugin.playerData.config.set(target.getUniqueId().toString() + ".Report." + ID + ".Date", date);
