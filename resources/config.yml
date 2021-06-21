@@ -81,25 +81,36 @@ Ranks:
 
 ChatFormat: "%player_tag% %player_prefix%&7: &f%message%"
 
-# IDs MUST match tag names!
+# Tag names and IDs MUST be in all caps!
+# Tag IDs MUST match tag names!
 Tags:
-  yoCore:
-    ID: "yoCore"
+  YOCORE:
+    ID: "YOCORE"
     Prefix: "&7[&byoCore&7]"
     Display: "&byoCore"
     Permission: "yocore.tags.yocore"
-  BetaTester:
-    ID: "BetaTester"
+  BETATESTER:
+    ID: "BETATESTER"
     Prefix: "&7[&3Beta-Tester&7]"
     Display: "&3Beta-Tester"
     Permission: "yocore.tags.betatester"
 
-TagCommand:
+TagsCommand:
   MustBePlayer: "&cYou must be a player to use that command"
-  IncorrectUsage: "&cIncorrect Usage! /tag <set/off>"
+  IncorrectUsage: "&cIncorrect Usage! /tags [off]"
   FormatOn: "&bYou have set your tag to &3%tag%&b."
   FormatOff: "&bYou have removed your chat tag."
   TagItem: "NAME_TAG"
+
+TagCommand:
+  MustBePlayer: "&cYou must be a player to use that command"
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /tag <add/remove/prefix/display> <tag> [prefix/display]"
+  InvalidTag: "&cInvalid Tag!"
+  AddedTag: "&bCreated tag &3%tag%&b."
+  RemovedTag: "&bRemoved tag &3%tag%&b."
+  ChangedPrefix: "%tag%&b's prefix has been changed to &3%prefix%&b."
+  ChangedDisplay: "%tag%&b's display name has been changed to &3%display%&b."
 
 JoinMessage:
   Enabled: true
