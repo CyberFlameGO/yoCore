@@ -128,7 +128,16 @@ QuitMessage:
 
 RankCommand:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /rank <add/remove/prefix/color/display/priority/item/permission> <rank> [prefix/color/display/priority/permission]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! /rank
+    &cArgument 1:
+    &c - <add/remove/prefix/color/display/priority/item/grantpermission/permissions>
+    &cArgument 2:
+    &c - <rank>
+    &cArgument 3 (Some are optional):
+    &c - [prefix/color/display/priority/grantpermission/add/remove]
+    &cArgument 4 (Permissions only):
+    &c - <permission>
   InvalidRank: "&cInvalid Rank!"
   InvalidItem: "&cInvalid Item! (Hold it in your hand)"
   CreatedRank: "&bCreated rank &3%rank%&b."
@@ -139,6 +148,27 @@ RankCommand:
   PriorityChanged: "%rank%&b's priority has been changed to &3%priority%&b."
   GrantItemChanged: "%rank%&b's grant item has been changed to &3%item%&b."
   GrantPermissionChanged: "%rank%&b's grant permission has been changed to &3%permission%&b."
+  PermissionAdded: "&bYou added the &3%permission% &bpermission to %rank%&b."
+  PermissionRemoved: "&bYou removed the &3%permission% &bpermission from %rank%&b."
+  RankPermissions: |-
+    &7&m--------------------------
+    %rank%&3's permissions:
+    &7 -
+    %permissions%
+    &7&m--------------------------
+
+UserCommand:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /user <player> <add/remove/list> [permission]"
+  InvalidPlayer: "&cInvalid Player!"
+  PermissionAdded: "&bYou added the &3%permission% &bpermission to %target%&b."
+  PermissionRemoved: "&bYou removed the &3%permission% &bpermission from %target%&b."
+  PlayerPermissions: |-
+    &7&m--------------------------
+    %target%&3's permissions:
+    &7 -
+    %permissions%
+    &7&m--------------------------
 
 SetRank:
   IncorrectUsage: "&cIncorrect Usage! /setrank <player> <rank>"
@@ -325,6 +355,14 @@ Grant:
         Item: "PAPER"
         Name: "&fInvsee"
         Permission: "yocore.invsee"
+      '7':
+        Item: "PAPER"
+        Name: "&fyoCore Tag"
+        Permission: "yocore.tags.yocore"
+      '8':
+        Item: "PAPER"
+        Name: "&fBeta-Tester Tag"
+        Permission: "yocore.tags.betatester"
   Duration:
     Items:
       TenSeconds:
@@ -435,6 +473,7 @@ Grant:
   RevokedGrant: "&cGrant has been revoked."
 
 RankDisguise:
+  MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /rankdisguise <player> <rank/off>"
   InvalidPlayer: "&cInvalid Player!"

@@ -4,6 +4,129 @@ main: me.yochran.yocore.yoCore
 api-version: 1.16
 authors: [ Yochran ]
 description: Remastered version of the vCores, combined into one plugin.
+permissions:
+  yocore.resetstats:
+    description: Permission
+  yocore.unbounty:
+    description: Permission
+  yocore.economycommand:
+    description: Permission
+  yocore.ban:
+    description: Permission
+  yocore.blacklist:
+    description: Permission
+  yocore.clearhistory:
+    description: Permission
+  yocore.history:
+    description: Permission
+  yocore.kick:
+    description: Permission
+  yocore.mute:
+    description: Permission
+  yocore.warn:
+    description: Permission
+  yocore.unban:
+    description: Permission
+  yocore.unblacklist:
+    description: Permission
+  yocore.unmute:
+    description: Permission
+  yocore.alts:
+    description: Permission
+  yocore.broadcast:
+    description: Permission
+  yocore.buildmode:
+    description: Permission
+  yocore.clearchat:
+    description: Permission
+  yocore.clear:
+    description: Permission
+  yocore.echest:
+    description: Permission
+  yocore.staffalerts:
+    description: Permission
+  yocore.feed:
+    description: Permission
+  yocore.fly:
+    description: Permission
+  yocore.fly.others:
+    description: Permission
+  yocore.freeze:
+    description: Permission
+  yocore.gamemode:
+    description: Permission
+  yocore.heal:
+    description: Permission
+  yocore.invsee:
+    description: Permission
+  yocore.modmode:
+    description: Permission
+  yocore.mutechat:
+    description: Permission
+  yocore.seen:
+    description: Permission
+  yocore.seen.ip:
+    description: Permission
+  yocore.servermanager:
+    description: Permission
+  yocore.speed:
+    description: Permission
+  yocore.sudo:
+    description: Permission
+  yocore.teleport:
+    description: Permission
+  yocore.teleport.all:
+    description: Permission
+  yocore.vanish:
+    description: Permission
+  yocore.chats.staff:
+    description: Permission
+  yocore.chats.admin:
+    description: Permission
+  yocore.chats.management:
+    description: Permission
+  yocore.chatcolor:
+    description: Permission
+  yocore.cleargranthistory:
+    description: Permission
+  yocore.clearreports:
+    description: Permission
+  yocore.grant:
+    description: Permission
+  yocore.grant.owner:
+    description: Permission
+  yocore.grant.developer:
+    description: Permission
+  yocore.grant.manager:
+    description: Permission
+  yocore.grant.admin:
+    description: Permission
+  yocore.grant.seniormod:
+    description: Permission
+  yocore.grant.mod:
+    description: Permission
+  yocore.grant.trialmod:
+    description: Permission
+  yocore.grant.builder:
+    description: Permission
+  yocore.grant.default:
+    description: Permission
+  yocore.granthistory:
+    description: Permission
+  yocore.nick:
+    description: Permission
+  yocore.rank:
+    description: Permission
+  yocore.rankdisguise:
+    description: Permission
+  yocore.reporthistory:
+    description: Permission
+  yocore.tag:
+    description: Permission
+  yocore.mutechat.bypass:
+    description: Permission
+  yocore.user:
+    description: Permission.
 commands:
   Setrank:
     description: Set a players rank.
@@ -186,7 +309,7 @@ commands:
     aliases: crh
   Seen:
     description: Get info on a player.
-    aliases: [player, pinfo, pi, playerinfo]
+    aliases: [pinfo, pi, playerinfo]
   RankDisguise:
     description: Disguise a players rank.
   Nickname:
@@ -198,3 +321,6 @@ commands:
     description: Set your tag.
   Tag:
     description: Manage tags.
+  User:
+    description: Add remove or list permissions under a user.
+    aliases: player
