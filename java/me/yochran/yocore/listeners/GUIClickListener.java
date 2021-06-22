@@ -229,16 +229,18 @@ public class GUIClickListener implements Listener {
                 }
                 event.getWhoClicked().closeInventory();
             }
-        } else if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&aClick to select this tag."))) {
-            plugin.tag.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")));
+        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aChat tags."))) {
+            if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&aClick to select this tag."))) {
+                plugin.tag.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")));
 
-            event.getWhoClicked().closeInventory();
-            for (String tag : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
-                if (plugin.getConfig().getString("Tags." + tag + ".ID").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")))) {
-                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("TagsCommand.FormatOn")
-                            .replace("%tag%", plugin.getConfig().getString("Tags." + tag + ".Display"))));
+                event.getWhoClicked().closeInventory();
+                for (String tag : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
+                    if (plugin.getConfig().getString("Tags." + tag + ".ID").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")))) {
+                        event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("TagsCommand.FormatOn")
+                                .replace("%tag%", plugin.getConfig().getString("Tags." + tag + ".Display"))));
+                    }
                 }
-            }
+            } else event.setCancelled(true);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aEnder Chest."))) {
             event.setCancelled(true);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aInventory Inspect")))

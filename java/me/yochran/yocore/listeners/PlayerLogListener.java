@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,8 @@ public class PlayerLogListener implements Listener {
                         if (staff.hasPermission("yocore.chats.staff"))
                             staff.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Staff.Message")
                                     .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                                    .replace("%server%", plugin.getConfig().getString("ServerName"))));
+                                    .replace("%server%", plugin.getConfig().getString("ServerName"))
+                                    .replace("%world%", event.getPlayer().getWorld().getName())));
                     }
                 }
             }
@@ -98,7 +100,8 @@ public class PlayerLogListener implements Listener {
             if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())
                     || plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                     || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) event.setJoinMessage("");
-            else event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+            else event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
+                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
         }
     }
 
@@ -118,7 +121,8 @@ public class PlayerLogListener implements Listener {
                     if (staff.hasPermission("yocore.chats.staff")) {
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                                .replace("%server%", plugin.getConfig().getString("ServerName"))));
+                                .replace("%server%", plugin.getConfig().getString("ServerName"))
+                                .replace("%world%", event.getPlayer().getWorld().getName())));
                     }
                 }
             }
@@ -126,7 +130,8 @@ public class PlayerLogListener implements Listener {
 
         if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
             if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setQuitMessage("");
-            else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+            else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
+                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
         }
 
         plugin.player_permissions.remove(event.getPlayer().getUniqueId());
