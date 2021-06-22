@@ -53,7 +53,7 @@ public class FreezeCommand implements CommandExecutor {
             target.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.TargetMessageOn")));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.FreezeOn")
                             .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                             .replace("%target%", playerManagement.getPlayerColor(target))));
@@ -67,7 +67,7 @@ public class FreezeCommand implements CommandExecutor {
             target.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.TargetMessageOff")));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.FreezeOff")
                             .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                             .replace("%target%", playerManagement.getPlayerColor(target))));

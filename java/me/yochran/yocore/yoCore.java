@@ -12,11 +12,17 @@ import me.yochran.yocore.commands.stats.StatsCommand;
 import me.yochran.yocore.commands.stats.staff.ResetStatsCommand;
 import me.yochran.yocore.data.*;
 import me.yochran.yocore.listeners.*;
+import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,8 +36,10 @@ public final class yoCore extends JavaPlugin {
     public GrantData grantData;
     public StatsData statsData;
     public EconomyData economyData;
+    public PermissionsData permissionsData;
 
     private PunishmentManagement punishmentManagement;
+    private PermissionManagement permissionManagement;
 
     public boolean chat_muted;
 
@@ -49,6 +57,10 @@ public final class yoCore extends JavaPlugin {
         registerTags();
 
         punishmentManagement = new PunishmentManagement();
+        permissionManagement = new PermissionManagement();
+
+        permissionManagement.initialize();
+        for (Player players : Bukkit.getOnlinePlayers()) permissionManagement.setupPlayer(players);
 
         refreshPunishments();
 
@@ -61,25 +73,19 @@ public final class yoCore extends JavaPlugin {
     public List<String> tags = new ArrayList<>();
     public List<UUID> vanished_players = new ArrayList<>();
     public List<UUID> staff_alerts = new ArrayList<>();
-
     public List<UUID> frozen_players = new ArrayList<>();
-    public Map<UUID, List<Double>> frozen_coordinates = new HashMap<>();
-
     public List<UUID> modmode_players = new ArrayList<>();
-    public Map<UUID, ItemStack[]> inventory_contents = new HashMap<>();
-    public Map<UUID, ItemStack[]> armor_contents = new HashMap<>();
-
     public List<UUID> buildmode_players = new ArrayList<>();
-
     public List<UUID> message_toggled = new ArrayList<>();
     public List<UUID> message_sounds_toggled = new ArrayList<>();
     public List<UUID> chat_toggled = new ArrayList<>();
-    public Map<UUID, UUID> reply = new HashMap<>();
-
-    public Map<UUID, String> chat_color = new HashMap<>();
-
     public List<UUID> tsb = new ArrayList<>();
-
+    public List<UUID> grant_custom_reason = new ArrayList<>();
+    public Map<UUID, ItemStack[]> inventory_contents = new HashMap<>();
+    public Map<UUID, ItemStack[]> armor_contents = new HashMap<>();
+    public Map<UUID, List<Double>> frozen_coordinates = new HashMap<>();
+    public Map<UUID, UUID> reply = new HashMap<>();
+    public Map<UUID, String> chat_color = new HashMap<>();
     public Map<UUID, Boolean> muted_players = new HashMap();
     public Map<UUID, Boolean> banned_players = new HashMap<>();
     public Map<UUID, String> blacklisted_players = new HashMap<>();
@@ -90,12 +96,10 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, String> grant_type = new HashMap<>();
     public Map<UUID, String> grant_duration = new HashMap<>();
     public Map<UUID, String> grant_reason = new HashMap<>();
-
-    public List<UUID> grant_custom_reason = new ArrayList<>();
-
     public Map<UUID, String> rank_disguise = new HashMap<>();
     public Map<UUID, String> nickname = new HashMap<>();
     public Map<UUID, String> tag = new HashMap<>();
+    public Map<UUID, PermissionAttachment> player_permissions = new HashMap<>();
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
@@ -155,25 +159,21 @@ public final class yoCore extends JavaPlugin {
         economyData.saveData();
         economyData.reloadData();
 
+        permissionsData = new PermissionsData();
+        permissionsData.setupData();
+        permissionsData.saveData();
+        permissionsData.reloadData();
+
         new BukkitRunnable() {
             @Override
-            public void run() { playerData.saveData(); }
-        }.runTaskLater(this, 10);
-        new BukkitRunnable() {
-            @Override
-            public void run() { punishmentData.saveData(); }
-        }.runTaskLater(this, 10);
-        new BukkitRunnable() {
-            @Override
-            public void run() { grantData.saveData(); }
-        }.runTaskLater(this, 10);
-        new BukkitRunnable() {
-            @Override
-            public void run() { statsData.saveData(); }
-        }.runTaskLater(this, 10);
-        new BukkitRunnable() {
-            @Override
-            public void run() { economyData.saveData(); }
+            public void run() {
+                playerData.saveData();
+                punishmentData.saveData();
+                grantData.saveData();
+                economyData.saveData();
+                statsData.saveData();
+                permissionsData.saveData();
+            }
         }.runTaskLater(this, 10);
     }
 
@@ -183,8 +183,25 @@ public final class yoCore extends JavaPlugin {
     }
 
     private void registerTags() {
-        for (String tag : getConfig().getConfigurationSection("Tags").getKeys(false))
+        for (Permission tag_permission : getServer().getPluginManager().getPermissions()) {
+            if (tag_permission.getName().contains("yocore.tags."))
+                getServer().getPluginManager().removePermission(tag_permission);
+        }
+
+        for (String tag : getConfig().getConfigurationSection("Tags").getKeys(false)) {
+            List<Permission> permissions = new ArrayList<>();
+            permissions.addAll(getServer().getPluginManager().getPermissions());
+            Permission permission = new Permission(getConfig().getString("Tags." + tag + ".Permission"));
+
+            if (!permissions.contains(permission)) {
+                permission.setDescription("Permission");
+                permission.setDefault(PermissionDefault.FALSE);
+
+                getServer().getPluginManager().addPermission(permission);
+            }
+
             tags.add(getConfig().getString("Tags." + tag + ".ID"));
+        }
     }
 
     private void refreshPunishments() {
@@ -285,5 +302,6 @@ public final class yoCore extends JavaPlugin {
         getCommand("RealName").setExecutor(new RealNameCommand());
         getCommand("Tags").setExecutor(new TagsCommand());
         getCommand("Tag").setExecutor(new TagCommand());
+        getCommand("User").setExecutor(new UserCommand());
     }
 }

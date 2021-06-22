@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -12,6 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -19,6 +23,7 @@ import java.util.*;
 public class RankCommand implements CommandExecutor {
 
     private final yoCore plugin;
+    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public RankCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -62,9 +67,8 @@ public class RankCommand implements CommandExecutor {
                         .replace("%rank%", args[1])));
 
                 List<Integer> ranks = new ArrayList<>();
-                for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false)) {
+                for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false))
                     ranks.add(plugin.getConfig().getInt("Ranks." + rank + ".Priority"));
-                }
 
                 int priority = Collections.max(ranks) + 1;
 
@@ -140,7 +144,6 @@ public class RankCommand implements CommandExecutor {
                 }
 
                 plugin.ranks.remove(args[1].toUpperCase());
-
 
                 break;
             case "prefix":
@@ -274,7 +277,6 @@ public class RankCommand implements CommandExecutor {
                         .replace("%item%", name)));
 
                 break;
-            case "permission":
             case "grantpermission":
                 if (args.length != 3) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
@@ -286,8 +288,16 @@ public class RankCommand implements CommandExecutor {
                     return true;
                 }
 
+                plugin.getServer().getPluginManager().removePermission(plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".GrantPermission"));
+
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantPermission", args[2]);
                 plugin.saveConfig();
+
+                Permission permission = new Permission(args[2]);
+                permission.setDescription("Permission");
+                permission.setDefault(PermissionDefault.FALSE);
+
+                plugin.getServer().getPluginManager().addPermission(permission);
 
                 for (Player player1 : Bukkit.getOnlinePlayers()) {
                     for (Team team : player1.getScoreboard().getTeams())
@@ -297,6 +307,97 @@ public class RankCommand implements CommandExecutor {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantPermissionChanged")
                         .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
                         .replace("%permission%", args[2])));
+
+                break;
+            case "permission":
+            case "permissions":
+                if (!plugin.ranks.contains(args[1].toUpperCase())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidRank")));
+                    return true;
+                }
+
+                if (!args[2].equalsIgnoreCase("add")
+                        && !args[2].equalsIgnoreCase("remove")
+                        && !args[2].equalsIgnoreCase("list")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                    return true;
+                }
+
+                switch (args[2].toLowerCase()) {
+                    case "add":
+                        if (args.length != 4) {
+                            sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                            return true;
+                        }
+
+                        permissionManagement.addRankPermission(args[1].toUpperCase(), args[3]);
+
+                        for (Player players : Bukkit.getOnlinePlayers()) {
+                            if (plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank").equalsIgnoreCase(args[1].toUpperCase())) {
+                                players.removeAttachment(plugin.player_permissions.get(players.getUniqueId()));
+                                plugin.player_permissions.remove(players.getUniqueId());
+
+                                PermissionAttachment attachment = players.addAttachment(plugin);
+                                attachment.setPermission(args[2], false);
+                                plugin.player_permissions.put(players.getUniqueId(), attachment);
+
+                                players.recalculatePermissions();
+                                permissionManagement.setupPlayer(players);
+                            }
+                        }
+
+                        sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PermissionAdded")
+                                .replace("%permission%", args[3])
+                                .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))));
+
+                        break;
+                    case "remove":
+                        if (args.length != 4) {
+                            sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                            return true;
+                        }
+
+                        permissionManagement.removeRankPermission(args[1].toUpperCase(), args[3]);
+
+                        for (Player players : Bukkit.getOnlinePlayers()) {
+                            if (plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank").equalsIgnoreCase(args[1].toUpperCase())) {
+                                players.removeAttachment(plugin.player_permissions.get(players.getUniqueId()));
+                                plugin.player_permissions.remove(players.getUniqueId());
+
+                                PermissionAttachment attachment = players.addAttachment(plugin);
+                                attachment.setPermission(args[2], false);
+                                plugin.player_permissions.put(players.getUniqueId(), attachment);
+
+                                players.recalculatePermissions();
+                                permissionManagement.setupPlayer(players);
+                            }
+                        }
+
+                        sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PermissionRemoved")
+                                .replace("%permission%", args[3])
+                                .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))));
+
+                        break;
+                    case "list":
+                        if (args.length != 3) {
+                            sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                            return true;
+                        }
+
+                        List<String> rank_permissions = permissionManagement.getRankPermissions(args[1].toUpperCase());
+
+                        String permissions = "";
+                        for (String perm : rank_permissions) {
+                            if (permissions.equalsIgnoreCase("")) permissions = "&7 - " + perm;
+                            else permissions = permissions + "\n&7 - " + perm;
+                        }
+
+                        sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.RankPermissions")
+                                .replace("%permissions%", permissions)
+                                .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))));
+
+                        break;
+                }
 
                 break;
         }

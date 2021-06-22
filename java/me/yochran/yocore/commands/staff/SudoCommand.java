@@ -55,7 +55,7 @@ public class SudoCommand implements CommandExecutor {
                     .replace("%command%", toRun)));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoCommand")
                             .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                             .replace("%target%", playerManagement.getPlayerColor(target))
@@ -69,7 +69,7 @@ public class SudoCommand implements CommandExecutor {
                     .replace("%message%", toRun)));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoMessage")
                             .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                             .replace("%target%", playerManagement.getPlayerColor(target))

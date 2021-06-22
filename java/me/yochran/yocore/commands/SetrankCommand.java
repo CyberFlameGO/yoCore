@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -12,8 +13,9 @@ import org.bukkit.entity.Player;
 
 public class SetrankCommand implements CommandExecutor {
 
-    private yoCore plugin;
-    private PlayerManagement playerManagement = new PlayerManagement();
+    private final yoCore plugin;
+    private final PlayerManagement playerManagement = new PlayerManagement();
+    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public SetrankCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -45,7 +47,7 @@ public class SetrankCommand implements CommandExecutor {
         plugin.playerData.config.set(target.getUniqueId().toString() + ".Rank", args[1].toUpperCase());
         plugin.playerData.saveData();
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + target.getName() + " group set " + args[1].toUpperCase());
+        if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
         if (target.isOnline())
             Bukkit.getPlayer(target.getUniqueId()).sendMessage(Utils.translate(plugin.getConfig().getString("SetRank.TargetMessage")

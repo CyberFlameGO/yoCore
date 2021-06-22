@@ -50,7 +50,7 @@ public class TeleportCommands implements CommandExecutor {
                             .replace("%target%", playerManagement.getPlayerColor(target))));
 
                     for (Player staff : Bukkit.getOnlinePlayers()) {
-                        if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                        if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                             staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.Teleport")
                                     .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                                     .replace("%target%", playerManagement.getPlayerColor(target))));
@@ -71,7 +71,7 @@ public class TeleportCommands implements CommandExecutor {
                             .replace("%target2%", playerManagement.getPlayerColor(target2))));
 
                     for (Player staff : Bukkit.getOnlinePlayers()) {
-                        if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                        if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                             staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.TeleportTwo")
                                     .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                                     .replace("%target1%", playerManagement.getPlayerColor(target1))
@@ -99,7 +99,7 @@ public class TeleportCommands implements CommandExecutor {
                         .replace("%target%", playerManagement.getPlayerColor(target))));
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
-                    if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.TeleportHere")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                                 .replace("%target%", playerManagement.getPlayerColor(target))));
@@ -118,7 +118,7 @@ public class TeleportCommands implements CommandExecutor {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportAll")));
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
-                    if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.TeleportAll")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }

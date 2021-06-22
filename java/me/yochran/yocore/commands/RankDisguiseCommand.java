@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Locale;
 
@@ -22,6 +23,11 @@ public class RankDisguiseCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankDisguise.MustBePlayer")));
+            return true;
+        }
+
         if (!sender.hasPermission("yocore.rankdisguise")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankDisguise.NoPermission")));
             return true;

@@ -41,7 +41,7 @@ public class BroadcastCommand implements CommandExecutor {
                     .replace("%message%", message)));
 
         for (Player staff : Bukkit.getOnlinePlayers()) {
-            if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+            if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.Broadcast")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%message%", message)));

@@ -48,7 +48,7 @@ public class ModmodeCommand implements CommandExecutor {
                 enterModmode((Player) sender);
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
-                    if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOnSelf")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
@@ -71,7 +71,7 @@ public class ModmodeCommand implements CommandExecutor {
                 plugin.armor_contents.remove(((Player) sender).getUniqueId());
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
-                    if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOffSelf")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
@@ -93,7 +93,7 @@ public class ModmodeCommand implements CommandExecutor {
                 enterModmode(target);
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
-                    if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOnOther")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                                 .replace("%target%", playerManagement.getPlayerColor(target))));
@@ -119,7 +119,7 @@ public class ModmodeCommand implements CommandExecutor {
                 plugin.armor_contents.remove(target.getUniqueId());
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
-                    if (staff.hasPermission("yocore.chats.staff") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOffOther")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                                 .replace("%target%", playerManagement.getPlayerColor(target))));
