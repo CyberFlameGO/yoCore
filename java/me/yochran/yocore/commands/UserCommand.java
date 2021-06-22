@@ -56,17 +56,7 @@ public class UserCommand implements CommandExecutor {
                 }
 
                 permissionManagement.addPlayerPermission(target, args[2]);
-                if (target.isOnline()) {
-                    Bukkit.getPlayer(target.getUniqueId()).removeAttachment(plugin.player_permissions.get(Bukkit.getPlayer(target.getUniqueId()).getUniqueId()));
-                    plugin.player_permissions.remove(Bukkit.getPlayer(target.getUniqueId()).getUniqueId());
-
-                    PermissionAttachment attachment = Bukkit.getPlayer(target.getUniqueId()).addAttachment(plugin);
-                    attachment.setPermission(args[2], false);
-                    plugin.player_permissions.put(Bukkit.getPlayer(target.getUniqueId()).getUniqueId(), attachment);
-
-                    Bukkit.getPlayer(target.getUniqueId()).recalculatePermissions();
-                    permissionManagement.setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
-                }
+                if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("UserCommand.PermissionAdded")
                         .replace("%target%", playerManagement.getPlayerColor(target))
@@ -80,17 +70,7 @@ public class UserCommand implements CommandExecutor {
                 }
 
                 permissionManagement.removePlayerPermission(target, args[2]);
-                if (target.isOnline()) {
-                    Bukkit.getPlayer(target.getUniqueId()).removeAttachment(plugin.player_permissions.get(Bukkit.getPlayer(target.getUniqueId()).getUniqueId()));
-                    plugin.player_permissions.remove(Bukkit.getPlayer(target.getUniqueId()).getUniqueId());
-
-                    PermissionAttachment attachment = Bukkit.getPlayer(target.getUniqueId()).addAttachment(plugin);
-                    attachment.setPermission(args[2], false);
-                    plugin.player_permissions.put(Bukkit.getPlayer(target.getUniqueId()).getUniqueId(), attachment);
-
-                    Bukkit.getPlayer(target.getUniqueId()).recalculatePermissions();
-                    permissionManagement.setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
-                }
+                if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("UserCommand.PermissionRemoved")
                         .replace("%target%", playerManagement.getPlayerColor(target))

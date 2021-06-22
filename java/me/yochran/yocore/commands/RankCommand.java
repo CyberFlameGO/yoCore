@@ -82,6 +82,9 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.ranks.add(args[1].toUpperCase());
 
+                plugin.permissionsData.config.set("Ranks." + args[1].toUpperCase() + ".Permissions", new ArrayList<>());
+                plugin.permissionsData.saveData();
+
                 for (Player player1 : Bukkit.getOnlinePlayers()) {
                     for (Team team : player1.getScoreboard().getTeams())
                         player1.getScoreboard().getTeam(team.getName()).unregister();
@@ -137,6 +140,9 @@ public class RankCommand implements CommandExecutor {
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase(), null);
                 plugin.saveConfig();
+
+                plugin.permissionsData.config.set("Ranks." + args[1].toUpperCase() + ".Permissions", null);
+                plugin.permissionsData.saveData();
 
                 for (Player player1 : Bukkit.getOnlinePlayers()) {
                     for (Team team : player1.getScoreboard().getTeams())
@@ -333,17 +339,8 @@ public class RankCommand implements CommandExecutor {
                         permissionManagement.addRankPermission(args[1].toUpperCase(), args[3]);
 
                         for (Player players : Bukkit.getOnlinePlayers()) {
-                            if (plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank").equalsIgnoreCase(args[1].toUpperCase())) {
-                                players.removeAttachment(plugin.player_permissions.get(players.getUniqueId()));
-                                plugin.player_permissions.remove(players.getUniqueId());
-
-                                PermissionAttachment attachment = players.addAttachment(plugin);
-                                attachment.setPermission(args[2], false);
-                                plugin.player_permissions.put(players.getUniqueId(), attachment);
-
-                                players.recalculatePermissions();
-                                permissionManagement.setupPlayer(players);
-                            }
+                            if (plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank").equalsIgnoreCase(args[1].toUpperCase()))
+                                permissionManagement.refreshPlayer(players);
                         }
 
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PermissionAdded")
@@ -360,17 +357,8 @@ public class RankCommand implements CommandExecutor {
                         permissionManagement.removeRankPermission(args[1].toUpperCase(), args[3]);
 
                         for (Player players : Bukkit.getOnlinePlayers()) {
-                            if (plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank").equalsIgnoreCase(args[1].toUpperCase())) {
-                                players.removeAttachment(plugin.player_permissions.get(players.getUniqueId()));
-                                plugin.player_permissions.remove(players.getUniqueId());
-
-                                PermissionAttachment attachment = players.addAttachment(plugin);
-                                attachment.setPermission(args[2], false);
-                                plugin.player_permissions.put(players.getUniqueId(), attachment);
-
-                                players.recalculatePermissions();
-                                permissionManagement.setupPlayer(players);
-                            }
+                            if (plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank").equalsIgnoreCase(args[1].toUpperCase()))
+                                permissionManagement.refreshPlayer(players);
                         }
 
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PermissionRemoved")

@@ -25,7 +25,7 @@ public class SudoCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.hasPermission("yocore.speed")) {
+        if (!sender.hasPermission("yocore.sudo")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.NoPermission")));
             return true;
         }
