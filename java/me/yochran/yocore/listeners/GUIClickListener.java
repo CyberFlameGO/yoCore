@@ -144,7 +144,7 @@ public class GUIClickListener implements Listener {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
                 } else {
                     previousRank = "N/A";
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + target.getName() + " add " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "user " + target.getName() + " add " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
                 }
 
                 System.out.println(plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
@@ -182,7 +182,7 @@ public class GUIClickListener implements Listener {
             plugin.grantData.saveData();
 
             if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Type").equalsIgnoreCase("RANK")) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
-            else Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"pex user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
+            else Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
 
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));
@@ -230,7 +230,7 @@ public class GUIClickListener implements Listener {
             event.getWhoClicked().closeInventory();
             for (String tag : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
                 if (plugin.getConfig().getString("Tags." + tag + ".ID").equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getLore().get(1).replace("Tag: ", "")))) {
-                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("TagCommand.FormatOn")
+                    event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("TagsCommand.FormatOn")
                             .replace("%tag%", plugin.getConfig().getString("Tags." + tag + ".Display"))));
                 }
             }

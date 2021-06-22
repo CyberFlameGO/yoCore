@@ -4,12 +4,10 @@ import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.UUID;
-
 public class GrantManagement {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
+    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public GrantManagement() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -83,7 +81,10 @@ public class GrantManagement {
 
         if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Type").equalsIgnoreCase("RANK"))
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
-        else Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
+        else {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "user " + Bukkit.getOfflinePlayer(target.getUniqueId()).getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
+            if (Bukkit.getPlayer(target.getUniqueId()) != null) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
+        }
     }
 
     public void clearHistory(OfflinePlayer target) {

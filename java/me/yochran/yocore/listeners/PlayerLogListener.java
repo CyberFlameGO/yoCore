@@ -18,6 +18,7 @@ public class PlayerLogListener implements Listener {
     private final GrantManagement grantManagement = new GrantManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
     private final StatsManagement statsManagement = new StatsManagement();
+    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public PlayerLogListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -30,6 +31,8 @@ public class PlayerLogListener implements Listener {
         if (!plugin.grantData.config.contains(event.getPlayer().getUniqueId().toString())) grantManagement.setupPlayer(event.getPlayer());
         if (!economyManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer())) economyManagement.setupPlayer(event.getPlayer());
         if (!statsManagement.isInitialized(event.getPlayer().getWorld().getName(), event.getPlayer())) statsManagement.setupPlayer(event.getPlayer());
+
+        permissionManagement.setupPlayer(event.getPlayer());
 
         if (plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()) && !plugin.playerData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".Name", event.getPlayer().getName());
@@ -110,8 +113,11 @@ public class PlayerLogListener implements Listener {
             }
         }
 
-        if (plugin.getConfig().getBoolean("QuitMessage.Enabled"))
+        if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
             if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) event.setQuitMessage("");
             else event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message").replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+        }
+
+        plugin.player_permissions.remove(event.getPlayer().getUniqueId());
     }
 }
