@@ -45,7 +45,8 @@ public class StaffChatCommand implements CommandExecutor {
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%message%", message)
-                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))
+                        .replace("%world%", ((Player) sender).getWorld().getName())));
             }
         }
 

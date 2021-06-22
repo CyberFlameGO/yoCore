@@ -45,7 +45,8 @@ public class ManagementChatCommand implements CommandExecutor {
                 managers.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%message%", message)
-                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))
+                        .replace("%world%", ((Player) sender).getWorld().getName())));
             }
         }
 

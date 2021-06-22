@@ -35,45 +35,85 @@ public class SudoCommand implements CommandExecutor {
             return true;
         }
 
-        Player target = Bukkit.getPlayer(args[0]);
-        if (target == null) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.InvalidPlayer")));
-            return true;
-        }
+        if (!args[0].equalsIgnoreCase("*")) {
+            Player target = Bukkit.getPlayer(args[0]);
+            if (target == null) {
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.InvalidPlayer")));
+                return true;
+            }
 
-        String toRun = "";
-        for (int i = 1; i < args.length; i++) {
-            if (toRun.equalsIgnoreCase("")) toRun = args[i];
-            else toRun = toRun + " " + args[i];
-        }
+            String toRun = "";
+            for (int i = 1; i < args.length; i++) {
+                if (toRun.equalsIgnoreCase("")) toRun = args[i];
+                else toRun = toRun + " " + args[i];
+            }
 
-        if (args[1].startsWith("/")) {
-            target.performCommand(toRun.replaceFirst("/", ""));
+            if (args[1].startsWith("/")) {
+                target.performCommand(toRun.replaceFirst("/", ""));
 
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.ExecutorMessageCommand")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%command%", toRun)));
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.ExecutorMessageCommand")
+                        .replace("%target%", playerManagement.getPlayerColor(target))
+                        .replace("%command%", toRun)));
 
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoCommand")
-                            .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                            .replace("%target%", playerManagement.getPlayerColor(target))
-                            .replace("%command%", toRun)));
+                for (Player staff : Bukkit.getOnlinePlayers()) {
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                        staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoCommand")
+                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                                .replace("%target%", playerManagement.getPlayerColor(target))
+                                .replace("%command%", toRun)));
+                }
+            } else {
+                target.chat(toRun);
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.ExecutorMessageMessage")
+                        .replace("%target%", playerManagement.getPlayerColor(target))
+                        .replace("%message%", toRun)));
+
+                for (Player staff : Bukkit.getOnlinePlayers()) {
+                    if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                        staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoMessage")
+                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                                .replace("%target%", playerManagement.getPlayerColor(target))
+                                .replace("%message%", toRun)));
+                }
             }
         } else {
-            target.chat(toRun);
+            for (Player target : Bukkit.getOnlinePlayers()) {
+                String toRun = "";
+                for (int i = 1; i < args.length; i++) {
+                    if (toRun.equalsIgnoreCase("")) toRun = args[i];
+                    else toRun = toRun + " " + args[i];
+                }
 
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.ExecutorMessageMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%message%", toRun)));
+                if (args[1].startsWith("/")) {
+                    target.performCommand(toRun.replaceFirst("/", ""));
 
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoMessage")
-                            .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.ExecutorMessageCommand")
+                            .replace("%target%", playerManagement.getPlayerColor(target))
+                            .replace("%command%", toRun)));
+
+                    for (Player staff : Bukkit.getOnlinePlayers()) {
+                        if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                            staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoCommand")
+                                    .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                                    .replace("%target%", playerManagement.getPlayerColor(target))
+                                    .replace("%command%", toRun)));
+                    }
+                } else {
+                    target.chat(toRun);
+
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Sudo.ExecutorMessageMessage")
                             .replace("%target%", playerManagement.getPlayerColor(target))
                             .replace("%message%", toRun)));
+
+                    for (Player staff : Bukkit.getOnlinePlayers()) {
+                        if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
+                            staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.SudoMessage")
+                                    .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                                    .replace("%target%", playerManagement.getPlayerColor(target))
+                                    .replace("%message%", toRun)));
+                    }
+                }
             }
         }
 

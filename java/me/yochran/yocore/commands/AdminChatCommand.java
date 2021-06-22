@@ -45,7 +45,8 @@ public class AdminChatCommand implements CommandExecutor {
                 admins.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%message%", message)
-                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
+                        .replace("%server%", plugin.getConfig().getString("ServerName"))
+                        .replace("%world%", ((Player) sender).getWorld().getName())));
             }
         }
 

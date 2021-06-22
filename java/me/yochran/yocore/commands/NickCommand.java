@@ -76,7 +76,7 @@ public class NickCommand implements CommandExecutor {
 
             if (args[0].equalsIgnoreCase("off")) {
                 if (!plugin.nickname.containsKey(((Player) sender).getUniqueId())) {
-                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.TargetNotNicked")));
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.NotNicked")));
                     return true;
                 }
 

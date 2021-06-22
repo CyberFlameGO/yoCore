@@ -13,13 +13,11 @@ import me.yochran.yocore.commands.stats.staff.ResetStatsCommand;
 import me.yochran.yocore.data.*;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PermissionManagement;
-import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionDefault;
@@ -38,7 +36,6 @@ public final class yoCore extends JavaPlugin {
     public EconomyData economyData;
     public PermissionsData permissionsData;
 
-    private PunishmentManagement punishmentManagement;
     private PermissionManagement permissionManagement;
 
     public boolean chat_muted;
@@ -53,16 +50,14 @@ public final class yoCore extends JavaPlugin {
         registerCommands();
         registerListeners();
         runRunnables();
+        refreshPunishments();
         registerRanks();
         registerTags();
 
-        punishmentManagement = new PunishmentManagement();
         permissionManagement = new PermissionManagement();
 
         permissionManagement.initialize();
         for (Player players : Bukkit.getOnlinePlayers()) permissionManagement.setupPlayer(players);
-
-        refreshPunishments();
 
         chat_muted = false;
 
