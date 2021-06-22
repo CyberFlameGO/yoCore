@@ -117,25 +117,29 @@ JoinMessage:
   Message: "&7(&a+&7) %player%"
   Staff:
     Enabled: true
-    Message: "&b[S] %player% &3connected to &b%server%&3."
+    Message: "&b[S] %player% &3connected to &b%world%&3."
 
 QuitMessage:
   Enabled: true
   Message: "&7(&c-&7) %player%"
   Staff:
     Enabled: true
-    Message: "&b[S] %player% &3disconnected from &b%server%&3."
+    Message: "&b[S] %player% &3disconnected from &b%world%&3."
+
+WorldChangeAlerts:
+  Enabled: true
+  Format: "&b[S] %player% &3joined &b%new_world% &3from &b%old_world%&3."
 
 RankCommand:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: |-
     &cIncorrect Usage! /rank
     &cArgument 1:
-    &c - <add/remove/prefix/color/display/priority/item/grantpermission/permissions>
+    &c - <add/remove/prefix/color/display/priority/item/gpermission/permissions>
     &cArgument 2:
     &c - <rank>
     &cArgument 3 (Some are optional):
-    &c - [prefix/color/display/priority/grantpermission/add/remove]
+    &c - [prefix/color/display/priority/gpermission/add/remove]
     &cArgument 4 (Permissions only):
     &c - <permission>
   InvalidRank: "&cInvalid Rank!"
@@ -524,19 +528,19 @@ StaffChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /sc <message>"
-  Format: "&b[S] &3[%server%] %player%&7: &b%message%"
+  Format: "&b[S] &3[%world%] %player%&7: &b%message%"
 
 AdminChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /ac <message>"
-  Format: "&c[A] &3[%server%] %player%&7: &b%message%"
+  Format: "&c[A] &3[%world%] %player%&7: &b%message%"
 
 ManagementChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /mc <message>"
-  Format: "&4[M] &3[%server%] %player%&7: &b%message%"
+  Format: "&4[M] &3[%world%] %player%&7: &b%message%"
 
 StaffAlerts:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -951,3 +955,7 @@ ToggleScoreboard:
   MustBePlayer: "&cYou must be a player to use that command."
   ToggleOn: "&bYou have toggled the scoreboard &3on&b."
   ToggleOff: "&bYou have toggled the scoreboard &3off&b."
+
+Bungee:
+  WorldSeparation: true
+  ChatSeparation: true

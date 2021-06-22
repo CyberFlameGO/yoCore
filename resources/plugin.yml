@@ -4,6 +4,8 @@ main: me.yochran.yocore.yoCore
 api-version: 1.16
 authors: [ Yochran ]
 description: Remastered version of the vCores, combined into one plugin.
+loadbefore:
+  - yoBungee
 permissions:
   yocore.resetstats:
     description: Permission
@@ -126,6 +128,8 @@ permissions:
   yocore.mutechat.bypass:
     description: Permission
   yocore.user:
+    description: Permission.
+  yocore.silent:
     description: Permission.
 commands:
   Setrank:
