@@ -161,10 +161,11 @@ public class PermissionManagement {
         plugin.player_permissions.remove(player.getUniqueId());
 
         PermissionAttachment attachment = player.addAttachment(plugin);
+        for (Permission permission : getAllPluginPerms())
+            attachment.setPermission(permission, false);
         plugin.player_permissions.put(player.getUniqueId(), attachment);
 
         player.recalculatePermissions();
         setupPlayer(player);
-        player.recalculatePermissions();
     }
 }

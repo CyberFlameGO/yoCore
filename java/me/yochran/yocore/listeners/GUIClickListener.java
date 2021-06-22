@@ -3,6 +3,7 @@ package me.yochran.yocore.listeners;
 import me.yochran.yocore.commands.GrantCommand;
 import me.yochran.yocore.commands.punishments.HistoryCommand;
 import me.yochran.yocore.management.GrantManagement;
+import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class GUIClickListener implements Listener {
     private final GrantManagement grantManagement = new GrantManagement();
     private final GrantCommand grantCommand = new GrantCommand();
     private final HistoryCommand historyCommand = new HistoryCommand();
+    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public GUIClickListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -147,7 +150,7 @@ public class GUIClickListener implements Listener {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "user " + target.getName() + " add " + plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
                 }
 
-                System.out.println(plugin.grant_grant.get(event.getWhoClicked().getUniqueId()));
+                if (target.isOnline()) permissionManagement.setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
                 if (plugin.grant_duration.get(event.getWhoClicked().getUniqueId()).equalsIgnoreCase("Permanent")) grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), type, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), "Permanent", System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
                 else grantManagement.addGrant(target, event.getWhoClicked().getUniqueId().toString(), type, plugin.grant_grant.get(event.getWhoClicked().getUniqueId()), grantManagement.getGrantDuration(plugin.grant_duration.get(event.getWhoClicked().getUniqueId())), System.currentTimeMillis(), plugin.grant_reason.get(event.getWhoClicked().getUniqueId()), previousRank);
@@ -183,6 +186,8 @@ public class GUIClickListener implements Listener {
 
             if (plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Type").equalsIgnoreCase("RANK")) Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".PreviousRank"));
             else Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
+
+            if (target.isOnline()) permissionManagement.setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));

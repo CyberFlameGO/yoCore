@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerLogListener implements Listener {
 
     private final yoCore plugin;
@@ -46,7 +49,15 @@ public class PlayerLogListener implements Listener {
 
         if (!playerManagement.checkIP(event.getPlayer(), event.getPlayer().getAddress().getAddress().getHostAddress())) {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".IP", event.getPlayer().getAddress().getAddress().getHostAddress());
-            plugin.playerData.config.getStringList(event.getPlayer().getUniqueId().toString() + ".TotalIPs").add(event.getPlayer().getAddress().getAddress().getHostAddress());
+            plugin.playerData.saveData();
+        }
+
+        if (!plugin.playerData.config.getStringList(event.getPlayer().getUniqueId().toString() + ".TotalIPs").contains(event.getPlayer().getAddress().getAddress().getHostAddress())) {
+            List<String> ips = new ArrayList<>();
+            ips.addAll(plugin.playerData.config.getStringList(event.getPlayer().getUniqueId().toString() + ".TotalIPs"));
+            ips.add(event.getPlayer().getAddress().getAddress().getHostAddress());
+
+            plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".TotalIPs", ips);
             plugin.playerData.saveData();
         }
 
