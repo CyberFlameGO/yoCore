@@ -79,19 +79,19 @@ Ranks:
     GrantItem: "GRAY_WOOL"
     GrantPermission: "yocore.grant.default"
 
-ChatFormat: "%player_tag% %player_prefix%&7: &f%message%"
+ChatFormat: "%player_tag%%player_prefix%&7: &f%message%"
 
 # Tag names and IDs MUST be in all caps!
 # Tag IDs MUST match tag names!
 Tags:
   YOCORE:
     ID: "YOCORE"
-    Prefix: "&7[&byoCore&7]"
+    Prefix: "&7[&byoCore&7] &7"
     Display: "&byoCore"
     Permission: "yocore.tags.yocore"
   BETATESTER:
     ID: "BETATESTER"
-    Prefix: "&7[&3Beta-Tester&7]"
+    Prefix: "&7[&3Beta-Tester&7] &7"
     Display: "&3Beta-Tester"
     Permission: "yocore.tags.betatester"
 
@@ -796,6 +796,14 @@ Seen:
     %all_ips%
     &7&m-----------------------
 
+Powertool:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /pt <command/off>"
+  InvalidItem: "&cInvalid Item! (Hold it in your hand)"
+  FormatOn: "&bYou have set the command for &3%item% &bto &3%command%&b."
+  FormatOff: "&bYou have removed the powertool for this item."
+
 Nametags:
   Enabled: true
   Vanish:
@@ -874,6 +882,7 @@ Bounty:
 
 Unbounty:
   MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /unbounty <player>"
   InvalidPlayer: "&cInvalid Player!"
   PlayerNotBountied: "&cPlayer is not bountied!"
@@ -956,6 +965,53 @@ ToggleScoreboard:
   ToggleOn: "&bYou have toggled the scoreboard &3on&b."
   ToggleOff: "&bYou have toggled the scoreboard &3off&b."
 
-Bungee:
+Servers:
   WorldSeparation: true
   ChatSeparation: true
+  Hub:
+    World: "world"
+    HubEveryJoin: true
+    Command:
+      Enabled: true
+      MustBePlayer: "&cYou must be a player to use that command."
+      CommandNotEnabled: "&cHub command is not enabled."
+      Format: "&bYou have sent yourself to the hub."
+
+Find:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /find <player>"
+  InvalidPlayer: "&cInvalid Player!"
+  Format: "%target% &bis connected to &3%server%&b."
+
+ServerCommand:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /server <server>"
+  InvalidServer: "&cInvalid Server!"
+  Format: "&bYou have sent yourself to &3%server%&b."
+
+Send:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /send <player> <server>"
+  InvalidPlayer: "&cInvalid Player!"
+  InvalidServer: "&cInvalid Server!"
+  ExecutorMessage: "&bYou have sent %target% &bto &3%server%&b."
+  TargetMessage: "&bYou have been summoned to &3%server%&b."
+
+GList:
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /glist <server/showall>"
+  InvalidServer: "&cInvalid Server!"
+  Format: |-
+    &7&m---------------------------
+    &7(&3%server%&7) &3online: &b%server_online%&3.
+    &7 -
+    %online_players%
+    &7&m---------------------------
+
+Spawn:
+  MustBePlayer: "&cYou must be a player to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /spawn [player]"
+  InvalidPlayer: "&cInvalid Player!"
+  ExecutorMessage: "&bYou have sent %target% &bto spawn."
+  TargetMessage: "&bYou have been sent to spawn."

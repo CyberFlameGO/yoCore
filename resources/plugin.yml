@@ -131,6 +131,16 @@ permissions:
     description: Permission.
   yocore.silent:
     description: Permission.
+  yocore.powertool:
+    description: Permission.
+  yocore.find:
+    description: Permission.
+  yocore.server:
+    description: Permission.
+  yocore.send:
+    description: Permission.
+  yocore.glist:
+    description: Permission.
 commands:
   Setrank:
     description: Set a players rank.
@@ -328,3 +338,19 @@ commands:
   User:
     description: Add remove or list permissions under a user.
     aliases: player
+  Powertool:
+    description: Set a powertool.
+    aliases: pt
+  Find:
+    description: Find a player connected to the server.
+  Server:
+    description: Send yourself to a server.
+  Send:
+    description: Send yourself or another player to a server.
+  GList:
+    description: List all servers and their players.
+  Hub:
+    description: Travel to the hub server.
+    aliases: [lobby, l]
+  Spawn:
+    description: Travel to spawn.
