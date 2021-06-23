@@ -1,6 +1,7 @@
 package me.yochran.yocore;
 
 import me.yochran.yocore.commands.*;
+import me.yochran.yocore.commands.bungee.*;
 import me.yochran.yocore.commands.economy.BalanceCommand;
 import me.yochran.yocore.commands.economy.BountyCommand;
 import me.yochran.yocore.commands.economy.PayCommand;
@@ -16,6 +17,8 @@ import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
@@ -35,6 +38,7 @@ public final class yoCore extends JavaPlugin {
     public StatsData statsData;
     public EconomyData economyData;
     public PermissionsData permissionsData;
+    public WorldData worldData;
 
     private PermissionManagement permissionManagement;
 
@@ -57,7 +61,12 @@ public final class yoCore extends JavaPlugin {
         permissionManagement = new PermissionManagement();
 
         permissionManagement.initialize();
-        for (Player players : Bukkit.getOnlinePlayers()) permissionManagement.setupPlayer(players);
+        for (Player players : Bukkit.getOnlinePlayers()) {
+            if (player_permissions.containsKey(players.getUniqueId()))
+                permissionManagement.setupPlayer(players);
+
+            permissionManagement.refreshPlayer(players);
+        }
 
         chat_muted = false;
 
@@ -95,6 +104,8 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, String> nickname = new HashMap<>();
     public Map<UUID, String> tag = new HashMap<>();
     public Map<UUID, PermissionAttachment> player_permissions = new HashMap<>();
+    public Map<UUID, String> powertool_command = new HashMap<>();
+    public Map<UUID, Material> powertool_material = new HashMap<>();
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
@@ -112,6 +123,7 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new ScoreboardSetter(), this);
         manager.registerEvents(new WorldChangeListener(), this);
         manager.registerEvents(new GrantCustomReasonListener(), this);
+        manager.registerEvents(new PlayerInteractListener(), this);
     }
 
     private void runRunnables() {
@@ -123,6 +135,8 @@ public final class yoCore extends JavaPlugin {
             new NametagUpdater().runTaskTimer(this, 0, 5);
         if (getConfig().getBoolean("Scoreboard.Enabled"))
             new ScoreboardUpdater().runTaskTimer(this, 0, 5);
+        if (getConfig().getBoolean("Servers.WorldSeparation"))
+            new WorldSeparator().runTaskTimer(this, 0, 5);
     }
 
     private void registerData() {
@@ -159,6 +173,25 @@ public final class yoCore extends JavaPlugin {
         permissionsData.saveData();
         permissionsData.reloadData();
 
+        worldData = new WorldData();
+
+        worldData.setupData();
+        worldData.saveData();
+        worldData.reloadData();
+
+        for (World world : getServer().getWorlds()) {
+            if (!worldData.config.contains("Servers." + world.getName())) {
+                worldData.config.set("Servers." + world.getName() + ".Enabled", true);
+                worldData.config.set("Servers." + world.getName() + ".World", world.getName());
+                worldData.config.set("Servers." + world.getName() + ".Spawn.X", 0.5);
+                worldData.config.set("Servers." + world.getName() + ".Spawn.Y", 75.0);
+                worldData.config.set("Servers." + world.getName() + ".Spawn.Z", 0.5);
+                worldData.config.set("Servers." + world.getName() + ".Spawn.Yaw", 0.0);
+                worldData.config.set("Servers." + world.getName() + ".Spawn.Pitch", 0.0);
+                worldData.saveData();
+            }
+        }
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -168,13 +201,31 @@ public final class yoCore extends JavaPlugin {
                 economyData.saveData();
                 statsData.saveData();
                 permissionsData.saveData();
+                worldData.saveData();
             }
         }.runTaskLater(this, 10);
     }
 
     private void registerRanks() {
-        for (String rank : getConfig().getConfigurationSection("Ranks").getKeys(false))
+        for (Permission grant_permission : getServer().getPluginManager().getPermissions()) {
+            if (grant_permission.getName().contains("yocore.grant."))
+                getServer().getPluginManager().removePermission(grant_permission);
+        }
+
+        for (String rank : getConfig().getConfigurationSection("Ranks").getKeys(false)) {
+            List<Permission> permissions = new ArrayList<>();
+            permissions.addAll(getServer().getPluginManager().getPermissions());
+            Permission permission = new Permission(getConfig().getString("Ranks." + rank + ".GrantPermission"));
+
+            if (!permissions.contains(permission)) {
+                permission.setDescription("Permission");
+                permission.setDefault(PermissionDefault.FALSE);
+
+                getServer().getPluginManager().addPermission(permission);
+            }
+
             ranks.add(getConfig().getString("Ranks." + rank + ".ID"));
+        }
     }
 
     private void registerTags() {
@@ -298,5 +349,12 @@ public final class yoCore extends JavaPlugin {
         getCommand("Tags").setExecutor(new TagsCommand());
         getCommand("Tag").setExecutor(new TagCommand());
         getCommand("User").setExecutor(new UserCommand());
+        getCommand("Powertool").setExecutor(new PowertoolCommand());
+        getCommand("Find").setExecutor(new FindCommand());
+        getCommand("Server").setExecutor(new ServerCommand());
+        getCommand("Send").setExecutor(new SendCommand());
+        getCommand("Glist").setExecutor(new GListCommand());
+        getCommand("Hub").setExecutor(new HubCommand());
+        getCommand("Spawn").setExecutor(new SpawnCommand());
     }
 }
