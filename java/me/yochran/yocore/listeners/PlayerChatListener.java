@@ -84,7 +84,7 @@ public class PlayerChatListener implements Listener {
             event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.GlobalChatAttempt")));
         }
 
-        String message = event.getMessage().replace("&", "");
+        String message = event.getMessage().replace("&", "").replace("%", "%%");
         if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId())) {
             switch (plugin.chat_color.get(event.getPlayer().getUniqueId()).toLowerCase()) {
                 case "dark red": message = "&4" + message; break;
@@ -118,6 +118,8 @@ public class PlayerChatListener implements Listener {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (plugin.chat_toggled.contains(player.getUniqueId()))
+                event.getRecipients().remove(player);
+            if (event.getPlayer().getWorld() != player.getWorld() && plugin.getConfig().getBoolean("Servers.ChatSeparation"))
                 event.getRecipients().remove(player);
         }
     }

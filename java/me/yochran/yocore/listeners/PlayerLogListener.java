@@ -82,6 +82,16 @@ public class PlayerLogListener implements Listener {
                 event.getPlayer().hidePlayer(players);
         }
 
+        if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin")) {
+            playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.World"), event.getPlayer());
+            if (plugin.getConfig().getBoolean("Servers.WorldSeparation")) {
+                for (Player players : Bukkit.getOnlinePlayers()) {
+                    if (!plugin.worldData.config.getString("Servers." + event.getPlayer().getWorld().getName() + ".World").equalsIgnoreCase(players.getWorld().getName()))
+                        players.hidePlayer(event.getPlayer());
+                }
+            }
+        }
+
         if (plugin.getConfig().getBoolean("JoinMessage.Staff.Enabled")) {
             if (!plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId()) && !plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
                 if (event.getPlayer().hasPermission("yocore.chats.staff")) {

@@ -76,4 +76,17 @@ public class PlayerManagement {
 
         plugin.playerData.saveData();
     }
+
+    public void sendToSpawn(String server, Player player) {
+        String world = plugin.worldData.config.getString("Servers." + server + ".World");
+        double X = plugin.worldData.config.getDouble("Servers." + server + ".Spawn.X");
+        double Y = plugin.worldData.config.getDouble("Servers." + server + ".Spawn.Y");
+        double Z = plugin.worldData.config.getDouble("Servers." + server + ".Spawn.Z");
+        double Yaw = plugin.worldData.config.getDouble("Servers." + server + ".Spawn.Yaw");
+        double Pitch = plugin.worldData.config.getDouble("Servers." + server + ".Spawn.Pitch");
+
+        Location location = new Location(Bukkit.getWorld(world), X, Y, Z, (float) Yaw, (float) Pitch);
+
+        player.teleport(location);
+    }
 }

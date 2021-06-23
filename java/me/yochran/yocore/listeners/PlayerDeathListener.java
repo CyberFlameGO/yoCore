@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -108,5 +110,17 @@ public class PlayerDeathListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.setDeathMessage("");
+        new BukkitRunnable() {
+            @Override
+            public void run() { playerManagement.sendToSpawn(event.getEntity().getWorld().getName(), event.getEntity()); }
+        }.runTaskLater(plugin, 1);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        new BukkitRunnable() {
+            @Override
+            public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
+        }.runTaskLater(plugin, 1);
     }
 }

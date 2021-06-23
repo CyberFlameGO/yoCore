@@ -22,6 +22,14 @@ public class WorldChangeListener implements Listener {
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
+        if (plugin.worldData.config.contains("Servers." + event.getPlayer().getWorld().getName())
+                && plugin.worldData.config.getBoolean("Servers." + event.getPlayer().getWorld().getName() + ".Enabled")) {
+            new BukkitRunnable() {
+                @Override
+                public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
+            }.runTaskLater(plugin, 1);
+        }
+
         if (event.getPlayer().hasPermission("yocore.chats.staff")) {
             if (plugin.getConfig().getBoolean("WorldChangeAlerts.Enabled")) {
                 for (Player staff : Bukkit.getOnlinePlayers()) {

@@ -20,8 +20,6 @@ public class VanishUpdater extends BukkitRunnable {
                 if (plugin.vanished_players.contains(staff.getUniqueId())) {
                     if (!players.hasPermission("yocore.vanish"))
                         players.hidePlayer(staff);
-                } else {
-                    players.showPlayer(staff);
                 }
             }
         }

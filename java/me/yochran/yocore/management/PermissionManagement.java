@@ -62,6 +62,16 @@ public class PermissionManagement {
                 }
             }
 
+            if (permission.contains("*") && permission.length() != 1) {
+                String plugin = permission.split("\\.")[0];
+                for (Permission plugin_permission : getAllPluginPerms()) {
+                    if (plugin_permission.getName().contains(plugin)) {
+                        if (permission.startsWith("-")) attachment.setPermission(plugin_permission.getName().replaceFirst("-", ""), false);
+                        else attachment.setPermission(plugin_permission, true);
+                    }
+                }
+            }
+
             if (permission.startsWith("-"))
                 attachment.setPermission(permission.replaceFirst("-", ""), false);
             else attachment.setPermission(permission, true);
@@ -95,6 +105,9 @@ public class PermissionManagement {
 
     public void addRankPermission(String rank, String permission) {
         if (plugin.permissionsData.config.contains("Ranks." + rank + ".Permissions")) {
+            if (plugin.permissionsData.config.getStringList("Ranks." + rank + ".Permissions").contains(permission))
+                return;
+
             List<String> rank_permissions = new ArrayList<>();
 
             rank_permissions.addAll(getRankPermissions(rank));
@@ -112,6 +125,9 @@ public class PermissionManagement {
 
     public void addPlayerPermission(OfflinePlayer player, String permission) {
         if (plugin.permissionsData.config.contains("Players." + player.getUniqueId().toString() + ".Permissions")) {
+            if (plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions").contains(permission))
+                return;
+
             List<String> player_permissions = new ArrayList<>();
 
             player_permissions.addAll(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
@@ -157,7 +173,8 @@ public class PermissionManagement {
     }
 
     public void refreshPlayer(Player player) {
-        player.removeAttachment(plugin.player_permissions.get(player.getUniqueId()));
+        try { player.removeAttachment(plugin.player_permissions.get(player.getUniqueId())); }
+        catch (IllegalArgumentException ignored) {}
         plugin.player_permissions.remove(player.getUniqueId());
 
         PermissionAttachment attachment = player.addAttachment(plugin);
