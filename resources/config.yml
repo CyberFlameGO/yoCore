@@ -665,6 +665,7 @@ Freeze:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /ss <player>"
   InvalidPlayer: "&cInvalid Player!"
+  OnCooldown: "&cYou're on cooldown for that."
   ExecutorMessageOn: "&bYou have &3frozen %target%&b."
   ExecutorMessageOff: "&bYou have &3unfrozen %target%&b."
   TargetMessageOn: |-
@@ -791,6 +792,7 @@ Seen:
     &bUsername: &3%name%
     &bRank: &3%rank%
     &bFirst Joined: &3%firstjoined%
+    &bPlay Time: &3%playtime%
     &bCurrent IP: &3%ip%
     &bAll IPs:
     %all_ips%
@@ -1010,6 +1012,7 @@ GList:
     &7&m---------------------------
 
 Spawn:
+  SpawnOnWorldChange: true
   MustBePlayer: "&cYou must be a player to use that command."
   IncorrectUsage: "&cIncorrect Usage! /spawn [player]"
   InvalidPlayer: "&cInvalid Player!"
