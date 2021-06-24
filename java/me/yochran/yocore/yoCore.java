@@ -357,5 +357,7 @@ public final class yoCore extends JavaPlugin {
         getCommand("Glist").setExecutor(new GListCommand());
         getCommand("Hub").setExecutor(new HubCommand());
         getCommand("Spawn").setExecutor(new SpawnCommand());
+        getCommand("Skull").setExecutor(new SkullCommand());
+        getCommand("ItemName").setExecutor(new ItemNameCommand());
     }
 }
