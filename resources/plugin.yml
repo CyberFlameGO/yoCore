@@ -141,6 +141,10 @@ permissions:
     description: Permission.
   yocore.glist:
     description: Permission.
+  yocore.skull:
+    description: Permission.
+  yocore.itemname:
+    description: Permission.
 commands:
   Setrank:
     description: Set a players rank.
@@ -354,3 +358,8 @@ commands:
     aliases: [lobby, l]
   Spawn:
     description: Travel to spawn.
+  Skull:
+    description: Get a players skull.
+  ItemName:
+    description: Rename an item.
+    aliases: iname

@@ -806,6 +806,19 @@ Powertool:
   FormatOn: "&bYou have set the command for &3%item% &bto &3%command%&b."
   FormatOff: "&bYou have removed the powertool for this item."
 
+Skull:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /skull <player>"
+  Format: "&bYou have given yourself &3%target%&b's skull."
+
+ItemName:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /iname <name>"
+  InvalidItem: "&cInvalid Item! (Hold it in your hand)"
+  Format: "&bYou have set your current item's name to &3%name%&b."
+
 Nametags:
   Enabled: true
   Vanish:
