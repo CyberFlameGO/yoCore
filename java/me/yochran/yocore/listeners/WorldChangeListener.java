@@ -23,7 +23,7 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
         if (plugin.worldData.config.contains("Servers." + event.getPlayer().getWorld().getName())
-                && plugin.worldData.config.getBoolean("Servers." + event.getPlayer().getWorld().getName() + ".Enabled")) {
+                && plugin.worldData.config.getBoolean("Servers." + event.getPlayer().getWorld().getName() + ".Enabled") && plugin.getConfig().getBoolean("Spawn.SpawnOnWorldChange")) {
             new BukkitRunnable() {
                 @Override
                 public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }

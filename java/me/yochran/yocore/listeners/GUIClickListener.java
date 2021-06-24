@@ -126,6 +126,8 @@ public class GUIClickListener implements Listener {
             }.runTaskLater(plugin, 5);
         } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aConfirm the grant."))) {
             if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&2&lConfirm Grant"))) {
+                event.getWhoClicked().closeInventory();
+
                 OfflinePlayer target = Bukkit.getOfflinePlayer(plugin.grant_player.get(event.getWhoClicked().getUniqueId()));
 
                 String grant;
@@ -161,8 +163,6 @@ public class GUIClickListener implements Listener {
                 plugin.grant_reason.remove(event.getWhoClicked().getUniqueId());
                 plugin.grant_duration.remove(event.getWhoClicked().getUniqueId());
 
-                event.getWhoClicked().closeInventory();
-
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&c&lCancel Grant"))) {
                 event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.CancelledGrant")));
                 event.getWhoClicked().closeInventory();
@@ -174,6 +174,9 @@ public class GUIClickListener implements Listener {
                 plugin.grant_duration.remove(event.getWhoClicked().getUniqueId());
             }
         } else if (event.getCurrentItem().getItemMeta().hasLore() && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&aClick to revoke this grant."))) {
+            event.getWhoClicked().closeInventory();
+            event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));
+
             List<String> itemLore = event.getCurrentItem().getItemMeta().getLore();
 
             OfflinePlayer target = Bukkit.getOfflinePlayer(ChatColor.stripColor(event.getView().getTitle().replace("'s grant history.", "")));
@@ -188,9 +191,6 @@ public class GUIClickListener implements Listener {
             else Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"user " + target.getName() + " remove " + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + id + ".Grant"));
 
             if (target.isOnline()) permissionManagement.setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
-
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));
         } else if (event.getCurrentItem().getItemMeta().hasLore()
                 && event.getCurrentItem().getItemMeta().getLore().contains(Utils.translate("&e&m----------------------------"))
                 && event.getInventory().getSize() == 54) {

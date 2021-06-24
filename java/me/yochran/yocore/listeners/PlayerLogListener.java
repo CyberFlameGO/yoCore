@@ -86,7 +86,7 @@ public class PlayerLogListener implements Listener {
             playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.World"), event.getPlayer());
             if (plugin.getConfig().getBoolean("Servers.WorldSeparation")) {
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    if (!plugin.worldData.config.getString("Servers." + event.getPlayer().getWorld().getName() + ".World").equalsIgnoreCase(players.getWorld().getName()))
+                    if (event.getPlayer().getWorld() != players.getWorld())
                         players.hidePlayer(event.getPlayer());
                 }
             }

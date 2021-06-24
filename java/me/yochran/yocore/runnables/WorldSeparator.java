@@ -18,7 +18,7 @@ public class WorldSeparator extends BukkitRunnable {
     public void run() {
         for (Player player1 : Bukkit.getOnlinePlayers()) {
             for (Player player2 : Bukkit.getOnlinePlayers()) {
-                if (!plugin.worldData.config.getString("Servers." + player1.getWorld().getName() + ".World").equalsIgnoreCase(player2.getWorld().getName()))
+                if (player1.getWorld() != player2.getWorld())
                     player1.hidePlayer(player2);
                 else {
                     if (!plugin.vanished_players.contains(player2.getUniqueId()))
