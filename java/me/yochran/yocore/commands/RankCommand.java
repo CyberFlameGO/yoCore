@@ -355,11 +355,11 @@ public class RankCommand implements CommandExecutor {
                             return true;
                         }
 
-                        permissionManagement.addRankPermission(args[1].toUpperCase(), args[3]);
-
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PermissionAdded")
                                 .replace("%permission%", args[3])
                                 .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))));
+
+                        permissionManagement.addRankPermission(args[1].toUpperCase(), args[3]);
 
                         break;
                     case "remove":
@@ -368,11 +368,11 @@ public class RankCommand implements CommandExecutor {
                             return true;
                         }
 
-                        permissionManagement.removeRankPermission(args[1].toUpperCase(), args[3]);
-
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PermissionRemoved")
                                 .replace("%permission%", args[3])
                                 .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))));
+
+                        permissionManagement.removeRankPermission(args[1].toUpperCase(), args[3]);
 
                         break;
                     case "list":

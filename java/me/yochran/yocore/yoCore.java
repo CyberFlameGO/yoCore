@@ -106,6 +106,7 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, PermissionAttachment> player_permissions = new HashMap<>();
     public Map<UUID, String> powertool_command = new HashMap<>();
     public Map<UUID, Material> powertool_material = new HashMap<>();
+    public List<UUID> frozen_cooldown = new ArrayList<>();
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();

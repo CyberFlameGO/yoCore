@@ -55,12 +55,12 @@ public class UserCommand implements CommandExecutor {
                     return true;
                 }
 
-                permissionManagement.addPlayerPermission(target, args[2]);
-                if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
-
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("UserCommand.PermissionAdded")
                         .replace("%target%", playerManagement.getPlayerColor(target))
                         .replace("%permission%", args[2])));
+
+                permissionManagement.addPlayerPermission(target, args[2]);
+                if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
                 break;
             case "remove":
@@ -69,12 +69,12 @@ public class UserCommand implements CommandExecutor {
                     return true;
                 }
 
-                permissionManagement.removePlayerPermission(target, args[2]);
-                if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
-
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("UserCommand.PermissionRemoved")
                         .replace("%target%", playerManagement.getPlayerColor(target))
                         .replace("%permission%", args[2])));
+
+                permissionManagement.removePlayerPermission(target, args[2]);
+                if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
                 break;
             case "list":

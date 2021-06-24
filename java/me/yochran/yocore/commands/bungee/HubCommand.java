@@ -29,7 +29,13 @@ public class HubCommand implements CommandExecutor {
             return true;
         }
 
-        Location location = new Location(Bukkit.getWorld(plugin.getConfig().getString("Servers.Hub.World")), 0.5, 75, 0.5, (float) 0.5, (float) 0.5);
+        double X = plugin.worldData.config.getDouble("Servers." + plugin.getConfig().getString("Servers.Hub.World") + ".Spawn.X");
+        double Y = plugin.worldData.config.getDouble("Servers." + plugin.getConfig().getString("Servers.Hub.World") + ".Spawn.Y");
+        double Z = plugin.worldData.config.getDouble("Servers." + plugin.getConfig().getString("Servers.Hub.World") + ".Spawn.Z");
+        double Yaw = plugin.worldData.config.getDouble("Servers." + plugin.getConfig().getString("Servers.Hub.World") + ".Spawn.Yaw");
+        double Pitch = plugin.worldData.config.getDouble("Servers." + plugin.getConfig().getString("Servers.Hub.World") + ".Spawn.Pitch");
+
+        Location location = new Location(Bukkit.getWorld(plugin.getConfig().getString("Servers.Hub.World")), X, Y, Z, (float) Yaw, (float) Pitch);
         ((Player) sender).teleport(location);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Servers.Hub.Command.Format")));

@@ -16,6 +16,7 @@ import java.util.List;
 public class ServerCommand implements CommandExecutor {
 
     private final yoCore plugin;
+    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ServerCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -49,8 +50,7 @@ public class ServerCommand implements CommandExecutor {
             return true;
         }
 
-        Location location = new Location(Bukkit.getWorld(args[0]), 0.5, 75, 0.5);
-        ((Player) sender).teleport(location);
+        playerManagement.sendToSpawn(Bukkit.getWorld(args[0]).getName(), (Player) sender);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ServerCommand.Format")
                 .replace("%server%", Bukkit.getWorld(args[0]).getName())));

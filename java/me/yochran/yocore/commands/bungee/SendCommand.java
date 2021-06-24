@@ -51,8 +51,7 @@ public class SendCommand implements CommandExecutor {
             return true;
         }
 
-        Location location = new Location(Bukkit.getWorld(args[1]), 0.5, 75, 0.5);
-        target.teleport(location);
+        playerManagement.sendToSpawn(Bukkit.getWorld(args[1]).getName(), target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Send.ExecutorMessage")
                 .replace("%target%", playerManagement.getPlayerColor(target))

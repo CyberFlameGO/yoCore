@@ -5,12 +5,14 @@ import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SeenCommand implements CommandExecutor {
 
@@ -40,17 +42,24 @@ public class SeenCommand implements CommandExecutor {
         }
 
         String ip;
-        if (sender.hasPermission("yocore.seen.ip")) { ip = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
-        } else { ip = "Hidden"; }
+        if (sender.hasPermission("yocore.seen.ip"))
+            ip = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
+        else ip = "Hidden";
+
         String rank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
         String rankDisplay = plugin.getConfig().getString("Ranks." + rank + ".Display");
+
+        long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
+        long hours = (ticks / 20) / 3600;
+        String playTime = hours + " hours.";
+
         String allIPsMessage = "";
         if (sender.hasPermission("yocore.seen.ip")) {
             for (String entry : plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs")) {
                 if (allIPsMessage.equalsIgnoreCase("")) allIPsMessage = "&7- " + entry;
                 else allIPsMessage = allIPsMessage + "\n&7- " + entry;
             }
-        } else { allIPsMessage = "Hidden"; }
+        } else allIPsMessage = "Hidden";
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Seen.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))
@@ -58,7 +67,8 @@ public class SeenCommand implements CommandExecutor {
                 .replace("%rank%", rankDisplay)
                 .replace("%ip%", ip)
                 .replace("%firstjoined%", Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".FirstJoined")))
-                .replace("%all_ips%", allIPsMessage)));
+                .replace("%all_ips%", allIPsMessage)
+                .replace("%playtime%", playTime)));
 
         return true;
     }

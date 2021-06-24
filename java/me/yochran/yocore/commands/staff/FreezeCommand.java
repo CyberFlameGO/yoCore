@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,18 @@ public class FreezeCommand implements CommandExecutor {
             return true;
         }
 
+        if (plugin.frozen_cooldown.contains(((Player) sender).getUniqueId())) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.OnCooldown")));
+            return true;
+        }
+
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.InvalidPlayer")));
             return true;
         }
 
+        plugin.frozen_cooldown.add(((Player) sender).getUniqueId());
         if (!plugin.frozen_players.contains(target.getUniqueId())) {
             plugin.frozen_players.add(target.getUniqueId());
 
@@ -73,6 +80,11 @@ public class FreezeCommand implements CommandExecutor {
                             .replace("%target%", playerManagement.getPlayerColor(target))));
             }
         }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() { plugin.frozen_cooldown.remove(((Player) sender).getUniqueId()); }
+        }.runTaskLater(plugin, 20);
 
         return true;
     }

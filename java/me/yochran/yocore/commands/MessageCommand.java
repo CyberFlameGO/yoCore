@@ -77,7 +77,9 @@ public class MessageCommand implements CommandExecutor {
             target.playSound(target.getLocation(), XSound.ENTITY_ARROW_HIT_PLAYER.parseSound(), 100, (float) 0.1);
 
         plugin.reply.remove(((Player) sender).getUniqueId());
+        plugin.reply.remove(target.getUniqueId());
         plugin.reply.put(((Player) sender).getUniqueId(), target.getUniqueId());
+        plugin.reply.put(target.getUniqueId(), ((Player) sender).getUniqueId());
 
         return true;
     }
