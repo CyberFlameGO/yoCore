@@ -79,6 +79,8 @@ permissions:
     description: Permission
   yocore.teleport.all:
     description: Permission
+  yocore.teleportrequest:
+    description: Permission.
   yocore.vanish:
     description: Permission
   yocore.chats.staff:
@@ -94,24 +96,6 @@ permissions:
   yocore.clearreports:
     description: Permission
   yocore.grant:
-    description: Permission
-  yocore.grant.owner:
-    description: Permission
-  yocore.grant.developer:
-    description: Permission
-  yocore.grant.manager:
-    description: Permission
-  yocore.grant.admin:
-    description: Permission
-  yocore.grant.seniormod:
-    description: Permission
-  yocore.grant.mod:
-    description: Permission
-  yocore.grant.trialmod:
-    description: Permission
-  yocore.grant.builder:
-    description: Permission
-  yocore.grant.default:
     description: Permission
   yocore.granthistory:
     description: Permission
@@ -238,6 +222,15 @@ commands:
   TeleportAll:
     description: Teleport all players to yourself.
     aliases: tpall
+  TeleportA:
+    description: Send a teleport request to someone.
+    aliases: tpa
+  TeleportAccept:
+    description: Accept a teleport request.
+    aliases: [tpaccept, tpaaccept, tpyes]
+  TeleportDeny:
+    description: Deny a teleport request.
+    aliases: [tpdeny, tpadeny, tpyes]
   Freeze:
     description: Freeze a player.
     aliases: ss

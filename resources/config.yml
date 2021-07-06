@@ -372,46 +372,57 @@ Grant:
       TenSeconds:
         Item: "WHITE_WOOL"
         Name: "&f10 Seconds"
+        ID: "10 Seconds"
         Slot: 10
       OneMinute:
         Item: "YELLOW_WOOL"
         Name: "&e1 Minute"
+        ID: "1 Minute"
         Slot: 11
       FiveMinutes:
         Item: "ORANGE_WOOL"
         Name: "&65 Minutes"
+        ID: "5 Minutes"
         Slot: 12
       ThirtyMinutes:
         Item: "RED_WOOL"
         Name: "&c30 Minutes"
+        ID: "30 Minutes"
         Slot: 13
       OneHour:
         Item: "GREEN_WOOL"
         Name: "&21 Hour"
+        ID: "1 Hour"
         Slot: 14
       ThreeHours:
         Item: "LIME_WOOL"
         Name: "&a3 Hours"
+        ID: "3 Hours"
         Slot: 15
       OneDay:
         Item: "BLUE_WOOL"
         Name: "&91 Day"
+        ID: "1 Day"
         Slot: 16
       OneWeek:
         Item: "CYAN_WOOL"
         Name: "&31 Week"
+        ID: "1 Week"
         Slot: 20
       OneMonth:
         Item: "LIGHT_BLUE_WOOL"
         Name: "&b1 Month"
+        ID: "1 Month"
         Slot: 21
       OneYear:
         Item: "PURPLE_WOOL"
         Name: "&51 Year"
+        ID: "1 Year"
         Slot: 23
       Permanent:
         Item: "BEDROCK"
         Name: "&8Permanent"
+        ID: "Permanent"
         Slot: 24
     Lore:
       - "&e&m----------------------------------------"
@@ -424,30 +435,37 @@ Grant:
       NoReason:
         Item: "BEDROCK"
         Name: "&8No Reason"
+        ID: "No Reason"
         Slot: 10
       Promoted:
         Item: "LIME_WOOL"
         Name: "&aPromoted"
+        ID: "Promoted"
         Slot: 11
       Demoted:
         Item: "RED_WOOL"
         Name: "&cDemoted"
+        ID: "Demoted"
         Slot: 12
       Famous:
         Item: "PINK_WOOL"
         Name: "&dFamous"
+        ID: "Famous"
         Slot: 13
       Whitelisted:
         Item: "WHITE_WOOL"
         Name: "&fWhitelisted"
+        ID: "Whitelisted"
         Slot: 14
       Testing:
         Item: "CYAN_WOOL"
         Name: "&3Testing"
+        ID: "Testing"
         Slot: 15
       Custom:
         Item: "GREEN_WOOL"
         Name: "&2Custom Reason"
+        ID: "Custom Reason"
         Slot: 16
     Lore:
       - "&e&m----------------------------------------"
@@ -655,11 +673,22 @@ Teleport:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /tp <player> [player]"
   IncorrectUsageHere: "&cIncorrect Usage! /tphere <player>"
+  IncorrectUsageRequest: "&cIncorrect Usage! /tpa <player>"
   InvalidPlayer: "&cInvalid Player!"
   Teleport: "&bYou have teleported to %target%&b."
   TeleportHere: "&bYou have teleported %target% &bto yourself."
   TeleportTwo: "&bYou have teleported %target1% &bto %target2%&b."
   TeleportAll: "&bYou have teleported &3ALL &bplayers to you."
+  TeleportRequest: "&bYou have sent a teleport request to %target%&b."
+  TeleportRequestNoRequest: "&cYou do not have a teleport request!"
+  TeleportRequestOutgoingRequest: "&cYou have an outgoing request!"
+  TeleportRequestTarget: "%player% &bhas sent you a teleport request.\nAccept with &3/tpaccept&b."
+  TeleportRequestAccept: "&bYou have accepted %player%&b's teleport request."
+  TeleportRequestStarted: "&bTeleport request accepted! You will be teleported in &35 seconds&b... &7(Do not move!&7)"
+  TeleportRequestTeleported: "&bYou have been teleported to %target%&b."
+  TeleportRequestCancelled: "&bTeleport request cancelled due to movement."
+  TeleportRequestDeny: "&bYou have denied %player%&b's teleport request."
+  TeleportRequestDenyTarget: "&bYour teleport request to %target% &bhas been denied."
 
 Freeze:
   NoPermission: "&cYou do not have permission to use that command."
