@@ -9,6 +9,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 public class TeleportCommands implements CommandExecutor {
 
     private final yoCore plugin;
@@ -30,6 +35,7 @@ public class TeleportCommands implements CommandExecutor {
             return true;
         }
 
+        Player target = null;
         switch (command.getName().toLowerCase()) {
             case "teleport":
                 if (args.length < 1 || args.length > 2) {
@@ -38,7 +44,7 @@ public class TeleportCommands implements CommandExecutor {
                 }
 
                 if (args.length == 1) {
-                    Player target = Bukkit.getPlayer(args[0]);
+                    target = Bukkit.getPlayer(args[0]);
                     if (target == null) {
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.InvalidPlayer")));
                         return true;
@@ -87,7 +93,7 @@ public class TeleportCommands implements CommandExecutor {
                     return true;
                 }
 
-                Player target = Bukkit.getPlayer(args[0]);
+                target = Bukkit.getPlayer(args[0]);
                 if (target == null) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.InvalidPlayer")));
                     return true;
@@ -122,6 +128,102 @@ public class TeleportCommands implements CommandExecutor {
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.TeleportAll")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
+
+                break;
+            case "teleporta":
+                if (!sender.hasPermission("yocore.teleportrequest")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
+                    return true;
+                }
+
+                if (args.length != 1) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsageRequest")));
+                    return true;
+                }
+
+                if (plugin.tpa.containsKey(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestOutgoingRequest")));
+                    return true;
+                }
+
+                target = Bukkit.getPlayer(args[0]);
+                if (target == null) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.InvalidPlayer")));
+                    return true;
+                }
+
+                plugin.tpa.remove(target.getUniqueId());
+                plugin.tpa.remove(((Player) sender).getUniqueId());
+
+                plugin.tpa_coords.remove(target.getUniqueId());
+                plugin.tpa_coords.remove(((Player) sender).getUniqueId());
+
+                plugin.tpa.put(((Player) sender).getUniqueId(), target.getUniqueId());
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequest")
+                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                target.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestTarget")
+                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+
+                break;
+            case "teleportaccept":
+                if (!sender.hasPermission("yocore.teleportrequest")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
+                    return true;
+                }
+
+                if (!plugin.tpa.containsValue(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestNoRequest")));
+                    return true;
+                }
+
+                for (Map.Entry<UUID, UUID> map : plugin.tpa.entrySet()) {
+                    if (map.getValue() == ((Player) sender).getUniqueId())
+                        target = Bukkit.getPlayer(map.getKey());
+                }
+
+                if (target == null) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.InvalidPlayer")));
+                    return true;
+                }
+
+                plugin.tpa_coords.put(target.getUniqueId(), target.getLocation());
+                plugin.tpa_timer.put(target.getUniqueId(), 5);
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestAccept")
+                        .replace("%player%", playerManagement.getPlayerColor(target))));
+                target.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestStarted")));
+
+                break;
+            case "teleportdeny":
+                if (!sender.hasPermission("yocore.teleportrequest")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
+                    return true;
+                }
+
+                if (!plugin.tpa.containsValue(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestNoRequest")));
+                    return true;
+                }
+
+                for (Map.Entry<UUID, UUID> map : plugin.tpa.entrySet()) {
+                    if (map.getValue() == ((Player) sender).getUniqueId())
+                        target = Bukkit.getPlayer(map.getKey());
+                }
+
+                if (target == null) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.InvalidPlayer")));
+                    return true;
+                }
+
+                plugin.tpa.remove(target.getUniqueId());
+                plugin.tpa_timer.remove(target.getUniqueId());
+                plugin.tpa_coords.remove(target.getUniqueId());
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestDeny")
+                        .replace("%player%", playerManagement.getPlayerColor(target))));
+                target.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestDenyTarget")
+                        .replace("%target%", playerManagement.getPlayerColor((Player) sender))));
 
                 break;
         }

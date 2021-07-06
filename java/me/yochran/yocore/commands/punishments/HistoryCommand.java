@@ -1,5 +1,7 @@
 package me.yochran.yocore.commands.punishments;
 
+import me.yochran.yocore.gui.Button;
+import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.Utils;
@@ -11,8 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -59,115 +59,102 @@ public class HistoryCommand implements CommandExecutor {
     }
 
     public void openHistoryGUI(Player player, OfflinePlayer target) {
-        Inventory inventory = Bukkit.createInventory(player, 36, Utils.translate("&aSelect Punishment Type."));
+        GUI gui = new GUI(player, 36, "&aSelect Punishment Type.");
 
-        ItemStack warn = XMaterial.YELLOW_WOOL.parseItem();
-        ItemMeta warnMeta = warn.getItemMeta();
-        warnMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(target) + "&e's warns."));
-        warn.setItemMeta(warnMeta);
+        gui.setFiller(36);
 
-        inventory.setItem(10, warn);
+        gui.setButton(10, new Button(
+                XMaterial.YELLOW_WOOL.parseItem(),
+                plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".WarnsAmount"),
+                () -> {
+                    gui.close();
+                    openPunishmentType("Warn", player, target);
+                },
+                playerManagement.getPlayerColor(target) + "&e's warns."
+        ));
+        gui.setButton(12, new Button(
+                XMaterial.ORANGE_WOOL.parseItem(),
+                plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".MutesAmount"),
+                () -> {
+                    gui.close();
+                    openPunishmentType("Mute", player, target);
+                },
+                playerManagement.getPlayerColor(target) + "&6's mutes."
+        ));
+        gui.setButton(14, new Button(
+                XMaterial.RED_WOOL.parseItem(),
+                plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".KicksAmount"),
+                () -> {
+                    gui.close();
+                    openPunishmentType("Kick", player, target);
+                },
+                playerManagement.getPlayerColor(target) + "&c's kicks."
+        ));
+        gui.setButton(16, new Button(
+                XMaterial.RED_WOOL.parseItem(),
+                plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BansAmount"),
+                () -> {
+                    gui.close();
+                    openPunishmentType("Ban", player, target);
+                },
+                playerManagement.getPlayerColor(target) + "&c's bans."
+        ));
+        gui.setButton(22, new Button(
+                XMaterial.REDSTONE_BLOCK.parseItem(),
+                plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BlacklistsAmount"),
+                () -> {
+                    gui.close();
+                    openPunishmentType("Blacklist", player, target);
+                },
+                playerManagement.getPlayerColor(target) + "&4's blacklists."
+        ));
 
-        for (int i = 1; i < plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".WarnsAmount"); i++) {
-            if (i <= 64) {
-                inventory.addItem(warn);
-            }
-        }
-
-        ItemStack mute = XMaterial.ORANGE_WOOL.parseItem();
-        ItemMeta muteMeta = mute.getItemMeta();
-        muteMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(target) + "&6's mutes."));
-        mute.setItemMeta(muteMeta);
-
-        inventory.setItem(12, mute);
-
-        for (int i = 1; i < plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".MutesAmount"); i++) {
-            if (i <= 64) {
-                inventory.addItem(mute);
-            }
-        }
-
-        ItemStack kick = XMaterial.RED_WOOL.parseItem();
-        ItemMeta kickMeta = kick.getItemMeta();
-        kickMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(target) + "&c's kicks."));
-        kick.setItemMeta(kickMeta);
-
-        inventory.setItem(14, kick);
-
-        for (int i = 1; i < plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".KicksAmount"); i++) {
-            if (i <= 64) {
-                inventory.addItem(kick);
-            }
-        }
-
-        ItemStack ban = XMaterial.RED_WOOL.parseItem();
-        ItemMeta banMeta = ban.getItemMeta();
-        banMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(target) + "&c's bans."));
-        ban.setItemMeta(banMeta);
-
-        inventory.setItem(16, ban);
-
-        for (int i = 1; i < plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BansAmount"); i++) {
-            if (i <= 64) {
-                inventory.addItem(ban);
-            }
-        }
-
-        ItemStack blacklist = XMaterial.BEDROCK.parseItem();
-        ItemMeta blacklistMeta = blacklist.getItemMeta();
-        blacklistMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(target) + "&4's blacklists."));
-        blacklist.setItemMeta(blacklistMeta);
-
-        inventory.setItem(22, blacklist);
-
-        for (int i = 1; i < plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BlacklistsAmount"); i++) {
-            if (i <= 64) {
-                inventory.addItem(blacklist);
-            }
-        }
-
-        player.openInventory(inventory);
+        gui.open();
     }
 
     public void openPunishmentType(String type, Player player, OfflinePlayer target) {
-        Inventory inventory = Bukkit.createInventory(player, 54, Utils.translate(playerManagement.getPlayerColor(target) + "&a's " + type + "&as"));
+        GUI gui = new GUI(player, 54, playerManagement.getPlayerColor(target) + "&a's " + type + "&as");
 
         String activePrefix = "&a&l(Active) ";
         String revokedPrefix = "&4&l(Revoked) ";
         String expiredPrefix = "&6&l(Expired) ";
 
         if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + "." + type)) {
+            int loop = -1;
             for (String punishment : plugin.punishmentData.config.getConfigurationSection(target.getUniqueId().toString() + "." + type).getKeys(false)) {
-                ItemStack item = XMaterial.BEDROCK.parseItem();
-                ItemMeta itemMeta = item.getItemMeta();
-
-                switch (plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Status").toLowerCase()) {
-                    case "active":
-                        item =XMaterial.LIME_WOOL.parseItem();
-                        itemMeta.setDisplayName(Utils.translate(activePrefix + Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Date"))));
-                        break;
-                    case "revoked":
-                        item = XMaterial.RED_WOOL.parseItem();
-                        itemMeta.setDisplayName(Utils.translate(revokedPrefix + Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Date"))));
-                        break;
-                    case "expired":
-                        item = XMaterial.ORANGE_WOOL.parseItem();
-                        itemMeta.setDisplayName(Utils.translate(expiredPrefix + Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Date"))));
-                        break;
-                }
+                loop++;
+                Button item = new Button(XMaterial.BEDROCK.parseItem(), "&4&lNULL", new ArrayList<>());
 
                 String executor;
                 if (plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Executor").equalsIgnoreCase("CONSOLE"))
                     executor = "&c&lConsole";
                 else executor = playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Executor"))));
                 String duration;
-                if (plugin.punishmentData.config.get(target.getUniqueId().toString() + "." + type + "." + punishment + ".Duration").equals("Permanent")) {
+                if (plugin.punishmentData.config.get(target.getUniqueId().toString() + "." + type + "." + punishment + ".Duration").equals("Permanent"))
                     duration = "Permanent";
-                } else {
-                    duration = Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Duration"));
-                }
+                else duration = Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Duration"));
                 String reason = plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Reason");
                 String silent = String.valueOf(plugin.punishmentData.config.getBoolean(target.getUniqueId().toString() + "." + type + "." + punishment + ".Silent"));
+
+                switch (plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Status").toLowerCase()) {
+                    case "active":
+                        item.setItem(XMaterial.LIME_WOOL.parseItem());
+                        item.setName(activePrefix + Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Date")));
+                        if (!type.equalsIgnoreCase("Warn") && player.hasPermission("yocore.un" + type.toLowerCase()))
+                            item.setAction(() -> {
+                                gui.close();
+                                player.performCommand("un" + type.toLowerCase() + " " + target.getName() + " -s");
+                            });
+                        break;
+                    case "revoked":
+                        item.setItem(XMaterial.RED_WOOL.parseItem());
+                        item.setName(revokedPrefix + Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Date")));
+                        break;
+                    case "expired":
+                        item.setItem(XMaterial.ORANGE_WOOL.parseItem());
+                        item.setName(expiredPrefix + Utils.getExpirationDate(plugin.punishmentData.config.getLong(target.getUniqueId().toString() + "." + type + "." + punishment + ".Date")));
+                        break;
+                }
 
                 List<String> itemLore = new ArrayList<>();
                 itemLore.add(Utils.translate("&e&m----------------------------"));
@@ -178,13 +165,17 @@ public class HistoryCommand implements CommandExecutor {
                 itemLore.add(Utils.translate("&eIssued Reason: &f" + reason));
                 itemLore.add(Utils.translate("&eIssued Silently: &f" + silent));
                 itemLore.add(Utils.translate("&e&m----------------------------"));
+                if (plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Status").equalsIgnoreCase("Active")
+                        && player.hasPermission("yocore.un" + type.toLowerCase())
+                        && !type.equalsIgnoreCase("Warn"))
+                    itemLore.add(Utils.translate("&aClick to revoke this punishment."));
 
-                itemMeta.setLore(itemLore);
-                item.setItemMeta(itemMeta);
-                inventory.addItem(item);
+                item.setLore(itemLore);
+
+                gui.setButton(loop, item);
             }
         }
 
-        player.openInventory(inventory);
+        gui.open();
     }
 }
