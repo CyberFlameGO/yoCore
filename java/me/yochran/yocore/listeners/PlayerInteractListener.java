@@ -1,7 +1,6 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.yoCore;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
