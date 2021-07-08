@@ -61,5 +61,15 @@ public class GUI {
         for (int i = 0; i < slots; i++) this.inventory.setItem(i, itemBuilder.getItemStack());
     }
 
+    public boolean isSlotEmpty(int slot) {
+        return inventory.getItem(slot) == null;
+    }
+
+    public void setFiller(int[] slots) {
+        ItemBuilder itemBuilder = new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(), 1, "&7 ", new ArrayList<>());
+
+        for (int i = 0; i < slots.length; i++) this.inventory.setItem(slots[i], itemBuilder.getItemStack());
+    }
+
     public static Map<Player, GUI> getOpenGUIs() { return open_guis; }
 }

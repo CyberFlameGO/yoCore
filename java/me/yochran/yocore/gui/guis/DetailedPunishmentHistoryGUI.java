@@ -4,7 +4,6 @@ import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -14,7 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DetailedPunishmentHistoryGUI extends CustomGUI {
 
@@ -26,16 +26,20 @@ public class DetailedPunishmentHistoryGUI extends CustomGUI {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
-    public void openPunishmentType(String type, Player player, OfflinePlayer target) {
+    public void setup(String type, Player player, OfflinePlayer target, int page) {
         String activePrefix = "&a&l(Active) ";
         String revokedPrefix = "&4&l(Revoked) ";
         String expiredPrefix = "&6&l(Expired) ";
+
+        gui.setFiller(new int[] { 9,10,11,12,13,14,15,16,17 });
+
+        Map<Integer, Button> buttons = new HashMap<>();
+        Set<Integer> pages = new HashSet<>();
 
         if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + "." + type)) {
             int loop = -1;
             for (String punishment : plugin.punishmentData.config.getConfigurationSection(target.getUniqueId().toString() + "." + type).getKeys(false)) {
                 loop++;
-
                 String executor;
                 if (plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Executor").equalsIgnoreCase("CONSOLE"))
                     executor = "&c&lConsole";
@@ -90,7 +94,66 @@ public class DetailedPunishmentHistoryGUI extends CustomGUI {
                         itemBuilder.getLore()
                 );
 
-                gui.setButton(loop, button);
+                buttons.put(loop, button);
+            }
+
+            for (Map.Entry<Integer, Button> entry : buttons.entrySet())
+                pages.add((entry.getKey() / 9) + 1);
+            List<Integer> newPages = new ArrayList<>(pages);
+
+            ItemBuilder nextPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lNo next page available", new ArrayList<>());
+            ItemBuilder previousPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lNo previous page available", new ArrayList<>());
+
+            gui.setButton(17, new Button(nextPage.getItem(), nextPage.getName(), nextPage.getLore()));
+            gui.setButton(9, new Button(previousPage.getItem(), previousPage.getName(), previousPage.getLore()));
+
+            AtomicInteger newPage = new AtomicInteger();
+
+            if (Collections.max(newPages) > 1 && page < Collections.max(newPages)) {
+                nextPage.setItem(XMaterial.LIME_DYE.parseItem());
+                nextPage.setName("&a&lNext page");
+
+                gui.setButton(17, new Button(nextPage.getItem(), () -> {
+                            GUI.close(gui);
+                            newPage.set(page + 1);
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18,
+                                            playerManagement.getPlayerColor(target) + "&a's " + type.toLowerCase() + "s.");
+                                    detailedPunishmentHistoryGUI.setup(type, player, target, newPage.get());
+                                    GUI.open(detailedPunishmentHistoryGUI.getGui());
+                                }
+                            }.runTaskLater(plugin, 1);
+                        }, nextPage.getName(), nextPage.getLore()));
+            }
+
+            if (Collections.min(newPages) == 1 && page > Collections.min(newPages)) {
+                previousPage.setItem(XMaterial.LIME_DYE.parseItem());
+                previousPage.setName("&a&lPrevious page");
+
+                gui.setButton(9, new Button(previousPage.getItem(), () -> {
+                            GUI.close(gui);
+                            newPage.set(page + -1);
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18,
+                                            playerManagement.getPlayerColor(target) + "&a's " + type.toLowerCase() + "s.");
+                                    detailedPunishmentHistoryGUI.setup(type, player, target, newPage.get());
+                                    GUI.open(detailedPunishmentHistoryGUI.getGui());
+                                }
+                            }.runTaskLater(plugin, 1);
+                        }, previousPage.getName(), previousPage.getLore()));
+            }
+
+            for (Map.Entry<Integer, Button> entry : buttons.entrySet()) {
+                for (Map.Entry<Integer, Integer> info : Utils.getPageAndSlot(entry.getKey()).entrySet()) {
+                    if (info.getKey() == page)
+                        gui.setButton(info.getValue(), entry.getValue());
+                }
             }
         }
     }

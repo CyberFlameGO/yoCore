@@ -113,7 +113,7 @@ public class PlayerChatListener implements Listener {
 
         String tag = "";
         if (plugin.tag.containsKey(event.getPlayer().getUniqueId()))
-            tag = " " + plugin.getConfig().getString("Tags." + plugin.tag.get(event.getPlayer().getUniqueId()) + ".Prefix");
+            tag = plugin.getConfig().getString("Tags." + plugin.tag.get(event.getPlayer().getUniqueId()) + ".Prefix");
 
         String format = plugin.getConfig().getString("ChatFormat")
                     .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))

@@ -1,5 +1,6 @@
 package me.yochran.yocore.listeners;
 
+import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.event.EventHandler;
@@ -18,5 +19,7 @@ public class GUIExitListener implements Listener {
     public void onInvClose(InventoryCloseEvent event) {
         if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect Punishment Type.")))
             plugin.selected_history.remove(event.getPlayer().getUniqueId());
+
+        GUI.getOpenGUIs().remove(event.getPlayer());
     }
 }

@@ -32,8 +32,8 @@ public class PunishmentHistoryGUI extends CustomGUI {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 54, playerManagement.getPlayerColor(target) + "&a's warns");
-                            detailedPunishmentHistoryGUI.openPunishmentType("Warn", player, target);
+                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's warns.");
+                            detailedPunishmentHistoryGUI.setup("Warn", player, target, 1);
                             GUI.open(detailedPunishmentHistoryGUI.getGui());
                         }
                     }.runTaskLater(plugin, 1);
@@ -49,8 +49,8 @@ public class PunishmentHistoryGUI extends CustomGUI {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 54, playerManagement.getPlayerColor(target) + "&a's mutes");
-                            detailedPunishmentHistoryGUI.openPunishmentType("Mute", player, target);
+                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's mutes.");
+                            detailedPunishmentHistoryGUI.setup("Mute", player, target, 1);
                             GUI.open(detailedPunishmentHistoryGUI.getGui());
                         }
                     }.runTaskLater(plugin, 1);
@@ -66,8 +66,8 @@ public class PunishmentHistoryGUI extends CustomGUI {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 54, playerManagement.getPlayerColor(target) + "&a's kicks");
-                            detailedPunishmentHistoryGUI.openPunishmentType("Kick", player, target);
+                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's kicks.");
+                            detailedPunishmentHistoryGUI.setup("Kick", player, target, 1);
                             GUI.open(detailedPunishmentHistoryGUI.getGui());
                         }
                     }.runTaskLater(plugin, 1);
@@ -83,8 +83,8 @@ public class PunishmentHistoryGUI extends CustomGUI {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 54, playerManagement.getPlayerColor(target) + "&a's bans");
-                            detailedPunishmentHistoryGUI.openPunishmentType("Ban", player, target);
+                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's bans.");
+                            detailedPunishmentHistoryGUI.setup("Ban", player, target, 1);
                             GUI.open(detailedPunishmentHistoryGUI.getGui());
                         }
                     }.runTaskLater(plugin, 1);
@@ -100,8 +100,8 @@ public class PunishmentHistoryGUI extends CustomGUI {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 54, playerManagement.getPlayerColor(target) + "&a's blacklists");
-                            detailedPunishmentHistoryGUI.openPunishmentType("Blacklist", player, target);
+                            DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's blacklists.");
+                            detailedPunishmentHistoryGUI.setup("Blacklist", player, target, 1);
                             GUI.open(detailedPunishmentHistoryGUI.getGui());
                         }
                     }.runTaskLater(plugin, 1);

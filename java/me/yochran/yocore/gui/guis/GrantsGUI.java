@@ -14,9 +14,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GrantsGUI extends CustomGUI {
 
@@ -29,10 +28,15 @@ public class GrantsGUI extends CustomGUI {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
-    public void setup(Player player, OfflinePlayer target) {
+    public void setup(Player player, OfflinePlayer target, int page) {
         String activePrefix = "&a&l(Active) ";
         String revokedPrefix = "&4&l(Revoked) ";
         String expiredPrefix = "&6&l(Expired) ";
+
+        gui.setFiller(new int[] { 9,10,11,12,13,14,15,16,17 });
+
+        Map<Integer, Button> buttons = new HashMap<>();
+        Set<Integer> pages = new HashSet<>();
 
         int loop = -1;
         if (plugin.grantData.config.contains(target.getUniqueId().toString() + ".Grants")) {
@@ -123,19 +127,67 @@ public class GrantsGUI extends CustomGUI {
 
                         if (target.isOnline())
                             new PermissionManagement().setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
-
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                GrantsGUI grantsGUI = new GrantsGUI(player, 54, playerManagement.getPlayerColor(target) + "&a's grant history.");
-                                grantsGUI.setup(player, target);
-                                GUI.open(grantsGUI.getGui());
-                            }
-                        }.runTaskLater(plugin, 1);
                     });
                 }
 
-                gui.setButton(loop, button);
+                buttons.put(loop, button);
+            }
+
+            for (Map.Entry<Integer, Button> entry : buttons.entrySet())
+                pages.add((entry.getKey() / 9) + 1);
+            List<Integer> newPages = new ArrayList<>(pages);
+
+            ItemBuilder nextPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lNo next page available", new ArrayList<>());
+            ItemBuilder previousPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lNo previous page available", new ArrayList<>());
+
+            gui.setButton(17, new Button(nextPage.getItem(), nextPage.getName(), nextPage.getLore()));
+            gui.setButton(9, new Button(previousPage.getItem(), previousPage.getName(), previousPage.getLore()));
+
+            AtomicInteger newPage = new AtomicInteger();
+
+            if (Collections.max(newPages) > 1 && page < Collections.max(newPages)) {
+                nextPage.setItem(XMaterial.LIME_DYE.parseItem());
+                nextPage.setName("&a&lNext page");
+
+                gui.setButton(17, new Button(nextPage.getItem(), () -> {
+                    GUI.close(gui);
+                    newPage.set(page + 1);
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            GrantsGUI grantsGUI = new GrantsGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
+                            grantsGUI.setup(player, target, newPage.get());
+                            GUI.open(grantsGUI.getGui());
+                        }
+                    }.runTaskLater(plugin, 1);
+                }, nextPage.getName(), nextPage.getLore()));
+            }
+
+            if (Collections.min(newPages) == 1 && page > Collections.min(newPages)) {
+                previousPage.setItem(XMaterial.LIME_DYE.parseItem());
+                previousPage.setName("&a&lPrevious page");
+
+                gui.setButton(9, new Button(previousPage.getItem(), () -> {
+                    GUI.close(gui);
+                    newPage.set(page + -1);
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            GrantsGUI grantsGUI = new GrantsGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
+                            grantsGUI.setup(player, target, newPage.get());
+                            GUI.open(grantsGUI.getGui());
+                        }
+                    }.runTaskLater(plugin, 1);
+                }, previousPage.getName(), previousPage.getLore()));
+            }
+
+            for (Map.Entry<Integer, Button> entry : buttons.entrySet()) {
+                for (Map.Entry<Integer, Integer> info : Utils.getPageAndSlot(entry.getKey()).entrySet()) {
+                    if (info.getKey() == page)
+                        gui.setButton(info.getValue(), entry.getValue());
+                }
             }
         }
     }
