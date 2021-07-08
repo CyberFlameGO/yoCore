@@ -107,10 +107,8 @@ public class GrantGUI extends CustomGUI {
                     ItemBuilder.translateLore(itemLore)
             );
 
-            itemBuilder.getLore().add(Utils.translate(permission));
-
             gui.setButton(loop, new Button(
-                    Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Item")),
+                    itemBuilder.getItem(),
                     () -> {
                         if (player.hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))) {
                             GUI.close(gui);
