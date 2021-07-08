@@ -173,6 +173,6 @@ public class ModmodeCommand implements CommandExecutor {
 
         new BukkitRunnable() {
             public void run() { player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()); }
-        }.runTaskLater(plugin, 0);
+        }.runTaskLater(plugin, 1);
     }
 }

@@ -25,6 +25,20 @@ public class RankCommand implements CommandExecutor {
     private final yoCore plugin;
     private final PermissionManagement permissionManagement = new PermissionManagement();
 
+    private String[] validArgs = new String[] {
+            "add",
+            "create",
+            "remove",
+            "delete",
+            "prefix",
+            "color",
+            "display",
+            "priority",
+            "item",
+            "permission",
+            "gpermission"
+    };
+
     public RankCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
     }
@@ -41,17 +55,7 @@ public class RankCommand implements CommandExecutor {
             return true;
         }
 
-        if (!args[0].equalsIgnoreCase("add")
-                && !args[0].equalsIgnoreCase("create")
-                && !args[0].equalsIgnoreCase("remove")
-                && !args[0].equalsIgnoreCase("delete")
-                && !args[0].equalsIgnoreCase("prefix")
-                && !args[0].equalsIgnoreCase("color")
-                && !args[0].equalsIgnoreCase("display")
-                && !args[0].equalsIgnoreCase("priority")
-                && !args[0].equalsIgnoreCase("item")
-                && !args[0].equalsIgnoreCase("permission")
-                && !args[0].equalsIgnoreCase("gpermission")) {
+        if (!Arrays.asList(validArgs).contains(args[0].toLowerCase())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
             return true;
         }

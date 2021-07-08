@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -9,6 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemNameCommand implements CommandExecutor {
 
@@ -46,12 +50,18 @@ public class ItemNameCommand implements CommandExecutor {
             else name = name + " " + args[i];
         }
 
-        ItemStack item = ((Player) sender).getInventory().getItemInHand();
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(Utils.translate(name));
-        item.setItemMeta(itemMeta);
+        List<String> lore = new ArrayList<>();
+        if (((Player) sender).getInventory().getItemInHand().getItemMeta().hasLore())
+            lore = ((Player) sender).getInventory().getItemInHand().getItemMeta().getLore();
 
-        ((Player) sender).getInventory().setItem(((Player) sender).getInventory().getHeldItemSlot(), item);
+        ItemBuilder itemBuilder = new ItemBuilder(
+                ((Player) sender).getInventory().getItemInHand(),
+                ((Player) sender).getInventory().getItemInHand().getAmount(),
+                name,
+                ItemBuilder.translateLore(lore)
+        );
+
+        itemBuilder.give((Player) sender, ((Player) sender).getInventory().getHeldItemSlot());
         ((Player) sender).updateInventory();
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ItemName.Format")
