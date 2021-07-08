@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -12,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
 
 public class ModmodeCommand implements CommandExecutor {
 
@@ -143,42 +146,25 @@ public class ModmodeCommand implements CommandExecutor {
         player.getInventory().setLeggings(XMaterial.AIR.parseItem());
         player.getInventory().setBoots(XMaterial.AIR.parseItem());
 
-        ItemStack launcher = XMaterial.COMPASS.parseItem();
-        ItemMeta launcherMeta = launcher.getItemMeta();
-        launcherMeta.setDisplayName(Utils.translate("&6&lLauncher"));
-        launcher.setItemMeta(launcherMeta);
+        ItemBuilder launcher = new ItemBuilder(XMaterial.COMPASS.parseItem(), 1,"&6&lLauncher", new ArrayList<>());
+        ItemBuilder freeze = new ItemBuilder(XMaterial.PACKED_ICE.parseItem(), 1, "&6&lFreeze", new ArrayList<>());
+        ItemBuilder vanish = new ItemBuilder(XMaterial.BEDROCK.parseItem(), 1, "&4&lNULL", new ArrayList<>());
+        ItemBuilder onlinePlayers = new ItemBuilder(XMaterial.PLAYER_HEAD.parseItem(), 1, "&6&lOnline Players", new ArrayList<>());
+        ItemBuilder inspect = new ItemBuilder(XMaterial.BOOK.parseItem(), 1, "&6&lInspect Player", new ArrayList<>());
 
-        ItemStack freeze = XMaterial.PACKED_ICE.parseItem();
-        ItemMeta freezeMeta = freeze.getItemMeta();
-        freezeMeta.setDisplayName(Utils.translate("&6&lFreeze"));
-        freeze.setItemMeta(freezeMeta);
-
-        ItemStack vanish = XMaterial.BEDROCK.parseItem();
-        ItemMeta vanishMeta = vanish.getItemMeta();
         if (plugin.vanished_players.contains(player.getUniqueId())) {
-            vanish = XMaterial.LIME_DYE.parseItem();
-            vanishMeta.setDisplayName(Utils.translate("&a&lBecome Visible"));
+            vanish.setItem(XMaterial.LIME_DYE.parseItem());
+            vanish.setName("&a&lBecome Visible");
         } else {
-            vanish = XMaterial.GRAY_DYE.parseItem();
-            vanishMeta.setDisplayName(Utils.translate("&7&lBecome Invisible"));
+            vanish.setItem(XMaterial.GRAY_DYE.parseItem());
+            vanish.setName("&7&lBecome Invisible");
         }
-        vanish.setItemMeta(vanishMeta);
 
-        ItemStack onlinePlayers = XMaterial.PLAYER_HEAD.parseItem();
-        ItemMeta onlinePlayersMeta = onlinePlayers.getItemMeta();
-        onlinePlayersMeta.setDisplayName(Utils.translate("&6&lOnline Players"));
-        onlinePlayers.setItemMeta(onlinePlayersMeta);
-
-        ItemStack inspect = XMaterial.BOOK.parseItem();
-        ItemMeta inspectMeta = inspect.getItemMeta();
-        inspectMeta.setDisplayName(Utils.translate("&6&lInspect Player"));
-        inspect.setItemMeta(inspectMeta);
-
-        player.getInventory().setItem(0, launcher);
-        player.getInventory().setItem(1, freeze);
-        player.getInventory().setItem(2, inspect);
-        player.getInventory().setItem(7, vanish);
-        player.getInventory().setItem(8, onlinePlayers);
+        player.getInventory().setItem(0, launcher.getItemStack());
+        player.getInventory().setItem(1, freeze.getItemStack());
+        player.getInventory().setItem(2, inspect.getItemStack());
+        player.getInventory().setItem(7, vanish.getItemStack());
+        player.getInventory().setItem(8, onlinePlayers.getItemStack());
 
         player.setHealth(20);
         player.setFoodLevel(20);

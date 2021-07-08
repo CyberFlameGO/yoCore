@@ -43,9 +43,7 @@ public class EnderChestCommand implements CommandExecutor {
         }
 
         Inventory inventory = Bukkit.createInventory((Player) sender, 27, Utils.translate("&aEnder Chest."));
-
         inventory.setContents(target.getEnderChest().getContents());
-
         ((Player) sender).openInventory(inventory);
 
         return true;

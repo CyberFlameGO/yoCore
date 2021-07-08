@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.gui.guis.GrantsGUI;
 import me.yochran.yocore.management.GrantManagement;
 import me.yochran.yocore.management.PlayerManagement;
@@ -46,7 +47,11 @@ public class GrantsCommand implements CommandExecutor {
         }
 
         plugin.selected_grant_history.remove(((Player) sender).getUniqueId());
-        new GrantsGUI().openHistoryGUI((Player) sender, target);
+
+        GrantsGUI grantsGUI = new GrantsGUI((Player) sender, 54, playerManagement.getPlayerColor(target) + "&a's grant history.");
+        grantsGUI.setup((Player) sender, target);
+        GUI.open(grantsGUI.getGui());
+
         plugin.selected_grant_history.put(((Player) sender).getUniqueId(), target.getUniqueId());
 
         return true;

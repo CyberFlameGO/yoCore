@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.gui.guis.GrantGUI;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
@@ -49,7 +50,10 @@ public class GrantCommand implements CommandExecutor {
         plugin.grant_reason.remove(((Player) sender).getUniqueId());
         plugin.grant_duration.remove(((Player) sender).getUniqueId());
 
-        new GrantGUI().openGrantGUI((Player) sender, target);
+        GrantGUI grantGUI = new GrantGUI((Player) sender, 54, "&aSelect a grant.");
+        grantGUI.setup((Player) sender, target);
+        GUI.open(grantGUI.getGui());
+
         plugin.grant_player.put(((Player) sender).getUniqueId(), target.getUniqueId());
 
         return true;
