@@ -1,6 +1,8 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.commands.GrantCommand;
+import me.yochran.yocore.gui.GUI;
+import me.yochran.yocore.gui.guis.GrantConfirmGUI;
 import me.yochran.yocore.gui.guis.GrantGUI;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -35,9 +37,11 @@ public class GrantCustomReasonListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    new GrantGUI().openConfirmGUI(event.getPlayer(), target, plugin.grant_grant.get(event.getPlayer().getUniqueId()), plugin.grant_duration.get(event.getPlayer().getUniqueId()), plugin.grant_reason.get(event.getPlayer().getUniqueId()));
+                    GrantConfirmGUI grantConfirmGUI = new GrantConfirmGUI(event.getPlayer(), 45, "&aConfirm the grant.");
+                    grantConfirmGUI.setup(event.getPlayer(), target, plugin.grant_grant.get(event.getPlayer().getUniqueId()), plugin.grant_duration.get(event.getPlayer().getUniqueId()), plugin.grant_reason.get(event.getPlayer().getUniqueId()));
+                    GUI.open(grantConfirmGUI.getGui());
                 }
-            }.runTaskLater(plugin, 5);
+            }.runTaskLater(plugin, 1);
 
             plugin.grant_custom_reason.remove(event.getPlayer().getUniqueId());
         }

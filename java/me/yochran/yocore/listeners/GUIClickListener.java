@@ -26,15 +26,7 @@ public class GUIClickListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == XMaterial.AIR.parseMaterial())
             return;
 
-        if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aSelect a chat color."))) {
-            plugin.chat_color.remove(event.getWhoClicked().getUniqueId());
-
-            event.getWhoClicked().closeInventory();
-            event.getWhoClicked().sendMessage(Utils.translate(plugin.getConfig().getString("ChatColor.SelectedColor")
-                    .replace("%color%", event.getCurrentItem().getItemMeta().getDisplayName())));
-
-            plugin.chat_color.put(event.getWhoClicked().getUniqueId(), ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
-        } else if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aPlayer settings."))) {
+        if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aPlayer settings."))) {
             if (event.getCurrentItem().getItemMeta().getDisplayName().contains(Utils.translate("&bPrivate Messages:"))) {
                 Bukkit.getPlayer(event.getWhoClicked().getUniqueId()).performCommand("tpm");
                 event.getWhoClicked().closeInventory();
@@ -83,8 +75,8 @@ public class GUIClickListener implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == XMaterial.AIR.parseMaterial())
             return;
 
-        if (GUI.open_guis.containsKey(event.getWhoClicked())) {
-            GUI gui = GUI.open_guis.get(event.getWhoClicked());
+        if (GUI.getOpenGUIs().containsKey(event.getWhoClicked())) {
+            GUI gui = GUI.getOpenGUIs().get(event.getWhoClicked());
             if (gui != null && event.getClickedInventory() != null && event.getClickedInventory().equals(gui.getInventory())) {
                 event.setCancelled(true);
 

@@ -5,6 +5,7 @@ import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -84,9 +85,10 @@ public class PlayerChatListener implements Listener {
             event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("Settings.GlobalChatAttempt")));
         }
 
-        String message = event.getMessage().replace("&", "").replace("%", "%%");
+        String message = event.getMessage().replaceAll("%", "%%");
+
         if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId())) {
-            switch (plugin.chat_color.get(event.getPlayer().getUniqueId()).toLowerCase()) {
+            switch (ChatColor.stripColor(plugin.chat_color.get(event.getPlayer().getUniqueId())).toLowerCase()) {
                 case "dark red": message = "&4" + message; break;
                 case "light red": message = "&c" + message; break;
                 case "orange": message = "&6" + message; break;
@@ -102,6 +104,11 @@ public class PlayerChatListener implements Listener {
                 case "bold": message = "&l" + message; break;
                 case "italics": message = "&o" + message; break;
             }
+        }
+
+        if (!event.getPlayer().hasPermission("yocore.chatcolor.bypass") && !event.getPlayer().hasPermission("yocore.chatcolor")) {
+            plugin.chat_color.remove(event.getPlayer().getUniqueId());
+            message = message.replace("&", "");
         }
 
         String tag = "";
