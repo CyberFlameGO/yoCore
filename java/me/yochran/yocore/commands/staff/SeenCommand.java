@@ -9,10 +9,6 @@ import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class SeenCommand implements CommandExecutor {
 
@@ -49,9 +45,14 @@ public class SeenCommand implements CommandExecutor {
         String rank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
         String rankDisplay = plugin.getConfig().getString("Ranks." + rank + ".Display");
 
-        long ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
-        long hours = (ticks / 20) / 3600;
-        String playTime = hours + " hours.";
+        long ticks;
+        long hours;
+        String playTime;
+        try {
+            ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            hours = (ticks / 20) / 3600;
+            playTime = hours + " hours.";
+        } catch (NoSuchFieldError ignored) { playTime = "Unavailable."; }
 
         String allIPsMessage = "";
         if (sender.hasPermission("yocore.seen.ip")) {
