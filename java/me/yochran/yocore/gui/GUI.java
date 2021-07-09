@@ -6,6 +6,7 @@ import me.yochran.yocore.utils.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +64,6 @@ public class GUI {
 
     public void setFiller(int slots) {
         ItemBuilder itemBuilder = new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(), 1, "&7 ", new ArrayList<>());
-
         for (int i = 0; i < slots; i++) this.inventory.setItem(i, itemBuilder.getItemStack());
     }
 
@@ -73,7 +73,11 @@ public class GUI {
 
     public void setFiller(int[] slots) {
         ItemBuilder itemBuilder = new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE.parseItem(), 1, "&7 ", new ArrayList<>());
+        for (int i = 0; i < slots.length; i++) this.inventory.setItem(slots[i], itemBuilder.getItemStack());
+    }
 
+    public void setFiller(int[] slots, ItemStack fillerItem) {
+        ItemBuilder itemBuilder = new ItemBuilder(fillerItem, 1, "&7 ", new ArrayList<>());
         for (int i = 0; i < slots.length; i++) this.inventory.setItem(slots[i], itemBuilder.getItemStack());
     }
 

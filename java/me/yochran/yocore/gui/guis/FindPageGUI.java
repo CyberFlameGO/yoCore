@@ -38,17 +38,17 @@ public class FindPageGUI extends CustomGUI {
                             public void run() {
                                 switch (cl.toLowerCase()) {
                                     case "punishments":
-                                        DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's " + type.toLowerCase() + "&as.");
+                                        DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's " + type.toLowerCase() + "&as.");
                                         detailedPunishmentHistoryGUI.setup(type, getGui().getPlayer(), target, (page + 1));
                                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                                         break;
                                     case "grants":
-                                        GrantsGUI grantsGUI = new GrantsGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
+                                        GrantsGUI grantsGUI = new GrantsGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's grant history.");
                                         grantsGUI.setup(getGui().getPlayer(), target, (page + 1));
                                         GUI.open(grantsGUI.getGui());
                                         break;
                                     case "reports":
-                                        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's report history.");
+                                        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's report history.");
                                         reportHistoryGUI.setup(target, (page + 1));
                                         GUI.open(reportHistoryGUI.getGui());
                                         break;
