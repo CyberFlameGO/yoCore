@@ -25,6 +25,7 @@ public class GUI {
 
     public GUI(Player player, int size, String title) {
         this.player = player;
+
         this.inventory = Bukkit.createInventory(null, size, Utils.translate(title));
         this.buttons = new HashMap<>();
     }
@@ -51,6 +52,11 @@ public class GUI {
             for (int i = 1; i < button.getAmount(); i++)
                 inventory.addItem(itemBuilder.getItemStack());
         }
+    }
+
+    public void removeButton(int slot) {
+        buttons.remove(slot);
+        inventory.setItem(slot, null);
     }
 
     public Button getButton(int slot) { return buttons.get(slot); }
