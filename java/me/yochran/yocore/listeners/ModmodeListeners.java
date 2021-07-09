@@ -1,5 +1,7 @@
 package me.yochran.yocore.listeners;
 
+import me.yochran.yocore.gui.GUI;
+import me.yochran.yocore.gui.guis.OnlinePlayersGUI;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -72,35 +74,9 @@ public class ModmodeListeners implements Listener {
         }
 
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&6&lOnline Players"))) {
-            Inventory inventory = Bukkit.createInventory(event.getPlayer(), 54, Utils.translate("&6&lOnline Players"));
-
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
-                SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-                skullMeta.setOwner(players.getName());
-                skull.setItemMeta(skullMeta);
-
-                ItemStack item = skull;
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(players)));
-
-                String rank = plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank");
-                String rankDisplay = plugin.getConfig().getString("Ranks." + rank.toUpperCase() + ".Display");
-
-                List<String> itemLore = new ArrayList<>();
-                itemLore.add(Utils.translate("&7&m--------------------------"));
-                itemLore.add(Utils.translate("&eRank: &f" + rankDisplay));
-                itemLore.add(Utils.translate("&r "));
-                itemLore.add(Utils.translate("&eClick to teleport to " + playerManagement.getPlayerColor(players)));
-                itemLore.add(Utils.translate("&7&m--------------------------"));
-
-                itemMeta.setLore(itemLore);
-                item.setItemMeta(itemMeta);
-
-                inventory.addItem(item);
-            }
-
-            event.getPlayer().openInventory(inventory);
+            OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(event.getPlayer(), 27, "&aOnline players.");
+            onlinePlayersGUI.setup(1);
+            GUI.open(onlinePlayersGUI.getGui());
         }
 
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&7&lBecome Invisible"))) {

@@ -19,11 +19,15 @@ public class VanishCheckListeners implements Listener {
 
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player))
-            return;
+        if (event.getEntity() instanceof Player) {
+            if (plugin.vanished_players.contains(event.getEntity().getUniqueId()))
+                event.setCancelled(true);
+        }
 
-        if (plugin.vanished_players.contains(event.getEntity().getUniqueId()) || plugin.vanished_players.contains(event.getDamager().getUniqueId()))
-            event.setCancelled(true);
+        if (event.getDamager() instanceof Player) {
+            if (plugin.vanished_players.contains(event.getDamager().getUniqueId()))
+                event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -39,8 +43,10 @@ public class VanishCheckListeners implements Listener {
     @EventHandler
     public void onMobNotice(EntityTargetEvent event) {
         if (event.getTarget() instanceof Player) {
-            if (plugin.vanished_players.contains(event.getTarget().getUniqueId()))
+            if (plugin.vanished_players.contains(event.getTarget().getUniqueId())) {
+                event.setTarget(null);
                 event.setCancelled(true);
+            }
         }
     }
 

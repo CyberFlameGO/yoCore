@@ -57,6 +57,11 @@ public class FindPageGUI extends CustomGUI {
                                         grantGUI.setup(getGui().getPlayer(), target, (page + 1));
                                         GUI.open(grantGUI.getGui());
                                         break;
+                                    case "onlineplayers":
+                                        OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(getGui().getPlayer(), 27, "&aOnline players.");
+                                        onlinePlayersGUI.setup(page + 1);
+                                        GUI.open(onlinePlayersGUI.getGui());
+                                        break;
                                 }
                             }
                         }.runTaskLater(plugin, 1);
