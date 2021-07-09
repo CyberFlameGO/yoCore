@@ -87,7 +87,7 @@ public class GrantConfirmGUI extends CustomGUI {
                 () -> {
                     GUI.close(gui);
 
-                    player.sendMessage(Utils.translate(plugin.getConfig().getString("Grant.CancelledGrant")));
+                    player.sendMessage(Utils.translate(plugin.getConfig().getString("Grant.Confirm.CancelledGrant")));
 
                     plugin.grant_player.remove(player.getUniqueId());
                     plugin.grant_type.remove(player.getUniqueId());

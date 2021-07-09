@@ -1,9 +1,6 @@
 package me.yochran.yocore.gui.guis;
 
-import me.yochran.yocore.gui.Button;
-import me.yochran.yocore.gui.CustomGUI;
-import me.yochran.yocore.gui.GUI;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.gui.*;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -12,13 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class GrantGUI extends CustomGUI {
+public class GrantGUI extends CustomGUI implements PagedGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public GrantGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -26,8 +21,21 @@ public class GrantGUI extends CustomGUI {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
-    public void setup(Player player, OfflinePlayer target) {
+    @Override
+    public void setupPagedGUI(Map<Integer, Button> entry, int page) {
+        for (Map.Entry<Integer, Button> button : entry.entrySet()) {
+            int[] data = Utils.getHistorySlotData(button.getKey());
+            if (page == data[0])
+                gui.setButton(data[1] + 9, button.getValue());
+        }
+    }
+
+    public void setup(Player player, OfflinePlayer target, int page) {
         int loop = -1;
+
+        Map<Integer, Button> buttons = new HashMap<>();
+        Set<Integer> pages = new HashSet<>();
+
         for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false)) {
             loop++;
 
@@ -57,7 +65,7 @@ public class GrantGUI extends CustomGUI {
 
             itemBuilder.getLore().add(Utils.translate(permission));
 
-            gui.setButton(loop, new Button(
+            Button button = new Button(
                     itemBuilder.getItem(),
                     1,
                     () -> {
@@ -79,7 +87,9 @@ public class GrantGUI extends CustomGUI {
                     },
                     itemBuilder.getName(),
                     itemBuilder.getLore()
-            ));
+            );
+
+            buttons.put(loop, button);
         }
 
         for (String perm : plugin.getConfig().getConfigurationSection("Grant.Permission.Items").getKeys(false)) {
@@ -107,7 +117,7 @@ public class GrantGUI extends CustomGUI {
                     ItemBuilder.translateLore(itemLore)
             );
 
-            gui.setButton(loop, new Button(
+            Button button = new Button(
                     itemBuilder.getItem(),
                     () -> {
                         if (player.hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))) {
@@ -128,7 +138,25 @@ public class GrantGUI extends CustomGUI {
                     },
                     itemBuilder.getName(),
                     itemBuilder.getLore()
-            ));
+            );
+
+            buttons.put(loop, button);
         }
+
+        for (Map.Entry<Integer, Button> entry : buttons.entrySet()) pages.add((entry.getKey() / 9) + 1);
+
+        Toolbar toolbar = new Toolbar(getGui(), "Grant", page, new ArrayList<>(pages), () -> {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    GrantGUI grantGUI = new GrantGUI(player, 27, "&aSelect a grant.");
+                    grantGUI.setup(player, target, Toolbar.getNewPage().get());
+                    GUI.open(grantGUI.getGui());
+                }
+            }.runTaskLater(plugin, 1);
+        });
+
+        toolbar.create(target, null);
+        setupPagedGUI(buttons, page);
     }
 }

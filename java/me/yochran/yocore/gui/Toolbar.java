@@ -1,6 +1,5 @@
 package me.yochran.yocore.gui;
 
-import me.yochran.yocore.gui.guis.DetailedPunishmentHistoryGUI;
 import me.yochran.yocore.gui.guis.FindPageGUI;
 import me.yochran.yocore.gui.guis.PunishmentHistoryGUI;
 import me.yochran.yocore.utils.ItemBuilder;
@@ -44,8 +43,8 @@ public class Toolbar {
     public static AtomicInteger getNewPage() { return newPage; }
 
     public void create(OfflinePlayer target, String type) {
-        gui.setFiller(new int[] { 9,10,11,12,13,14,15,16,17 });
-        gui.setFiller(new int[] { 18,19,20,21,22,23,24,25,26 }, XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
+        gui.setFiller(new int[] { 0,1,2,3,4,5,6,7,8 });
+        gui.setFiller(new int[] { 18,19,20,21,22,23,24,25,26 });
 
         ItemBuilder firstPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lYou are on the first page.", new ArrayList<>());
         ItemBuilder lastPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lYou are on the last page.", new ArrayList<>());
@@ -55,9 +54,9 @@ public class Toolbar {
         ItemBuilder back = new ItemBuilder(XMaterial.ARROW.parseItem(), 1, "&6&lGo back to main menu.", new ArrayList<>());
         ItemBuilder exit = new ItemBuilder(XMaterial.BARRIER.parseItem(), 1, "&4&lExit", new ArrayList<>());
 
-        gui.setButton(9, new Button(firstPage.getItem(), firstPage.getName(), firstPage.getLore()));
-        gui.setButton(10, new Button(previousPage.getItem(), previousPage.getName(), previousPage.getLore()));
-        gui.setButton(15, new Button(
+        gui.setButton(0, new Button(firstPage.getItem(), firstPage.getName(), firstPage.getLore()));
+        gui.setButton(1, new Button(previousPage.getItem(), previousPage.getName(), previousPage.getLore()));
+        gui.setButton(4, new Button(
                 findPage.getItem(),
                 () -> {
                     GUI.close(gui);
@@ -74,15 +73,15 @@ public class Toolbar {
                 findPage.getName(),
                 findPage.getLore()
         ));
-        gui.setButton(16, new Button(nextPage.getItem(), nextPage.getName(), nextPage.getLore()));
-        gui.setButton(17, new Button(lastPage.getItem(), lastPage.getName(), lastPage.getLore()));
+        gui.setButton(7, new Button(nextPage.getItem(), nextPage.getName(), nextPage.getLore()));
+        gui.setButton(8, new Button(lastPage.getItem(), lastPage.getName(), lastPage.getLore()));
 
         Runnable reopen = getReopen();
 
         if (page != 1) {
             firstPage.setItem(XMaterial.MAGENTA_DYE.parseItem());
             firstPage.setName("&a&lFirst page.");
-            gui.setButton(9, new Button(firstPage.getItem(), () -> {
+            gui.setButton(0, new Button(firstPage.getItem(), () -> {
                 GUI.close(gui);
                 newPage.set(1);
                 reopen.run();
@@ -91,7 +90,7 @@ public class Toolbar {
         if (Collections.min(getTotalPages()) == 1 && page > Collections.min(getTotalPages())) {
             previousPage.setItem(XMaterial.LIME_DYE.parseItem());
             previousPage.setName("&a&lPrevious page");
-            gui.setButton(10, new Button(previousPage.getItem(), () -> {
+            gui.setButton(1, new Button(previousPage.getItem(), () -> {
                 GUI.close(gui);
                 newPage.set(page - 1);
                 reopen.run();
@@ -100,7 +99,7 @@ public class Toolbar {
         if (Collections.max(getTotalPages()) > 1 && page < Collections.max(getTotalPages())) {
             nextPage.setItem(XMaterial.LIME_DYE.parseItem());
             nextPage.setName("&a&lNext page");
-            gui.setButton(16, new Button(nextPage.getItem(), () -> {
+            gui.setButton(7, new Button(nextPage.getItem(), () -> {
                 GUI.close(gui);
                 newPage.set(page + 1);
                 reopen.run();
@@ -109,7 +108,7 @@ public class Toolbar {
         if (page < Collections.max(getTotalPages())) {
             firstPage.setItem(XMaterial.MAGENTA_DYE.parseItem());
             firstPage.setName("&a&lLast page.");
-            gui.setButton(17, new Button(firstPage.getItem(), () -> {
+            gui.setButton(8, new Button(firstPage.getItem(), () -> {
                 GUI.close(gui);
                 newPage.set(Collections.max(getTotalPages()));
                 reopen.run();

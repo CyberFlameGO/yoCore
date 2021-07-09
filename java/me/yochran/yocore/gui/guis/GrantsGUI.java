@@ -30,7 +30,7 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
         for (Map.Entry<Integer, Button> button : entry.entrySet()) {
             int[] data = Utils.getHistorySlotData(button.getKey());
             if (page == data[0])
-                gui.setButton(data[1], button.getValue());
+                gui.setButton(data[1] + 9, button.getValue());
         }
     }
 

@@ -52,6 +52,11 @@ public class FindPageGUI extends CustomGUI {
                                         reportHistoryGUI.setup(target, (page + 1));
                                         GUI.open(reportHistoryGUI.getGui());
                                         break;
+                                    case "grant":
+                                        GrantGUI grantGUI = new GrantGUI(getGui().getPlayer(), 27, "&aSelect a grant.");
+                                        grantGUI.setup(getGui().getPlayer(), target, (page + 1));
+                                        GUI.open(grantGUI.getGui());
+                                        break;
                                 }
                             }
                         }.runTaskLater(plugin, 1);
