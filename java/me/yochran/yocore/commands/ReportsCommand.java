@@ -44,7 +44,7 @@ public class ReportsCommand implements CommandExecutor {
             return true;
         }
 
-        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI((Player) sender, 18, playerManagement.getPlayerColor(target) + "&a's report history.");
+        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI((Player) sender, 27, playerManagement.getPlayerColor(target) + "&a's report history.");
         reportHistoryGUI.setup(target, 1);
         GUI.open(reportHistoryGUI.getGui());
 
