@@ -1055,6 +1055,7 @@ GList:
 
 Spawn:
   SpawnOnWorldChange: true
+  OverrideBeds: true
   MustBePlayer: "&cYou must be a player to use that command."
   IncorrectUsage: "&cIncorrect Usage! /spawn [player]"
   InvalidPlayer: "&cInvalid Player!"
