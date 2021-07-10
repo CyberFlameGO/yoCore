@@ -87,7 +87,7 @@ public class PlayerChatListener implements Listener {
 
         String message = event.getMessage().replaceAll("%", "%%");
 
-        if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId())) {
+        if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId()) && event.getPlayer().hasPermission("yocore.chatcolor")) {
             switch (ChatColor.stripColor(plugin.chat_color.get(event.getPlayer().getUniqueId())).toLowerCase()) {
                 case "dark red": message = "&4" + message; break;
                 case "light red": message = "&c" + message; break;

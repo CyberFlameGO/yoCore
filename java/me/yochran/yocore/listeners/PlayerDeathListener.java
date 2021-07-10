@@ -108,19 +108,19 @@ public class PlayerDeathListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        event.setDeathMessage("");
-        new BukkitRunnable() {
-            @Override
-            public void run() { playerManagement.sendToSpawn(event.getEntity().getWorld().getName(), event.getEntity()); }
-        }.runTaskLater(plugin, 1);
-    }
-
-    @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        new BukkitRunnable() {
-            @Override
-            public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
-        }.runTaskLater(plugin, 1);
+        if (event.getPlayer().getBedSpawnLocation() == null) {
+            new BukkitRunnable() {
+                @Override
+                public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
+            }.runTaskLater(plugin, 1);
+        } else {
+            if (plugin.getConfig().getBoolean("Spawn.OverrideBeds")) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
+                }.runTaskLater(plugin, 1);
+            }
+        }
     }
 }
