@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.stats;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.management.StatsManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -18,6 +19,7 @@ public class StatsCommand implements CommandExecutor {
     private final yoCore plugin;
     private final StatsManagement statsManagement = new StatsManagement();
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public StatsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -30,7 +32,7 @@ public class StatsCommand implements CommandExecutor {
             return true;
         }
 
-        if (!statsManagement.statsAreEnabled(((Player) sender).getWorld().getName())) {
+        if (!statsManagement.statsAreEnabled(serverManagement.getServer((Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.NotEnabledMessage")));
             return true;
         }
@@ -41,7 +43,7 @@ public class StatsCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            Map<String, String> stats = statsManagement.getAllStats(((Player) sender).getWorld().getName(), (Player) sender);
+            Map<String, String> stats = statsManagement.getAllStats(serverManagement.getServer((Player) sender), (Player) sender);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.Format")
                     .replace("%player%", playerManagement.getPlayerColor((Player) sender))
@@ -51,12 +53,12 @@ public class StatsCommand implements CommandExecutor {
                     .replace("%streak%", stats.get("Streak"))));
         } else {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-            if (!statsManagement.isInitialized(((Player) sender).getWorld().getName(), target)) {
+            if (!statsManagement.isInitialized(target)) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.InvalidPlayer")));
                 return true;
             }
 
-            Map<String, String> stats = statsManagement.getAllStats(((Player) sender).getWorld().getName(), target);
+            Map<String, String> stats = statsManagement.getAllStats(serverManagement.getServer((Player) sender), target);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.Format")
                     .replace("%player%", playerManagement.getPlayerColor(target))

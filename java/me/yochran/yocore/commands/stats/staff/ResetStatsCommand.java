@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.stats.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.management.StatsManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -16,6 +17,7 @@ public class ResetStatsCommand implements CommandExecutor {
     private final yoCore plugin;
     private final StatsManagement statsManagement = new StatsManagement();
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public ResetStatsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,7 +35,7 @@ public class ResetStatsCommand implements CommandExecutor {
             return true;
         }
 
-        if (!statsManagement.statsAreEnabled(((Player) sender).getWorld().getName())) {
+        if (!statsManagement.statsAreEnabled(serverManagement.getServer((Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.NotEnabledMessage")));
             return true;
         }
@@ -44,12 +46,12 @@ public class ResetStatsCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-        if (!statsManagement.isInitialized(((Player) sender).getWorld().getName(), target)) {
+        if (!statsManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.InvalidPlayer")));
             return true;
         }
 
-        statsManagement.resetPlayer(((Player) sender).getWorld().getName(), target);
+        statsManagement.resetPlayer(serverManagement.getServer((Player) sender), target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))));

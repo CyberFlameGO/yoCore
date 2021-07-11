@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ public class StaffChatCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public StaffChatCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -45,7 +47,7 @@ public class StaffChatCommand implements CommandExecutor {
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%message%", message)
-                        .replace("%server%", plugin.getConfig().getString("ServerName"))
+                        .replace("%server%", serverManagement.getName(serverManagement.getServer((Player) sender)))
                         .replace("%world%", ((Player) sender).getWorld().getName())));
             }
         }

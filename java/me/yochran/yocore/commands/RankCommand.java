@@ -34,7 +34,6 @@ public class RankCommand implements CommandExecutor {
             "prefix",
             "color",
             "display",
-            "priority",
             "item",
             "permission",
             "permissions"
@@ -237,30 +236,6 @@ public class RankCommand implements CommandExecutor {
                         .replace("%display%", display)));
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Display", display);
-                plugin.saveConfig();
-
-                for (Player player1 : Bukkit.getOnlinePlayers()) {
-                    for (Team team : player1.getScoreboard().getTeams())
-                        player1.getScoreboard().getTeam(team.getName()).unregister();
-                }
-
-                break;
-            case "priority":
-                if (args.length != 3) {
-                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
-                    return true;
-                }
-
-                if (!plugin.ranks.contains(args[1].toUpperCase())) {
-                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidRank")));
-                    return true;
-                }
-
-                sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.PriorityChanged")
-                        .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
-                        .replace("%priority%", args[2])));
-
-                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Priority", Integer.parseInt(args[2]));
                 plugin.saveConfig();
 
                 for (Player player1 : Bukkit.getOnlinePlayers()) {

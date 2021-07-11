@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class SendCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public SendCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -40,25 +42,19 @@ public class SendCommand implements CommandExecutor {
             return true;
         }
 
-        List<String> servers = new ArrayList<>();
-        for (String server : plugin.worldData.config.getConfigurationSection("Servers").getKeys(false)) {
-            if (plugin.worldData.config.getBoolean("Servers." + server + ".Enabled"))
-                servers.add(plugin.worldData.config.getString("Servers." + server + ".World").toUpperCase());
-        }
-
-        if (!servers.contains(args[1].toUpperCase())) {
+        if (!serverManagement.getServers().contains(args[1].toUpperCase())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Send.InvalidServer")));
             return true;
         }
 
-        playerManagement.sendToSpawn(Bukkit.getWorld(args[1]).getName(), target);
+        playerManagement.sendToSpawn(args[1].toUpperCase(), target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Send.ExecutorMessage")
                 .replace("%target%", playerManagement.getPlayerColor(target))
-                .replace("%server%", Bukkit.getWorld(args[1]).getName())));
+                .replace("%server%", serverManagement.getName(args[1].toUpperCase()))));
 
         target.sendMessage(Utils.translate(plugin.getConfig().getString("Send.TargetMessage")
-                .replace("%server%", Bukkit.getWorld(args[1]).getName())));
+                .replace("%server%", serverManagement.getName(args[1].toUpperCase()))));
 
         return true;
     }

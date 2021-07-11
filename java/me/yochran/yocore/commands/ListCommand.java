@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -14,11 +15,13 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ListCommand implements CommandExecutor, Listener {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public ListCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -29,7 +32,7 @@ public class ListCommand implements CommandExecutor, Listener {
         List<String> players = new ArrayList<>();
 
         for (String rank : plugin.ranks) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : serverManagement.getPlayers(serverManagement.getServer((Player) sender))) {
                 if (!plugin.vanished_players.contains(player.getUniqueId()) && plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank)) {
                     players.add(playerManagement.getPlayerColor(player));
                 }
@@ -48,7 +51,13 @@ public class ListCommand implements CommandExecutor, Listener {
             else playerMessage = playerMessage + "&7, " + player;
         }
 
-        int online = Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size();
+        List<UUID> vanished = new ArrayList<>();
+        for (Player player : serverManagement.getPlayers(serverManagement.getServer((Player) sender))) {
+            if (plugin.vanished_players.contains(player.getUniqueId()))
+                vanished.add(player.getUniqueId());
+        }
+
+        int online = serverManagement.getPlayers(serverManagement.getServer((Player) sender)).size() - vanished.size();
         int max = plugin.getServer().getMaxPlayers();
 
         sender.sendMessage(Utils.translate(rankMessage + "\n&7(&f" + online + "/" + max + "&7) " + playerMessage));

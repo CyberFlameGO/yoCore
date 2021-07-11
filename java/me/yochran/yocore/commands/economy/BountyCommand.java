@@ -2,6 +2,7 @@ package me.yochran.yocore.commands.economy;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ public class BountyCommand implements CommandExecutor {
 
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public BountyCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -31,12 +33,12 @@ public class BountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.economyIsEnabled(((Player) sender).getWorld().getName())) {
+        if (!economyManagement.economyIsEnabled(serverManagement.getServer((Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.NotEnabledMessage")));
             return true;
         }
 
-        if (!economyManagement.bountyIsEnabled(((Player) sender).getWorld().getName())) {
+        if (!economyManagement.bountyIsEnabled(serverManagement.getServer((Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.NotEnabledMessage")));
             return true;
         }
@@ -47,7 +49,7 @@ public class BountyCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-        if (!economyManagement.isInitialized(((Player) sender).getWorld().getName(), target)) {
+        if (!economyManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.InvalidPlayer")));
             return true;
         }
@@ -61,7 +63,7 @@ public class BountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.hasEnoughMoney(((Player) sender).getWorld().getName(), (Player) sender, Double.parseDouble(args[1]))) {
+        if (!economyManagement.hasEnoughMoney(serverManagement.getServer((Player) sender), (Player) sender, Double.parseDouble(args[1]))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.NotEnoughMoney")));
             return true;
         }
@@ -73,8 +75,8 @@ public class BountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.isBountied(((Player) sender).getWorld().getName(), target)) {
-            economyManagement.setBounty(((Player) sender).getWorld().getName(), (Player) sender, target, Double.parseDouble(args[1]));
+        if (!economyManagement.isBountied(serverManagement.getServer((Player) sender), target)) {
+            economyManagement.setBounty(serverManagement.getServer((Player) sender), (Player) sender, target, Double.parseDouble(args[1]));
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.Format")
                     .replace("%target%", playerManagement.getPlayerColor(target))
@@ -86,17 +88,17 @@ public class BountyCommand implements CommandExecutor {
                         .replace("%target%", playerManagement.getPlayerColor(target))
                         .replace("%amount%", df.format(Double.parseDouble(args[1])))));
         } else {
-            economyManagement.increaseBounty(((Player) sender).getWorld().getName(), (Player) sender, target, Double.parseDouble(args[1]));
+            economyManagement.increaseBounty(serverManagement.getServer((Player) sender), (Player) sender, target, Double.parseDouble(args[1]));
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.FormatIncreased")
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%amount%", df.format(economyManagement.getBountyAmount(((Player) sender).getWorld().getName(), target)))));
+                    .replace("%amount%", df.format(economyManagement.getBountyAmount(serverManagement.getServer((Player) sender), target)))));
 
             for (Player players : Bukkit.getWorld(((Player) sender).getWorld().getName()).getPlayers())
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.BroadcastIncreased")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%amount%", df.format(economyManagement.getBountyAmount(((Player) sender).getWorld().getName(), target)))));
+                        .replace("%amount%", df.format(economyManagement.getBountyAmount(serverManagement.getServer((Player) sender), target)))));
         }
 
         return true;

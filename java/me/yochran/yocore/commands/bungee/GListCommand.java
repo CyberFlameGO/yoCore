@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ public class GListCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public GListCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,21 +35,15 @@ public class GListCommand implements CommandExecutor {
             return true;
         }
 
-        List<String> servers = new ArrayList<>();
-        for (String server : plugin.worldData.config.getConfigurationSection("Servers").getKeys(false)) {
-            if (plugin.worldData.config.getBoolean("Servers." + server + ".Enabled"))
-                servers.add(plugin.worldData.config.getString("Servers." + server + ".World").toUpperCase());
-        }
-
         if (!args[0].equalsIgnoreCase("showall")) {
-            if (!servers.contains(args[0].toUpperCase())) {
+            if (!serverManagement.getServers().contains(args[0].toUpperCase())) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("GList.InvalidServer")));
                 return true;
             }
 
             List<String> players = new ArrayList<>();
             for (String rank : plugin.ranks) {
-                for (Player player : Bukkit.getWorld(args[0]).getPlayers()) {
+                for (Player player : serverManagement.getPlayers(args[0])) {
                     if (plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank))
                         players.add(playerManagement.getPlayerColor(player));
                 }
@@ -60,17 +56,18 @@ public class GListCommand implements CommandExecutor {
             }
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("GList.Format")
-                    .replace("%server%", Bukkit.getWorld(args[0]).getName())
+                    .replace("%server%", serverManagement.getName(args[0].toUpperCase()))
                     .replace("%server_online%", String.valueOf(Bukkit.getWorld(args[0]).getPlayers().size()))
                     .replace("%online_players%", player_message)));
 
         } else {
             String server_message = "";
 
-            for (String server : servers) {
+            for (String server : serverManagement.getServers()) {
                 List<String> players = new ArrayList<>();
+
                 for (String rank : plugin.ranks) {
-                    for (Player player : Bukkit.getWorld(server).getPlayers()) {
+                    for (Player player : serverManagement.getPlayers(server)) {
                         if (plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank))
                             players.add(playerManagement.getPlayerColor(player));
                     }
@@ -83,12 +80,12 @@ public class GListCommand implements CommandExecutor {
                 }
 
                 if (server_message.equalsIgnoreCase("")) server_message = plugin.getConfig().getString("GList.Format")
-                        .replace("%server%", Bukkit.getWorld(server).getName())
-                        .replace("%server_online%", String.valueOf(Bukkit.getWorld(server).getPlayers().size()))
+                        .replace("%server%", serverManagement.getName(server))
+                        .replace("%server_online%", String.valueOf(serverManagement.getPlayers(server).size()))
                         .replace("%online_players%", player_message);
                 else server_message = server_message + "\n" + plugin.getConfig().getString("GList.Format")
-                        .replace("%server%", Bukkit.getWorld(server).getName())
-                        .replace("%server_online%", String.valueOf(Bukkit.getWorld(server).getPlayers().size()))
+                        .replace("%server%", serverManagement.getName(server))
+                        .replace("%server_online%", String.valueOf(serverManagement.getPlayers(server).size()))
                         .replace("%online_players%", player_message);
             }
 

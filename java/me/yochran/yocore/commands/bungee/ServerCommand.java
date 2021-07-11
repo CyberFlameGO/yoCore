@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class ServerCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public ServerCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -39,21 +41,15 @@ public class ServerCommand implements CommandExecutor {
             return true;
         }
 
-        List<String> servers = new ArrayList<>();
-        for (String server : plugin.worldData.config.getConfigurationSection("Servers").getKeys(false)) {
-            if (plugin.worldData.config.getBoolean("Servers." + server + ".Enabled"))
-                servers.add(plugin.worldData.config.getString("Servers." + server + ".World").toUpperCase());
-        }
-
-        if (!servers.contains(args[0].toUpperCase())) {
+        if (!serverManagement.getServers().contains(args[0].toUpperCase())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("ServerCommand.InvalidServer")));
             return true;
         }
 
-        playerManagement.sendToSpawn(Bukkit.getWorld(args[0]).getName(), (Player) sender);
+        playerManagement.sendToSpawn(args[0].toUpperCase(), (Player) sender);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ServerCommand.Format")
-                .replace("%server%", Bukkit.getWorld(args[0]).getName())));
+                .replace("%server%", serverManagement.getName(args[0].toUpperCase()))));
 
         return true;
     }

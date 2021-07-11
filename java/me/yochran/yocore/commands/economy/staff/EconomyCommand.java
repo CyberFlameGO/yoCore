@@ -2,6 +2,7 @@ package me.yochran.yocore.commands.economy.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ public class EconomyCommand implements CommandExecutor {
 
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public EconomyCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -31,7 +33,7 @@ public class EconomyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.economyIsEnabled(((Player) sender).getWorld().getName())) {
+        if (!economyManagement.economyIsEnabled(serverManagement.getServer((Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.NotEnabledMessage")));
             return true;
         }
@@ -47,7 +49,7 @@ public class EconomyCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-        if (!economyManagement.isInitialized(((Player) sender).getWorld().getName(), target)) {
+        if (!economyManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.InvalidPlayer")));
             return true;
         }
@@ -61,15 +63,15 @@ public class EconomyCommand implements CommandExecutor {
                     return true;
                 }
 
-                economyManagement.resetPlayer(((Player) sender).getWorld().getName(), target);
+                economyManagement.resetPlayer(serverManagement.getServer((Player) sender), target);
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Reset")
                         .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%amount%", df.format(economyManagement.getMoney(((Player) sender).getWorld().getName(), target)))));
+                        .replace("%amount%", df.format(economyManagement.getMoney(serverManagement.getServer((Player) sender), target)))));
 
                 if (target.isOnline()) {
                     Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.FormatTarget")
-                            .replace("%balance%", df.format(economyManagement.getMoney(((Player) sender).getWorld().getName(), target)))));
+                            .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer((Player) sender), target)))));
                 }
 
                 break;
@@ -87,16 +89,16 @@ public class EconomyCommand implements CommandExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("set")) {
-                    plugin.economyData.config.set(target.getUniqueId().toString() + "." + ((Player) sender).getWorld().getName() + "." + ".Balance", Double.parseDouble(args[2]));
+                    plugin.economyData.config.set(target.getUniqueId().toString() + "." + serverManagement.getServer((Player) sender) + "." + ".Balance", Double.parseDouble(args[2]));
                     plugin.economyData.saveData();
 
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Set")
                             .replace("%target%", playerManagement.getPlayerColor(target))
-                            .replace("%amount%", df.format(economyManagement.getMoney(((Player) sender).getWorld().getName(), target)))));
+                            .replace("%amount%", df.format(economyManagement.getMoney(serverManagement.getServer((Player) sender), target)))));
 
                     if (target.isOnline()) {
                         Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.FormatTarget")
-                                .replace("%balance%", df.format(economyManagement.getMoney(((Player) sender).getWorld().getName(), target)))));
+                                .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer((Player) sender), target)))));
                     }
                 } else if (args[0].equalsIgnoreCase("give")) {
                     try { Integer.parseInt(args[2]); } catch (NumberFormatException exception) {
@@ -105,12 +107,12 @@ public class EconomyCommand implements CommandExecutor {
                         return true;
                     }
 
-                    if (economyManagement.isOverMaximum(Double.parseDouble(args[2]) + economyManagement.getMoney(((Player) sender).getWorld().getName(), target))) {
+                    if (economyManagement.isOverMaximum(Double.parseDouble(args[2]) + economyManagement.getMoney(serverManagement.getServer((Player) sender), target))) {
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.InvalidAmount")
                                 .replace("%maximum%", df.format(plugin.getConfig().getDouble("Economy.MaximumAmount")))));
                         return true;
                     }
-                    economyManagement.addMoney(((Player) sender).getWorld().getName(), target, Double.parseDouble(args[2]));
+                    economyManagement.addMoney(serverManagement.getServer((Player) sender), target, Double.parseDouble(args[2]));
 
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Give")
                             .replace("%target%", playerManagement.getPlayerColor(target))
@@ -118,7 +120,7 @@ public class EconomyCommand implements CommandExecutor {
 
                     if (target.isOnline()) {
                         Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.FormatTarget")
-                                .replace("%balance%", df.format(economyManagement.getMoney(((Player) sender).getWorld().getName(), target)))));
+                                .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer((Player) sender), target)))));
                     }
                 } else if (args[0].equalsIgnoreCase("take")) {
                     try { Integer.parseInt(args[2]); } catch (NumberFormatException exception) {
@@ -127,7 +129,7 @@ public class EconomyCommand implements CommandExecutor {
                         return true;
                     }
 
-                    economyManagement.removeMoney(((Player) sender).getWorld().getName(), target, Double.parseDouble(args[2]));
+                    economyManagement.removeMoney(serverManagement.getServer((Player) sender), target, Double.parseDouble(args[2]));
 
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Take")
                             .replace("%target%", playerManagement.getPlayerColor(target))
@@ -135,7 +137,7 @@ public class EconomyCommand implements CommandExecutor {
 
                     if (target.isOnline()) {
                         Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.FormatTarget")
-                                .replace("%balance%", df.format(economyManagement.getMoney(((Player) sender).getWorld().getName(), target)))));
+                                .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer((Player) sender), target)))));
                     }
                 } else {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.IncorrectUsage")));

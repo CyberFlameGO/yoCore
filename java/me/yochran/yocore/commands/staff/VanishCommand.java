@@ -51,6 +51,12 @@ public class VanishCommand implements CommandExecutor {
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.VanishOnSelf")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
+
+                if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
+                    for (Player player : Bukkit.getOnlinePlayers())
+                        player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
+                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                }
             } else {
                 plugin.vanished_players.remove(((Player) sender).getUniqueId());
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.TargetMessageOff")));
@@ -85,6 +91,12 @@ public class VanishCommand implements CommandExecutor {
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.VanishOnOther")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                                 .replace("%target%", playerManagement.getPlayerColor(target))));
+                }
+
+                if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
+                    for (Player player : Bukkit.getOnlinePlayers())
+                        player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
+                                .replace("%player%", playerManagement.getPlayerColor(target))));
                 }
             } else {
                 plugin.vanished_players.remove(target.getUniqueId());
