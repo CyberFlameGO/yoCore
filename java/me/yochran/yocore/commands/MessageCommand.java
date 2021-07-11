@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 
 public class MessageCommand implements CommandExecutor {
 
@@ -25,6 +26,10 @@ public class MessageCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.MustBePlayer")));
+            return true;
+        }
+
+        if (!sender.isOp()) {
             return true;
         }
 
@@ -61,6 +66,11 @@ public class MessageCommand implements CommandExecutor {
             return true;
         }
 
+        plugin.reply.remove(((Player) sender).getUniqueId());
+        plugin.reply.remove(target.getUniqueId());
+        plugin.reply.put(((Player) sender).getUniqueId(), target.getUniqueId());
+        plugin.reply.put(target.getUniqueId(), ((Player) sender).getUniqueId());
+
         String message = "";
         for (int i = 1; i < args.length; i++) {
             message = message + args[i] + " ";
@@ -75,11 +85,6 @@ public class MessageCommand implements CommandExecutor {
 
         if (!plugin.message_sounds_toggled.contains(target.getUniqueId()))
             target.playSound(target.getLocation(), XSound.ENTITY_ARROW_HIT_PLAYER.parseSound(), 100, (float) 0.1);
-
-        plugin.reply.remove(((Player) sender).getUniqueId());
-        plugin.reply.remove(target.getUniqueId());
-        plugin.reply.put(((Player) sender).getUniqueId(), target.getUniqueId());
-        plugin.reply.put(target.getUniqueId(), ((Player) sender).getUniqueId());
 
         return true;
     }

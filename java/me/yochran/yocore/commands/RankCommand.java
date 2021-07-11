@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.management.GrantManagement;
 import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -36,7 +37,7 @@ public class RankCommand implements CommandExecutor {
             "priority",
             "item",
             "permission",
-            "gpermission"
+            "permissions"
     };
 
     public RankCommand() {
@@ -83,25 +84,23 @@ public class RankCommand implements CommandExecutor {
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Display", "&7" + args[1]);
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Priority", priority);
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantItem", "GRAY_WOOL");
-                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantPermission", "yocore.grant." + args[1].toLowerCase());
                 plugin.saveConfig();
 
                 Permission newPermission = new Permission("yocore.grant." + args[1].toLowerCase());
                 newPermission.setDescription("Permission");
-                plugin.getServer().getPluginManager().addPermission(newPermission);
+
+                if (permissionManagement.getAllServerPerms().contains(newPermission))
+                    plugin.getServer().getPluginManager().addPermission(newPermission);
 
                 plugin.ranks.add(args[1].toUpperCase());
 
                 plugin.permissionsData.config.set("Ranks." + args[1].toUpperCase() + ".Permissions", new ArrayList<>());
                 plugin.permissionsData.saveData();
 
-                for (Player player1 : Bukkit.getOnlinePlayers()) {
-                    for (Team team : player1.getScoreboard().getTeams())
-                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                for (Player players : Bukkit.getOnlinePlayers()) {
+                    for (Team team : players.getScoreboard().getTeams())
+                        players.getScoreboard().getTeam(team.getName()).unregister();
                 }
-
-                for (Player players : Bukkit.getOnlinePlayers())
-                    permissionManagement.refreshPlayer(players);
 
                 break;
             case "remove":
@@ -127,7 +126,6 @@ public class RankCommand implements CommandExecutor {
                     if (!priorities.contains(plugin.getConfig().getInt("Ranks." + rank + ".Priority")) && !rank.equalsIgnoreCase(args[1].toUpperCase()))
                         priorities.add(plugin.getConfig().getInt("Ranks." + rank + ".Priority"));
                 }
-
                 lowestPriority = Collections.max(priorities);
 
                 for (String rank : plugin.ranks) {
@@ -151,15 +149,15 @@ public class RankCommand implements CommandExecutor {
                     }
                 }
 
-                for (Permission permission : permissionManagement.getAllPluginPerms()) {
-                    if (permission.getName().equalsIgnoreCase("Ranks." + args[1].toUpperCase() + ".Permission"))
+                for (Permission permission : permissionManagement.getAllServerPerms()) {
+                    if (permission.getName().equalsIgnoreCase("yocore.grant." + args[1].toLowerCase()))
                         plugin.getServer().getPluginManager().removePermission(permission);
                 }
 
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase(), null);
                 plugin.saveConfig();
 
-                plugin.permissionsData.config.set("Ranks." + args[1].toUpperCase() + ".Permissions", null);
+                plugin.permissionsData.config.set("Ranks." + args[1].toUpperCase(), null);
                 plugin.permissionsData.saveData();
 
                 for (Player player1 : Bukkit.getOnlinePlayers()) {
@@ -304,8 +302,9 @@ public class RankCommand implements CommandExecutor {
                         .replace("%item%", name)));
 
                 break;
-            case "gpermission":
-                if (args.length != 3) {
+            case "permission":
+            case "permissions":
+                if (args.length < 3) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
                     return true;
                 }
@@ -315,39 +314,7 @@ public class RankCommand implements CommandExecutor {
                     return true;
                 }
 
-                plugin.getServer().getPluginManager().removePermission(plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".GrantPermission"));
-
-                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantPermission", args[2]);
-                plugin.saveConfig();
-
-                Permission permission = new Permission(args[2]);
-                permission.setDescription("Permission");
-
-                plugin.getServer().getPluginManager().addPermission(permission);
-
-                for (Player player1 : Bukkit.getOnlinePlayers()) {
-                    for (Team team : player1.getScoreboard().getTeams())
-                        player1.getScoreboard().getTeam(team.getName()).unregister();
-                }
-
-                sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantPermissionChanged")
-                        .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
-                        .replace("%permission%", args[2])));
-
-                for (Player players : Bukkit.getOnlinePlayers())
-                    permissionManagement.refreshPlayer(players);
-
-                break;
-            case "permission":
-            case "permissions":
-                if (!plugin.ranks.contains(args[1].toUpperCase())) {
-                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidRank")));
-                    return true;
-                }
-
-                if (!args[2].equalsIgnoreCase("add")
-                        && !args[2].equalsIgnoreCase("remove")
-                        && !args[2].equalsIgnoreCase("list")) {
+                if (!args[2].equalsIgnoreCase("add") && !args[2].equalsIgnoreCase("remove") && !args[2].equalsIgnoreCase("list")) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
                     return true;
                 }
@@ -399,9 +366,6 @@ public class RankCommand implements CommandExecutor {
 
                         break;
                 }
-
-                for (Player players : Bukkit.getOnlinePlayers())
-                    permissionManagement.refreshPlayer(players);
 
                 break;
         }

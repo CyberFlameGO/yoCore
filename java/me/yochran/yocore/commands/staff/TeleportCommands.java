@@ -30,14 +30,14 @@ public class TeleportCommands implements CommandExecutor {
             return true;
         }
 
-        if (!sender.hasPermission("yocore.teleport")) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
-            return true;
-        }
-
         Player target = null;
         switch (command.getName().toLowerCase()) {
             case "teleport":
+                if (!sender.hasPermission("yocore.teleport")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
+                    return true;
+                }
+
                 if (args.length < 1 || args.length > 2) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsage")));
                     return true;
@@ -88,6 +88,11 @@ public class TeleportCommands implements CommandExecutor {
 
                 break;
             case "teleporthere":
+                if (!sender.hasPermission("yocore.teleport")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
+                    return true;
+                }
+
                 if (args.length != 1) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsageHere")));
                     return true;
@@ -113,7 +118,7 @@ public class TeleportCommands implements CommandExecutor {
 
                 break;
             case "teleportall":
-                if (!sender.hasPermission("yocore.teleport.all")) {
+                if (!sender.hasPermission("yocore.teleport.all") && !sender.hasPermission("yocore.teleport")) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
                     return true;
                 }
@@ -224,6 +229,22 @@ public class TeleportCommands implements CommandExecutor {
                         .replace("%player%", playerManagement.getPlayerColor(target))));
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestDenyTarget")
                         .replace("%target%", playerManagement.getPlayerColor((Player) sender))));
+
+                break;
+            case "teleportcancel":
+                if (!sender.hasPermission("yocore.teleportrequest")) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.NoPermission")));
+                    return true;
+                }
+
+                if (!plugin.tpa.containsKey(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestNoRequest")));
+                    return true;
+                }
+
+                plugin.tpa.remove(((Player) sender).getUniqueId());
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestCancel")));
 
                 break;
         }
