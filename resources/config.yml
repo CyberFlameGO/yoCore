@@ -12,6 +12,7 @@ Ranks:
     Color: "&4"
     Display: "&4Owner"
     Priority: 1
+    TabIndex: "a"
     GrantItem: "REDSTONE_BLOCK"
   DEVELOPER:
     ID: "DEVELOPER"
@@ -19,6 +20,7 @@ Ranks:
     Color: "&5&o"
     Display: "&5&oDeveloper"
     Priority: 2
+    TabIndex: "b"
     GrantItem: "PURPLE_WOOL"
   MANAGER:
     ID: "MANAGER"
@@ -26,6 +28,7 @@ Ranks:
     Color: "&c&o"
     Display: "&c&oManager"
     Priority: 3
+    TabIndex: "c"
     GrantItem: "RED_WOOL"
   ADMIN:
     ID: "ADMIN"
@@ -33,6 +36,7 @@ Ranks:
     Color: "&c"
     Display: "&cAdmin"
     Priority: 4
+    TabIndex: "d"
     GrantItem: "RED_WOOL"
   SENIOR-MOD:
     ID: "SENIOR-MOD"
@@ -40,6 +44,7 @@ Ranks:
     Color: "&6&o"
     Display: "&6&oSenior-Mod"
     Priority: 5
+    TabIndex: "e"
     GrantItem: "ORANGE_WOOL"
   MOD:
     ID: "MOD"
@@ -47,6 +52,7 @@ Ranks:
     Color: "&6"
     Display: "&6Mod"
     Priority: 6
+    TabIndex: "f"
     GrantItem: "ORANGE_WOOL"
   TRIAL-MOD:
     ID: "TRIAL-MOD"
@@ -54,6 +60,7 @@ Ranks:
     Color: "&e"
     Display: "&eTrial-Mod"
     Priority: 7
+    TabIndex: "g"
     GrantItem: "YELLOW_WOOL"
   BUILDER:
     ID: "BUILDER"
@@ -61,6 +68,7 @@ Ranks:
     Color: "&2"
     Display: "&2Builder"
     Priority: 8
+    TabIndex: "h"
     GrantItem: "GREEN_WOOL"
   DEFAULT:
     ID: "DEFAULT"
@@ -68,6 +76,7 @@ Ranks:
     Color: "&7"
     Display: "&7Default"
     Priority: 9
+    TabIndex: "i"
     GrantItem: "GRAY_WOOL"
 
 ChatFormat: "%player_tag%%player_prefix%&7: &f%message%"
@@ -108,29 +117,29 @@ JoinMessage:
   Message: "&7(&a+&7) %player%"
   Staff:
     Enabled: true
-    Message: "&b[S] %player% &3connected to &b%world%&3."
+    Message: "&b[S] %player% &3connected to &b%server%&3."
 
 QuitMessage:
   Enabled: true
   Message: "&7(&c-&7) %player%"
   Staff:
     Enabled: true
-    Message: "&b[S] %player% &3disconnected from &b%world%&3."
+    Message: "&b[S] %player% &3disconnected from &b%server%&3."
 
 WorldChangeAlerts:
   Enabled: true
-  Format: "&b[S] %player% &3joined &b%new_world% &3from &b%old_world%&3."
+  Format: "&b[S] %player% &3joined &b%new_server% &3from &b%old_server%&3."
 
 RankCommand:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: |-
     &cIncorrect Usage! /rank
     &cArgument 1:
-    &c - <add/remove/prefix/color/display/priority/item/gpermission/permissions>
+    &c - <add/remove/prefix/color/display/item/gpermission/permissions>
     &cArgument 2:
     &c - <rank>
     &cArgument 3 (Some are optional):
-    &c - [prefix/color/display/priority/gpermission/add/remove]
+    &c - [prefix/color/display/gpermission/add/remove]
     &cArgument 4 (Permissions only):
     &c - <permission>
   InvalidRank: "&cInvalid Rank!"
@@ -537,19 +546,19 @@ StaffChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /sc <message>"
-  Format: "&b[S] &3[%world%] %player%&7: &b%message%"
+  Format: "&b[S] &3[%server%] %player%&7: &b%message%"
 
 AdminChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /ac <message>"
-  Format: "&c[A] &3[%world%] %player%&7: &b%message%"
+  Format: "&c[A] &3[%server%] %player%&7: &b%message%"
 
 ManagementChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: "&cIncorrect Usage! /mc <message>"
-  Format: "&4[M] &3[%world%] %player%&7: &b%message%"
+  Format: "&4[M] &3[%server%] %player%&7: &b%message%"
 
 StaffAlerts:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -588,6 +597,7 @@ Vanish:
   ExecutorMessageOff: "&bYou have taken %target% &bout of &3vanish&b."
   TargetMessageOn: "&bYou are now in &3vanish&b."
   TargetMessageOff: "&bYou are no longer in &3vanish&b."
+  FakeLeave: true
 
 Gamemode:
   MustBePlayer: "&cYou must be a player to use that command."
@@ -856,19 +866,19 @@ Nametags:
     Color: "RED"
 
 Economy:
-  EnabledWorlds:
-    - world
+  EnabledServers:
+    - server
   StartingAmount: 100.0
   # Warning: Going over this maximum amount will cause the plugin to break. In future version,
   # it will be able to be more than this.
   MaximumAmount: 999999999999999
   MoneyPerKill:
-    EnabledWorlds:
-      - world
+    EnabledServers:
+      - server
     Highest: 20.5
     Lowest: 12.5
   MoneyOnKillMessage: "&bYou have killed %target% &bfor &3$%amount%&b."
-  NotEnabledMessage: "&cThe economy is not enabled in this world."
+  NotEnabledMessage: "&cThe economy is not enabled in this server."
   # Economy Command
   Command:
     MustBePlayer: "&cYou must be a player to use that command."
@@ -900,10 +910,10 @@ Pay:
   FormatTarget: "&bYou have been sent &3$%amount% &bfrom %player%&b."
 
 Bounty:
-  EnabledWorlds:
-    - world
+  EnabledServers:
+    - server
   MustBePlayer: "&cYou must be a player to use that command."
-  NotEnabledMessage: "&cBounty is not enabled in this world."
+  NotEnabledMessage: "&cBounty is not enabled in this server."
   MinimumAmount: 100
   RemoveFee: 1000
   IncorrectUsage: "&cIncorrect Usage! /bounty <player> <amount>"
@@ -925,10 +935,10 @@ Unbounty:
   Format: "&bYou have removed the bounty on %target%&b."
 
 Stats:
-  EnabledWorlds:
-    - world
+  EnabledServers:
+    - server
   KilledMessage: "&bYou were killed by %player%&b."
-  NotEnabledMessage: "&cStats are not enabled in this world."
+  NotEnabledMessage: "&cStats are not enabled in this server."
   MinimumStreakEndBroadcast: 10
   StreakEndBroadcast: "&3&l<!> %player% &bhas ended %target%&b's &3%streak% &bkillstreak. &3&l<!>"
   Command:
@@ -1005,6 +1015,7 @@ Servers:
   WorldSeparation: true
   ChatSeparation: true
   Hub:
+    Server: "server"
     World: "world"
     HubEveryJoin: true
     Command:
@@ -1046,7 +1057,7 @@ GList:
     &7&m---------------------------
 
 Spawn:
-  SpawnOnWorldChange: true
+  SpawnOnServerChange: true
   OverrideBeds: true
   MustBePlayer: "&cYou must be a player to use that command."
   IncorrectUsage: "&cIncorrect Usage! /spawn [player]"
