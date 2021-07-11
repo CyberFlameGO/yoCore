@@ -13,7 +13,6 @@ Ranks:
     Display: "&4Owner"
     Priority: 1
     GrantItem: "REDSTONE_BLOCK"
-    GrantPermission: "yocore.grant.owner"
   DEVELOPER:
     ID: "DEVELOPER"
     Prefix: "&7[&5&oDeveloper&7] &5&o"
@@ -21,7 +20,6 @@ Ranks:
     Display: "&5&oDeveloper"
     Priority: 2
     GrantItem: "PURPLE_WOOL"
-    GrantPermission: "yocore.grant.developer"
   MANAGER:
     ID: "MANAGER"
     Prefix: "&7[&c&oManager&7] &c&o"
@@ -29,7 +27,6 @@ Ranks:
     Display: "&c&oManager"
     Priority: 3
     GrantItem: "RED_WOOL"
-    GrantPermission: "yocore.grant.manager"
   ADMIN:
     ID: "ADMIN"
     Prefix: "&7[&cAdmin&7] &c"
@@ -37,7 +34,6 @@ Ranks:
     Display: "&cAdmin"
     Priority: 4
     GrantItem: "RED_WOOL"
-    GrantPermission: "yocore.grant.admin"
   SENIOR-MOD:
     ID: "SENIOR-MOD"
     Prefix: "&7[&6&oSenior-Mod&7] &6&o"
@@ -45,7 +41,6 @@ Ranks:
     Display: "&6&oSenior-Mod"
     Priority: 5
     GrantItem: "ORANGE_WOOL"
-    GrantPermission: "yocore.grant.seniormod"
   MOD:
     ID: "MOD"
     Prefix: "&7[&6Mod&7] &6"
@@ -53,7 +48,6 @@ Ranks:
     Display: "&6Mod"
     Priority: 6
     GrantItem: "ORANGE_WOOL"
-    GrantPermission: "yocore.grant.mod"
   TRIAL-MOD:
     ID: "TRIAL-MOD"
     Prefix: "&7[&eTrial-Mod&7] &e"
@@ -61,7 +55,6 @@ Ranks:
     Display: "&eTrial-Mod"
     Priority: 7
     GrantItem: "YELLOW_WOOL"
-    GrantPermission: "yocore.grant.trialmod"
   BUILDER:
     ID: "BUILDER"
     Prefix: "&7[&2Builder&7] &2"
@@ -69,7 +62,6 @@ Ranks:
     Display: "&2Builder"
     Priority: 8
     GrantItem: "GREEN_WOOL"
-    GrantPermission: "yocore.grant.builder"
   DEFAULT:
     ID: "DEFAULT"
     Prefix: "&7"
@@ -77,7 +69,6 @@ Ranks:
     Display: "&7Default"
     Priority: 9
     GrantItem: "GRAY_WOOL"
-    GrantPermission: "yocore.grant.default"
 
 ChatFormat: "%player_tag%%player_prefix%&7: &f%message%"
 
@@ -689,6 +680,7 @@ Teleport:
   TeleportRequestCancelled: "&bTeleport request cancelled due to movement."
   TeleportRequestDeny: "&bYou have denied %player%&b's teleport request."
   TeleportRequestDenyTarget: "&bYour teleport request to %target% &bhas been denied."
+  TeleportRequestCancel: "&bYou have cancelled your teleport request."
 
 Freeze:
   NoPermission: "&cYou do not have permission to use that command."

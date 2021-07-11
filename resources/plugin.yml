@@ -91,6 +91,8 @@ permissions:
     description: Permission
   yocore.chatcolor:
     description: Permission
+  yocore.chatcolor.bypass:
+    description: Permission.
   yocore.cleargranthistory:
     description: Permission
   yocore.clearreports:
@@ -231,6 +233,9 @@ commands:
   TeleportDeny:
     description: Deny a teleport request.
     aliases: [tpdeny, tpadeny, tpyes]
+  TeleportCancel:
+    description: Cancel your teleport request.
+    aliases: [tpc, tpcancel]
   Freeze:
     description: Freeze a player.
     aliases: ss
