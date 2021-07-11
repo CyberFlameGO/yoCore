@@ -62,6 +62,11 @@ public class FindPageGUI extends CustomGUI {
                                         onlinePlayersGUI.setup(page + 1);
                                         GUI.open(onlinePlayersGUI.getGui());
                                         break;
+                                    case "tags":
+                                        TagsGUI tagsGUI = new TagsGUI(getGui().getPlayer(), 27, "&aChat tags.");
+                                        tagsGUI.setup(page + 1);
+                                        GUI.open(tagsGUI.getGui());
+                                        break;
                                 }
                             }
                         }.runTaskLater(plugin, 1);

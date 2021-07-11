@@ -51,6 +51,8 @@ public final class yoCore extends JavaPlugin {
         // Plugin startup logic
         Bukkit.getConsoleSender().sendMessage("yoCore v1.0 by Yochran is loading...");
 
+        permissionManagement = new PermissionManagement();
+
         saveDefaultConfig();
         registerData();
         registerCommands();
@@ -59,8 +61,6 @@ public final class yoCore extends JavaPlugin {
         refreshPunishments();
         registerRanks();
         registerTags();
-
-        permissionManagement = new PermissionManagement();
 
         permissionManagement.initialize();
         for (Player players : Bukkit.getOnlinePlayers()) {
@@ -88,7 +88,7 @@ public final class yoCore extends JavaPlugin {
     public List<UUID> chat_toggled = new ArrayList<>();
     public List<UUID> tsb = new ArrayList<>();
     public List<UUID> grant_custom_reason = new ArrayList<>();
-    
+
     public Map<UUID, ItemStack[]> inventory_contents = new HashMap<>();
     public Map<UUID, ItemStack[]> armor_contents = new HashMap<>();
     public Map<UUID, List<Double>> frozen_coordinates = new HashMap<>();
@@ -208,19 +208,14 @@ public final class yoCore extends JavaPlugin {
     }
 
     private void registerRanks() {
-        for (Permission grant_permission : getServer().getPluginManager().getPermissions()) {
+        for (Permission grant_permission : permissionManagement.getAllServerPerms())
             if (grant_permission.getName().contains("yocore.grant.")) getServer().getPluginManager().removePermission(grant_permission);
-        }
 
         for (String rank : getConfig().getConfigurationSection("Ranks").getKeys(false)) {
-            List<Permission> permissions = new ArrayList<>();
-            permissions.addAll(getServer().getPluginManager().getPermissions());
-            Permission permission = new Permission(getConfig().getString("Ranks." + rank + ".GrantPermission"));
+            Permission permission = new Permission("yocore.grant." + getConfig().getString("Ranks." + rank + ".ID").toLowerCase());
 
-            if (!permissions.contains(permission)) {
+            if (!permissionManagement.getAllServerPerms().contains(permission)) {
                 permission.setDescription("Permission");
-                permission.setDefault(PermissionDefault.FALSE);
-
                 getServer().getPluginManager().addPermission(permission);
             }
 
@@ -234,14 +229,10 @@ public final class yoCore extends JavaPlugin {
         }
 
         for (String tag : getConfig().getConfigurationSection("Tags").getKeys(false)) {
-            List<Permission> permissions = new ArrayList<>();
-            permissions.addAll(getServer().getPluginManager().getPermissions());
             Permission permission = new Permission(getConfig().getString("Tags." + tag + ".Permission"));
 
-            if (!permissions.contains(permission)) {
+            if (!permissionManagement.getAllServerPerms().contains(permission)) {
                 permission.setDescription("Permission");
-                permission.setDefault(PermissionDefault.FALSE);
-
                 getServer().getPluginManager().addPermission(permission);
             }
 
@@ -357,5 +348,6 @@ public final class yoCore extends JavaPlugin {
         getCommand("TeleportA").setExecutor(new TeleportCommands());
         getCommand("TeleportAccept").setExecutor(new TeleportCommands());
         getCommand("TeleportDeny").setExecutor(new TeleportCommands());
+        getCommand("TeleportCancel").setExecutor(new TeleportCommands());
     }
 }

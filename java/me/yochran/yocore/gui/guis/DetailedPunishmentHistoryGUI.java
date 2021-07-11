@@ -24,11 +24,11 @@ public class DetailedPunishmentHistoryGUI extends CustomGUI implements PagedGUI 
     }
 
     @Override
-    public void setupPagedGUI(Map<Integer, Button> entry, int page) {
-        for (Map.Entry<Integer, Button> button : entry.entrySet()) {
-            int[] data = Utils.getHistorySlotData(button.getKey());
+    public void setupPagedGUI(Map<Integer, Button> buttons, int page) {
+        for (Map.Entry<Integer, Button> entry : buttons.entrySet()) {
+            int[] data = Utils.getHistorySlotData(entry.getKey());
             if (page == data[0])
-                gui.setButton(data[1] + 9, button.getValue());
+                gui.setButton(data[1] + 9, entry.getValue());
         }
     }
 

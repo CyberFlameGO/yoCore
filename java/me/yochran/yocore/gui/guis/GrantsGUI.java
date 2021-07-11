@@ -66,7 +66,7 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
 
                 String revokePermission;
                 if (previousRank.equalsIgnoreCase("N/A")) revokePermission = issuedGrant;
-                else revokePermission = plugin.getConfig().getString("Ranks." + previousRank + ".GrantPermission");
+                else revokePermission = "yocore.grant." + plugin.getConfig().getString("Ranks." + previousRank + ".ID").toLowerCase();
 
                 ItemBuilder itemBuilder = new ItemBuilder(XMaterial.BEDROCK.parseItem(), 1, "&4&lNULL", ItemBuilder.formatLore(new String[] {
                         "&e&m----------------------------",

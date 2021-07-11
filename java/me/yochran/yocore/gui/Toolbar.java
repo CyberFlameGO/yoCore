@@ -36,7 +36,6 @@ public class Toolbar {
     }
 
     public GUI getGui() { return gui; }
-    public int getPage() { return page; }
     public List<Integer> getTotalPages() { return totalPages; }
     public Runnable getReopen() { return reopen; }
     public String getType() { return type; }

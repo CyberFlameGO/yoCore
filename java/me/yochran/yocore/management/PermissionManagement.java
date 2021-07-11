@@ -9,7 +9,6 @@ import org.bukkit.permissions.PermissionAttachment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PermissionManagement {
 
@@ -37,35 +36,24 @@ public class PermissionManagement {
         return permissions;
     }
 
-    public List<Permission> getAllPluginPerms() {
-        List<Permission> plugin_permissions = new ArrayList<>();
-        for (Permission perm : plugin.getServer().getPluginManager().getPermissions()) {
-            if (!plugin_permissions.contains(perm))
-                plugin_permissions.add(perm);
-        }
-
-        return plugin_permissions;
+    public List<Permission> getAllServerPerms() {
+        return new ArrayList<>(plugin.getServer().getPluginManager().getPermissions());
     }
 
     public void setupPlayer(Player player) {
         plugin.player_permissions.remove(player.getUniqueId());
-
         PermissionAttachment attachment = player.addAttachment(plugin);
 
-        for (Map.Entry<String, Boolean> oldPermissions : attachment.getPermissions().entrySet())
-            attachment.unsetPermission(oldPermissions.getKey());
+        if (getAllPlayerPermissions(player).contains("*")) {
+            player.setOp(true);
+            for (Permission permission : getAllServerPerms())
+                attachment.setPermission(permission, true);
+        }
 
         for (String permission : getAllPlayerPermissions(player)) {
-            if (permission.equalsIgnoreCase("*")) {
-                for (Permission plugin_permission : getAllPluginPerms()) {
-                    attachment.setPermission(plugin_permission, true);
-                }
-            }
-
             if (permission.contains("*") && permission.length() != 1) {
-                String plugin = permission.split("\\.")[0];
-                for (Permission plugin_permission : getAllPluginPerms()) {
-                    if (plugin_permission.getName().contains(plugin)) {
+                for (Permission plugin_permission : getAllServerPerms()) {
+                    if (plugin_permission.getName().contains( permission.split("\\.")[0])) {
                         if (permission.startsWith("-")) attachment.setPermission(plugin_permission.getName().replaceFirst("-", ""), false);
                         else attachment.setPermission(plugin_permission, true);
                     }
@@ -89,7 +77,7 @@ public class PermissionManagement {
         List<String> permissions = new ArrayList<>();
 
         if (plugin.permissionsData.config.contains("Ranks." + rank))
-            permissions.addAll(plugin.permissionsData.config.getStringList("Ranks." + rank + ".Permissions"));
+            permissions = new ArrayList<>(plugin.permissionsData.config.getStringList("Ranks." + rank + ".Permissions"));
 
         return permissions;
     }
@@ -98,7 +86,7 @@ public class PermissionManagement {
         List<String> permissions = new ArrayList<>();
 
         if (plugin.permissionsData.config.contains("Players." + player.getUniqueId().toString()))
-            permissions.addAll(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
+            permissions = new ArrayList<>(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
 
         return permissions;
     }
@@ -108,9 +96,7 @@ public class PermissionManagement {
             if (plugin.permissionsData.config.getStringList("Ranks." + rank + ".Permissions").contains(permission))
                 return;
 
-            List<String> rank_permissions = new ArrayList<>();
-
-            rank_permissions.addAll(getRankPermissions(rank));
+            List<String> rank_permissions = new ArrayList<>(getRankPermissions(rank));
             rank_permissions.add(permission);
 
             plugin.permissionsData.config.set("Ranks." + rank + ".Permissions", rank_permissions);
@@ -128,24 +114,20 @@ public class PermissionManagement {
             if (plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions").contains(permission))
                 return;
 
-            List<String> player_permissions = new ArrayList<>();
-
-            player_permissions.addAll(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
+            List<String> player_permissions = new ArrayList<>(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
             player_permissions.add(permission);
 
             plugin.permissionsData.config.set("Players." + player.getUniqueId().toString() + ".Permissions", player_permissions);
             plugin.permissionsData.saveData();
 
-            if (player.isOnline())
-                refreshPlayer(Bukkit.getPlayer(player.getUniqueId()));
+            if (player.isOnline()) refreshPlayer(Bukkit.getPlayer(player.getUniqueId()));
         }
     }
 
     public void removeRankPermission(String rank, String permission) {
         if (plugin.permissionsData.config.contains("Ranks." + rank + ".Permissions")) {
-            List<String> rank_permissions = new ArrayList<>();
 
-            rank_permissions.addAll(getRankPermissions(rank));
+            List<String> rank_permissions = new ArrayList<>(getRankPermissions(rank));
             rank_permissions.remove(permission);
 
             plugin.permissionsData.config.set("Ranks." + rank + ".Permissions", rank_permissions);
@@ -160,9 +142,8 @@ public class PermissionManagement {
 
     public void removePlayerPermission(OfflinePlayer player, String permission) {
         if (plugin.permissionsData.config.contains("Players." + player.getUniqueId().toString() + ".Permissions")) {
-            List<String> rank_permissions = new ArrayList<>();
 
-            rank_permissions.addAll(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
+            List<String> rank_permissions = new ArrayList<>(plugin.permissionsData.config.getStringList("Players." + player.getUniqueId().toString() + ".Permissions"));
             rank_permissions.remove(permission);
 
             plugin.permissionsData.config.set("Players." + player.getUniqueId().toString() + ".Permissions", rank_permissions);
@@ -177,12 +158,14 @@ public class PermissionManagement {
         catch (IllegalArgumentException ignored) {}
         plugin.player_permissions.remove(player.getUniqueId());
 
+        player.recalculatePermissions();
+
         PermissionAttachment attachment = player.addAttachment(plugin);
-        for (Permission permission : getAllPluginPerms())
+        for (Permission permission : getAllServerPerms())
             attachment.setPermission(permission, false);
         plugin.player_permissions.put(player.getUniqueId(), attachment);
 
-        player.recalculatePermissions();
+        player.setOp(false);
         setupPlayer(player);
     }
 }

@@ -1,20 +1,15 @@
 package me.yochran.yocore.gui.guis;
 
-import me.yochran.yocore.gui.Button;
-import me.yochran.yocore.gui.CustomGUI;
-import me.yochran.yocore.gui.GUI;
+import me.yochran.yocore.gui.*;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class TagsGUI extends CustomGUI {
+public class TagsGUI extends CustomGUI implements PagedGUI {
 
     private final yoCore plugin;
 
@@ -23,8 +18,21 @@ public class TagsGUI extends CustomGUI {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
-    public void setup() {
+    @Override
+    public void setupPagedGUI(Map<Integer, Button> buttons, int page) {
+        for (Map.Entry<Integer, Button> entry : buttons.entrySet()) {
+            int[] info = Utils.getHistorySlotData(entry.getKey());
+            if (page == info[0])
+                gui.setButton(info[1] + 9, entry.getValue());
+        }
+    }
+
+    public void setup(int page) {
         int loop = -1;
+
+        Map<Integer, Button> buttons = new HashMap<>();
+        Set<Integer> pages = new HashSet<>();
+
         for (String tag : plugin.getConfig().getConfigurationSection("Tags").getKeys(false)) {
             loop++;
             ItemBuilder itemBuilder = new ItemBuilder(
@@ -44,7 +52,7 @@ public class TagsGUI extends CustomGUI {
                 itemBuilder.getLore().add(Utils.translate("&aClick to select this tag."));
             else itemBuilder.getLore().add(Utils.translate("&cYou cannot use this tag."));
 
-            gui.setButton(loop, new Button(
+            Button button = new Button(
                     itemBuilder.getItem(),
                     () -> {
                         GUI.close(gui);
@@ -58,7 +66,23 @@ public class TagsGUI extends CustomGUI {
                     },
                     itemBuilder.getName(),
                     itemBuilder.getLore()
-            ));
+            );
+
+            buttons.put(loop, button);
         }
+
+        for (Map.Entry<Integer, Button> entry : buttons.entrySet()) pages.add((entry.getKey() / 9) + 1);
+
+        Toolbar toolbar = new Toolbar(getGui(), "Tags", page, new ArrayList<>(pages), () -> new BukkitRunnable() {
+            @Override
+            public void run() {
+                TagsGUI tagsGUI = new TagsGUI(player, 27, "&aChat tags.");
+                tagsGUI.setup(Toolbar.getNewPage().get());
+                GUI.open(tagsGUI.getGui());
+            }
+        }.runTaskLater(plugin, 1));
+
+        toolbar.create(null, null);
+        setupPagedGUI(buttons, page);
     }
 }

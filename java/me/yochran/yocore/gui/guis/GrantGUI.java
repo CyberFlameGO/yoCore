@@ -56,7 +56,7 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
             );
 
             String permission;
-            if (player.hasPermission(plugin.getConfig().getString("Ranks." + rank + ".GrantPermission")))
+            if (player.hasPermission("yocore.grant." + plugin.getConfig().getString("Ranks." + rank + ".ID").toLowerCase()))
                 permission = "&a&lYou can grant this rank.";
             else {
                 permission = "&c&lYou cannot grant this rank.";
@@ -69,7 +69,7 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
                     itemBuilder.getItem(),
                     1,
                     () -> {
-                        if (player.hasPermission(plugin.getConfig().getString("Ranks." + rank + ".GrantPermission"))) {
+                        if (player.hasPermission("yocore.grant." + plugin.getConfig().getString("Ranks." + rank + ".ID").toLowerCase())) {
                             GUI.close(gui);
 
                             plugin.grant_type.put(player.getUniqueId(), "RANK");
