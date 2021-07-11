@@ -1,6 +1,7 @@
 package me.yochran.yocore.scoreboard;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import me.yochran.yocore.management.EconomyManagement;
@@ -27,6 +28,7 @@ public class ScoreboardSetter implements Listener {
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
     private final StatsManagement statsManagement = new StatsManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public List<UUID> enabled = new ArrayList<>();
 
@@ -100,8 +102,8 @@ public class ScoreboardSetter implements Listener {
         else rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
         String rankDisplay = plugin.getConfig().getString("Ranks." + rank.toUpperCase() + ".Display");
         String bounty;
-        if (economyManagement.isBountied(player.getWorld().getName(), player)) {
-            bounty = String.valueOf(economyManagement.getBountyAmount(player.getWorld().getName(), player));
+        if (economyManagement.isBountied(serverManagement.getServer(player), player)) {
+            bounty = String.valueOf(economyManagement.getBountyAmount(serverManagement.getServer(player), player));
         } else {
             bounty = "&cNot Bountied";
         }
@@ -122,11 +124,11 @@ public class ScoreboardSetter implements Listener {
                 String rowFormat = score
                         .replace("%online%", df.format(Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size()))
                         .replace("%rank%", rankDisplay)
-                        .replace("%kills%", df.format(statsManagement.getKills(player.getWorld().getName(), player)))
-                        .replace("%deaths%", df.format(statsManagement.getDeaths(player.getWorld().getName(), player)))
-                        .replace("%kdr%", df.format(statsManagement.getKDR(player.getWorld().getName(), player)))
-                        .replace("%streak%", df.format(statsManagement.getStreak(player.getWorld().getName(), player)))
-                        .replace("%balance%", df.format(economyManagement.getMoney(player.getWorld().getName(), player)))
+                        .replace("%kills%", df.format(statsManagement.getKills(serverManagement.getServer(player), player)))
+                        .replace("%deaths%", df.format(statsManagement.getDeaths(serverManagement.getServer(player), player)))
+                        .replace("%kdr%", df.format(statsManagement.getKDR(serverManagement.getServer(player), player)))
+                        .replace("%streak%", df.format(statsManagement.getStreak(serverManagement.getServer(player), player)))
+                        .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer(player), player)))
                         .replace("%bounty%", bounty)
                         .replace("%vanish%", String.valueOf(plugin.vanished_players.contains(player.getUniqueId())))
                         .replace("%online_staff%", df.format(staffAmount)
@@ -143,11 +145,11 @@ public class ScoreboardSetter implements Listener {
                     String rowFormat = score
                             .replace("%online%", df.format(Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size()))
                             .replace("%rank%", rankDisplay)
-                            .replace("%kills%", df.format(statsManagement.getKills(player.getWorld().getName(), player)))
-                            .replace("%deaths%", df.format(statsManagement.getDeaths(player.getWorld().getName(), player)))
-                            .replace("%kdr%", df.format(statsManagement.getKDR(player.getWorld().getName(), player)))
-                            .replace("%streak%", df.format(statsManagement.getStreak(player.getWorld().getName(), player)))
-                            .replace("%balance%", df.format(economyManagement.getMoney(player.getWorld().getName(), player)))
+                            .replace("%kills%", df.format(statsManagement.getKills(serverManagement.getServer(player), player)))
+                            .replace("%deaths%", df.format(statsManagement.getDeaths(serverManagement.getServer(player), player)))
+                            .replace("%kdr%", df.format(statsManagement.getKDR(serverManagement.getServer(player), player)))
+                            .replace("%streak%", df.format(statsManagement.getStreak(serverManagement.getServer(player), player)))
+                            .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer(player), player)))
                             .replace("%bounty%", bounty)
                             .replace("%vanish%", String.valueOf(plugin.vanished_players.contains(player.getUniqueId())))
                             .replace("%online_staff%", df.format(staffAmount))
@@ -165,11 +167,11 @@ public class ScoreboardSetter implements Listener {
                             String rowFormat = score
                                     .replace("%online%", df.format(Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size()))
                                     .replace("%rank%", rankDisplay)
-                                    .replace("%kills%", df.format(statsManagement.getKills(player.getWorld().getName(), player)))
-                                    .replace("%deaths%", df.format(statsManagement.getDeaths(player.getWorld().getName(), player)))
-                                    .replace("%kdr%", df.format(statsManagement.getKDR(player.getWorld().getName(), player)))
-                                    .replace("%streak%", df.format(statsManagement.getStreak(player.getWorld().getName(), player)))
-                                    .replace("%balance%", df.format(economyManagement.getMoney(player.getWorld().getName(), player)))
+                                    .replace("%kills%", df.format(statsManagement.getKills(serverManagement.getServer(player), player)))
+                                    .replace("%deaths%", df.format(statsManagement.getDeaths(serverManagement.getServer(player), player)))
+                                    .replace("%kdr%", df.format(statsManagement.getKDR(serverManagement.getServer(player), player)))
+                                    .replace("%streak%", df.format(statsManagement.getStreak(serverManagement.getServer(player), player)))
+                                    .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer(player), player)))
                                     .replace("%bounty%", bounty)
                                     .replace("%vanish%", String.valueOf(plugin.vanished_players.contains(player.getUniqueId())))
                                     .replace("%online_staff%", df.format(staffAmount))

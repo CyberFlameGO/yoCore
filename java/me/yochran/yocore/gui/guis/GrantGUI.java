@@ -46,7 +46,6 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
                     ItemBuilder.formatLore(new String[] {
                             "&e&m----------------------------",
                             "&eID: &f" + plugin.getConfig().getString("Ranks." + rank + ".ID"),
-                            "&ePriority: &f" + plugin.getConfig().getInt("Ranks." + rank + ".Priority"),
                             "&ePrefix: &f" + plugin.getConfig().getString("Ranks." + rank + ".Prefix"),
                             "&eDisplay Name: &f" + plugin.getConfig().getString("Ranks." + rank + ".Display"),
                             "&e&m----------------------------",

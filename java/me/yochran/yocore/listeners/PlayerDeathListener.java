@@ -2,6 +2,7 @@ package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.management.StatsManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -19,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlayerDeathListener implements Listener {
@@ -27,7 +29,17 @@ public class PlayerDeathListener implements Listener {
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
     private final StatsManagement statsManagement = new StatsManagement();
-    private final List<EntityDamageEvent.DamageCause> causes = new ArrayList<>();
+    private final ServerManagement serverManagement = new ServerManagement();
+    private final EntityDamageEvent.DamageCause[] causes = new EntityDamageEvent.DamageCause[] {
+            EntityDamageEvent.DamageCause.ENTITY_ATTACK,
+            EntityDamageEvent.DamageCause.PROJECTILE,
+            EntityDamageEvent.DamageCause.FALL,
+            EntityDamageEvent.DamageCause.MAGIC,
+            EntityDamageEvent.DamageCause.LAVA,
+            EntityDamageEvent.DamageCause.FIRE,
+            EntityDamageEvent.DamageCause.FIRE_TICK,
+            EntityDamageEvent.DamageCause.VOID
+    };
 
     public PlayerDeathListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -41,38 +53,29 @@ public class PlayerDeathListener implements Listener {
         if (event.getEntity().getKiller() == event.getEntity())
             return;
 
-        causes.add(EntityDamageEvent.DamageCause.ENTITY_ATTACK);
-        causes.add(EntityDamageEvent.DamageCause.PROJECTILE);
-        causes.add(EntityDamageEvent.DamageCause.FALL);
-        causes.add(EntityDamageEvent.DamageCause.MAGIC);
-        causes.add(EntityDamageEvent.DamageCause.LAVA);
-        causes.add(EntityDamageEvent.DamageCause.FIRE);
-        causes.add(EntityDamageEvent.DamageCause.FIRE_TICK);
-        causes.add(EntityDamageEvent.DamageCause.VOID);
-
         EntityDamageEvent.DamageCause cause = event.getEntity().getLastDamageCause().getCause();
-        if (!causes.contains(cause))
+        if (!Arrays.asList(causes).contains(cause))
             return;
 
-        if (economyManagement.economyIsEnabled(event.getEntity().getKiller().getWorld().getName())) {
+        if (economyManagement.economyIsEnabled(serverManagement.getServer(event.getEntity().getKiller()))) {
             DecimalFormat df = new DecimalFormat("###,###,###,###,###,###.##");
 
-            if (economyManagement.moneyPerKillEnabled(event.getEntity().getKiller().getWorld().getName())) {
+            if (economyManagement.moneyPerKillEnabled(serverManagement.getServer(event.getEntity().getKiller()))) {
                 double amount = economyManagement.getMoneyPerKill();
 
-                economyManagement.addMoney(event.getEntity().getKiller().getWorld().getName(), event.getEntity().getKiller(), amount);
+                economyManagement.addMoney(serverManagement.getServer(event.getEntity().getKiller()), event.getEntity().getKiller(), amount);
 
                 event.getEntity().getKiller().sendMessage(Utils.translate(plugin.getConfig().getString("Economy.MoneyOnKillMessage")
                         .replace("%target%", playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(event.getEntity().getUniqueId())))
                         .replace("%amount%", df.format(amount))));
             }
 
-            if (economyManagement.isBountied(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity())) {
-                double amount = economyManagement.getBountyAmount(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity());
+            if (economyManagement.isBountied(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity())) {
+                double amount = economyManagement.getBountyAmount(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity());
 
-                economyManagement.claimBounty(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity(), event.getEntity().getKiller(), amount);
+                economyManagement.claimBounty(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity(), event.getEntity().getKiller(), amount);
 
-                for (Player players : Bukkit.getWorld(event.getEntity().getKiller().getWorld().getName()).getPlayers()) {
+                for (Player players : serverManagement.getPlayers(serverManagement.getServer(event.getEntity().getKiller()))) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.Completed")
                             .replace("%player%", playerManagement.getPlayerColor(event.getEntity().getKiller()))
                             .replace("%target%", playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(event.getEntity().getUniqueId())))
@@ -81,22 +84,22 @@ public class PlayerDeathListener implements Listener {
             }
         }
 
-        if (statsManagement.statsAreEnabled(event.getEntity().getKiller().getWorld().getName())) {
-            statsManagement.addDeath(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity());
-            statsManagement.addKill(event.getEntity().getKiller().getWorld().getName(), event.getEntity().getKiller());
-            statsManagement.addToStreak(event.getEntity().getKiller().getWorld().getName(), event.getEntity().getKiller());
+        if (statsManagement.statsAreEnabled(serverManagement.getServer(event.getEntity().getKiller()))) {
+            statsManagement.addDeath(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity());
+            statsManagement.addKill(serverManagement.getServer(event.getEntity().getKiller()), event.getEntity().getKiller());
+            statsManagement.addToStreak(serverManagement.getServer(event.getEntity().getKiller()), event.getEntity().getKiller());
 
             event.getEntity().sendMessage(Utils.translate(plugin.getConfig().getString("Stats.KilledMessage")
                     .replace("%player%", playerManagement.getPlayerColor(event.getEntity().getKiller()))));
 
-            if (statsManagement.hasStreak(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity())) {
+            if (statsManagement.hasStreak(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity())) {
                 DecimalFormat df = new DecimalFormat("###,###.##");
 
-                int streak = statsManagement.getStreak(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity());
+                int streak = statsManagement.getStreak(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity());
 
-                statsManagement.endStreak(event.getEntity().getKiller().getWorld().getName(), (OfflinePlayer) event.getEntity());
+                statsManagement.endStreak(serverManagement.getServer(event.getEntity().getKiller()), (OfflinePlayer) event.getEntity());
                 if (statsManagement.streakShouldBeAnnounced(streak)) {
-                    for (Player players : Bukkit.getWorld(event.getEntity().getKiller().getWorld().getName()).getPlayers()) {
+                    for (Player players : serverManagement.getPlayers(serverManagement.getServer(event.getEntity().getKiller()))) {
                         players.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.StreakEndBroadcast")
                                 .replace("%player%", playerManagement.getPlayerColor(event.getEntity().getKiller()))
                                 .replace("%target%", playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(event.getEntity().getUniqueId())))
@@ -112,13 +115,13 @@ public class PlayerDeathListener implements Listener {
         if (event.getPlayer().getBedSpawnLocation() == null) {
             new BukkitRunnable() {
                 @Override
-                public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
+                public void run() { playerManagement.sendToSpawn(serverManagement.getServer(event.getPlayer()), event.getPlayer()); }
             }.runTaskLater(plugin, 1);
         } else {
             if (plugin.getConfig().getBoolean("Spawn.OverrideBeds")) {
                 new BukkitRunnable() {
                     @Override
-                    public void run() { playerManagement.sendToSpawn(event.getPlayer().getWorld().getName(), event.getPlayer()); }
+                    public void run() { playerManagement.sendToSpawn(serverManagement.getServer(event.getPlayer()), event.getPlayer()); }
                 }.runTaskLater(plugin, 1);
             }
         }

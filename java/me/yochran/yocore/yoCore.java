@@ -78,6 +78,7 @@ public final class yoCore extends JavaPlugin {
     public List<String> ranks = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
     public List<UUID> vanished_players = new ArrayList<>();
+    public List<UUID> vanish_logged = new ArrayList<>();
     public List<UUID> staff_alerts = new ArrayList<>();
     public List<UUID> frozen_players = new ArrayList<>();
     public List<UUID> frozen_cooldown = new ArrayList<>();
@@ -124,7 +125,6 @@ public final class yoCore extends JavaPlugin {
         manager.registerEvents(new FreezeListener(), this);
         manager.registerEvents(new BuildModeListener(), this);
         manager.registerEvents(new ListCommand(), this);
-        manager.registerEvents(new PlayerLogListener(), this);
         manager.registerEvents(new PlayerDeathListener(), this);
         manager.registerEvents(new ScoreboardSetter(), this);
         manager.registerEvents(new WorldChangeListener(), this);
@@ -180,17 +180,21 @@ public final class yoCore extends JavaPlugin {
         worldData.saveData();
         worldData.reloadData();
 
-        for (World world : getServer().getWorlds()) {
-            if (!worldData.config.contains("Servers." + world.getName())) {
-                worldData.config.set("Servers." + world.getName() + ".Enabled", true);
-                worldData.config.set("Servers." + world.getName() + ".World", world.getName());
-                worldData.config.set("Servers." + world.getName() + ".Spawn.X", 0.5);
-                worldData.config.set("Servers." + world.getName() + ".Spawn.Y", 75.0);
-                worldData.config.set("Servers." + world.getName() + ".Spawn.Z", 0.5);
-                worldData.config.set("Servers." + world.getName() + ".Spawn.Yaw", 0.0);
-                worldData.config.set("Servers." + world.getName() + ".Spawn.Pitch", 0.0);
-                worldData.saveData();
-            }
+        if (!worldData.config.contains("Servers")) {
+            List<String> worlds = new ArrayList<>();
+            for (World world : Bukkit.getWorlds())
+                worlds.add(world.getName());
+
+            worldData.config.set("Servers.SERVER.ID", "SERVER");
+            worldData.config.set("Servers.SERVER.Name", "server");
+            worldData.config.set("Servers.SERVER.Worlds", worlds);
+            worldData.config.set("Servers.SERVER.Spawn.World", "world");
+            worldData.config.set("Servers.SERVER.Spawn.X", 0.5);
+            worldData.config.set("Servers.SERVER.Spawn.Y", 75.0);
+            worldData.config.set("Servers.SERVER.Spawn.Z", 0.5);
+            worldData.config.set("Servers.SERVER.Spawn.Yaw", 0.0);
+            worldData.config.set("Servers.SERVER.Spawn.Pitch", 0.0);
+            worldData.saveData();
         }
 
         new BukkitRunnable() {

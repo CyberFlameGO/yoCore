@@ -2,6 +2,7 @@ package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,9 +14,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class PlayerChatListener implements Listener {
 
-    private yoCore plugin;
-    private PlayerManagement playerManagement = new PlayerManagement();
-    private PunishmentManagement punishmentManagement = new PunishmentManagement();
+    private final yoCore plugin;
+    private final PlayerManagement playerManagement = new PlayerManagement();
+    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public PlayerChatListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -26,12 +28,13 @@ public class PlayerChatListener implements Listener {
         if (event.getMessage().startsWith("# ") && event.getPlayer().hasPermission("yocore.chats.staff")) {
             event.setCancelled(true);
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff"))
+                if (staff.hasPermission("yocore.chats.staff")) {
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("# ", ""))
-                            .replace("%server%", plugin.getConfig().getString("ServerName"))
+                            .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
                             .replace("%world%", event.getPlayer().getWorld().getName())));
+                }
             }
             return;
         }
@@ -39,12 +42,13 @@ public class PlayerChatListener implements Listener {
         if (event.getMessage().startsWith("@ ") && event.getPlayer().hasPermission("yocore.chats.admin")) {
             event.setCancelled(true);
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.admin"))
+                if (staff.hasPermission("yocore.chats.admin")) {
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("@ ", ""))
-                            .replace("%server%", plugin.getConfig().getString("ServerName"))
+                            .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
                             .replace("%world%", event.getPlayer().getWorld().getName())));
+                }
             }
             return;
         }
@@ -52,12 +56,13 @@ public class PlayerChatListener implements Listener {
         if (event.getMessage().startsWith("! ") && event.getPlayer().hasPermission("yocore.chats.management")) {
             event.setCancelled(true);
             for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.management"))
+                if (staff.hasPermission("yocore.chats.management")) {
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
                             .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
                             .replace("%message%", event.getMessage().replaceFirst("! ", ""))
-                            .replace("%server%", plugin.getConfig().getString("ServerName"))
+                            .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
                             .replace("%world%", event.getPlayer().getWorld().getName())));
+                }
             }
             return;
         }
@@ -126,7 +131,7 @@ public class PlayerChatListener implements Listener {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (plugin.chat_toggled.contains(player.getUniqueId()))
                 event.getRecipients().remove(player);
-            if (event.getPlayer().getWorld() != player.getWorld() && plugin.getConfig().getBoolean("Servers.ChatSeparation"))
+            if (!serverManagement.getServer(event.getPlayer()).equalsIgnoreCase(serverManagement.getServer(player)) && plugin.getConfig().getBoolean("Servers.ChatSeparation"))
                 event.getRecipients().remove(player);
         }
     }

@@ -6,8 +6,6 @@ import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,21 +14,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ModmodeListeners implements Listener {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ModmodeListeners() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -162,19 +153,6 @@ public class ModmodeListeners implements Listener {
             if (splashed instanceof Player) {
                 if (plugin.vanished_players.contains(splashed.getUniqueId()))
                     event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onInvClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&6&lOnline Players"))) {
-            if (event.getCurrentItem() == null || event.getCurrentItem().getType() == XMaterial.AIR.parseMaterial())
-                return;
-
-            for (Player players : Bukkit.getOnlinePlayers()) {
-                if (players.getName().equalsIgnoreCase(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName())))
-                    ((Player) event.getWhoClicked()).performCommand("tp " + players.getName());
             }
         }
     }

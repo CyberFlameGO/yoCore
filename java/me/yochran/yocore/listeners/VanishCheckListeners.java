@@ -1,13 +1,12 @@
 package me.yochran.yocore.listeners;
 
-import com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent;
 import me.yochran.yocore.yoCore;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class VanishCheckListeners implements Listener {
 

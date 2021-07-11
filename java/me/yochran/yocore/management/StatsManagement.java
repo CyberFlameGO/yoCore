@@ -1,9 +1,7 @@
 package me.yochran.yocore.management;
 
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -19,48 +17,48 @@ public class StatsManagement {
 
     public void setupPlayer(OfflinePlayer target) {
         plugin.statsData.config.set(target.getUniqueId().toString() + ".Name", target.getName());
-        for (World world : Bukkit.getWorlds()) {
-            plugin.statsData.config.set(target.getUniqueId().toString() + "." + world.getName() + ".Kills", 0);
-            plugin.statsData.config.set(target.getUniqueId().toString() + "." + world.getName() + ".Deaths", 0);
-            plugin.statsData.config.set(target.getUniqueId().toString() + "." + world.getName() + ".KDR", 0);
-            plugin.statsData.config.set(target.getUniqueId().toString() + "." + world.getName() + ".Streak", 0);
+        for (String server : plugin.worldData.config.getConfigurationSection("Servers").getKeys(false)) {
+            plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Kills", 0);
+            plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Deaths", 0);
+            plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".KDR", 0);
+            plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Streak", 0);
         }
 
         plugin.statsData.saveData();
     }
 
-    public boolean isInitialized(String world, OfflinePlayer target) {
+    public boolean isInitialized(OfflinePlayer target) {
         return plugin.statsData.config.contains(target.getUniqueId().toString());
     }
 
-    public boolean statsAreEnabled(String world) {
-        return (plugin.getConfig().getStringList("Stats.EnabledWorlds").contains(world));
+    public boolean statsAreEnabled(String server) {
+        return (plugin.getConfig().getStringList("Stats.EnabledServers").contains(server.toLowerCase()));
     }
 
-    public int getKills(String world, OfflinePlayer target) {
-        return plugin.statsData.config.getInt(target.getUniqueId().toString() + "." + world + ".Kills");
+    public int getKills(String server, OfflinePlayer target) {
+        return plugin.statsData.config.getInt(target.getUniqueId().toString() + "." + server + ".Kills");
     }
 
-    public int getDeaths(String world, OfflinePlayer target) {
-        return plugin.statsData.config.getInt(target.getUniqueId().toString() + "." + world + ".Deaths");
+    public int getDeaths(String server, OfflinePlayer target) {
+        return plugin.statsData.config.getInt(target.getUniqueId().toString() + "." + server + ".Deaths");
     }
 
-    public double getKDR(String world, OfflinePlayer target) {
-        return plugin.statsData.config.getDouble(target.getUniqueId().toString() + "." + world + ".KDR");
+    public double getKDR(String server, OfflinePlayer target) {
+        return plugin.statsData.config.getDouble(target.getUniqueId().toString() + "." + server + ".KDR");
     }
 
-    public int getStreak(String world, OfflinePlayer target) {
-        return plugin.statsData.config.getInt(target.getUniqueId().toString() + "." + world + ".Streak");
+    public int getStreak(String server, OfflinePlayer target) {
+        return plugin.statsData.config.getInt(target.getUniqueId().toString() + "." + server + ".Streak");
     }
 
-    public Map<String, String> getAllStats(String world, OfflinePlayer target) {
+    public Map<String, String> getAllStats(String server, OfflinePlayer target) {
         DecimalFormat df = new DecimalFormat("###,###.##");
         Map<String, String> stats = new HashMap<>();
 
-        String kills = df.format(getKills(world, target));
-        String deaths = df.format(getDeaths(world, target));
-        String kdr = df.format(getKDR(world, target));
-        String streak = df.format(getStreak(world, target));
+        String kills = df.format(getKills(server, target));
+        String deaths = df.format(getDeaths(server, target));
+        String kdr = df.format(getKDR(server, target));
+        String streak = df.format(getStreak(server, target));
 
         stats.put("Kills", kills);
         stats.put("Deaths", deaths);
@@ -70,21 +68,21 @@ public class StatsManagement {
         return stats;
     }
 
-    public void addKill(String world, OfflinePlayer target) {
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Kills", getKills(world, target) + 1);
-        updateKDR(world, target);
+    public void addKill(String server, OfflinePlayer target) {
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Kills", getKills(server, target) + 1);
+        updateKDR(server, target);
         plugin.statsData.saveData();
     }
 
-    public void addDeath(String world, OfflinePlayer target) {
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Deaths", getDeaths(world, target) + 1);
-        updateKDR(world, target);
+    public void addDeath(String server, OfflinePlayer target) {
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Deaths", getDeaths(server, target) + 1);
+        updateKDR(server, target);
         plugin.statsData.saveData();
     }
 
-    public void updateKDR(String world, OfflinePlayer target) {
-        int kills = getKills(world, target);
-        int deaths = getDeaths(world, target);
+    public void updateKDR(String server, OfflinePlayer target) {
+        int kills = getKills(server, target);
+        int deaths = getDeaths(server, target);
 
         int alternateKills;
         int alternateDeaths;
@@ -99,22 +97,22 @@ public class StatsManagement {
 
         double kdr = (double) alternateKills / (double) alternateDeaths;
 
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".KDR", kdr);
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".KDR", kdr);
         plugin.statsData.saveData();
     }
 
-    public void addToStreak(String world, OfflinePlayer target) {
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Streak", getStreak(world, target) + 1);
+    public void addToStreak(String server, OfflinePlayer target) {
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Streak", getStreak(server, target) + 1);
         plugin.statsData.saveData();
     }
 
-    public void endStreak(String world, OfflinePlayer target) {
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Streak", 0);
+    public void endStreak(String server, OfflinePlayer target) {
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Streak", 0);
         plugin.statsData.saveData();
     }
 
-    public boolean hasStreak(String world, OfflinePlayer target) {
-        if (getStreak(world, target) > 0) {
+    public boolean hasStreak(String server, OfflinePlayer target) {
+        if (getStreak(server, target) > 0) {
             return true;
         } else {
             return false;
@@ -129,11 +127,11 @@ public class StatsManagement {
         }
     }
 
-    public void resetPlayer(String world, OfflinePlayer target) {
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Kills", 0);
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Deaths", 0);
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".KDR", 0.0);
-        plugin.statsData.config.set(target.getUniqueId().toString() + "." + world + ".Streak", 0);
+    public void resetPlayer(String server, OfflinePlayer target) {
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Kills", 0);
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Deaths", 0);
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".KDR", 0.0);
+        plugin.statsData.config.set(target.getUniqueId().toString() + "." + server + ".Streak", 0);
         plugin.statsData.saveData();
     }
 }

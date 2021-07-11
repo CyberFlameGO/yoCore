@@ -37,80 +37,80 @@ public class NametagSetter {
     }
 
     public void rankNametag(Scoreboard scoreboard, Player player) {
-        String rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
+        String rank;
+        if (!plugin.rank_disguise.containsKey(player.getUniqueId()))
+            rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
+        else rank = plugin.rank_disguise.get(player.getUniqueId());
 
-        Map<String, Integer> priority = new HashMap<>();
-        for (String ranks : plugin.ranks)
-            priority.put(ranks, plugin.getConfig().getInt("Ranks." + rank + ".Priority"));
-
-        if (scoreboard.getTeam(String.valueOf(priority.get(rank))) != null) {
-            if (!scoreboard.getTeam(String.valueOf(priority.get(rank))).hasPlayer(player)) {
-                for (Team teams : scoreboard.getTeams()) {
-                    if (teams.hasPlayer(player)) teams.removePlayer(player);
-                }
-
-                scoreboard.getTeam(String.valueOf(priority.get(rank))).addPlayer(player);
-            }
-        } else {
-            Team team = scoreboard.registerNewTeam(String.valueOf(priority.get(rank)));
+        Team team = scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex"));
+        if (team != null) {
             team.setPrefix(Utils.translate(plugin.getConfig().getString("Ranks." + rank + ".Color")));
             try { team.setColor(ChatColor.getByChar(plugin.getConfig().getString("Ranks." + rank + ".Color").replace("&", "")));
             } catch (NoSuchMethodError ignored) {}
-            scoreboard.getTeam(String.valueOf(priority.get(rank))).addPlayer(player);
         }
-    }
 
-    public void vanishNametag(Scoreboard scoreboard, Player player) {
-        if (scoreboard.getTeam("a") != null) {
-            if (!scoreboard.getTeam("a").hasPlayer(player)) {
+        if (scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex")) != null) {
+            if (!scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex")).hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
                     if (teams.hasPlayer(player)) teams.removePlayer(player);
                 }
 
-                scoreboard.getTeam("a").addPlayer(player);
+                scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex")).addPlayer(player);
+            }
+        } else scoreboard.registerNewTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex"));
+    }
+
+    public void vanishNametag(Scoreboard scoreboard, Player player) {
+        if (scoreboard.getTeam("zz") != null) {
+            if (!scoreboard.getTeam("zz").hasPlayer(player)) {
+                for (Team teams : scoreboard.getTeams()) {
+                    if (teams.hasPlayer(player)) teams.removePlayer(player);
+                }
+
+                scoreboard.getTeam("zz").addPlayer(player);
             }
         } else {
-            Team team = scoreboard.registerNewTeam("a");
+            Team team = scoreboard.registerNewTeam("zz");
             team.setPrefix(Utils.translate("&7[V] &7"));
             try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.Vanish.Color")));
             } catch (NoSuchMethodError ignored) {}
-            scoreboard.getTeam("a").addPlayer(player);
+            scoreboard.getTeam("zz").addPlayer(player);
         }
     }
 
     public void modmodeNametag(Scoreboard scoreboard, Player player) {
-        if (scoreboard.getTeam("b") != null) {
-            if (!scoreboard.getTeam("b").hasPlayer(player)) {
+        if (scoreboard.getTeam("zzz") != null) {
+            if (!scoreboard.getTeam("zzz").hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
                     if (teams.hasPlayer(player)) teams.removePlayer(player);
                 }
 
-                scoreboard.getTeam("b").addPlayer(player);
+                scoreboard.getTeam("zzz").addPlayer(player);
             }
         } else {
-            Team team = scoreboard.registerNewTeam("b");
+            Team team = scoreboard.registerNewTeam("zzz");
             team.setPrefix(Utils.translate("&7[M] &7"));
             try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.ModMode.Color")));
             } catch (NoSuchMethodError ignored) {}
-            scoreboard.getTeam("b").addPlayer(player);
+            scoreboard.getTeam("zzz").addPlayer(player);
         }
     }
 
     public void frozenNametag(Scoreboard scoreboard, Player player) {
-        if (scoreboard.getTeam("c") != null) {
-            if (!scoreboard.getTeam("c").hasPlayer(player)) {
+        if (scoreboard.getTeam("zzzz") != null) {
+            if (!scoreboard.getTeam("zzzz").hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
                     if (teams.hasPlayer(player)) teams.removePlayer(player);
                 }
 
-                scoreboard.getTeam("c").addPlayer(player);
+                scoreboard.getTeam("zzzz").addPlayer(player);
             }
         } else {
-            Team team = scoreboard.registerNewTeam("c");
+            Team team = scoreboard.registerNewTeam("zzzz");
             team.setPrefix(Utils.translate("&c[F] &c"));
             try { team.setColor(ChatColor.valueOf(plugin.getConfig().getString("Nametags.Frozen.Color")));
             } catch (NoSuchMethodError ignored) {}
-            scoreboard.getTeam("c").addPlayer(player);
+            scoreboard.getTeam("zzzz").addPlayer(player);
         }
     }
 }
