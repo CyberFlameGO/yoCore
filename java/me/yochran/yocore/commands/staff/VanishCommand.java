@@ -1,9 +1,11 @@
 package me.yochran.yocore.commands.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +17,7 @@ public class VanishCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final ServerManagement serverManagement = new ServerManagement();
 
     public VanishCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -53,7 +56,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
-                    for (Player player : Bukkit.getOnlinePlayers())
+                    for (Player player : serverManagement.getPlayers(serverManagement.getServer((Player) sender)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
@@ -100,7 +103,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
-                    for (Player player : Bukkit.getOnlinePlayers())
+                    for (Player player : serverManagement.getPlayers(serverManagement.getServer(target)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(target))));
                 }
