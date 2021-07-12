@@ -37,6 +37,18 @@ public class ManagementChatCommand implements CommandExecutor {
             return true;
         }
 
+        if (args.length == 1 && args[0].equalsIgnoreCase("toggle")) {
+            if (plugin.mchat_toggle.contains(((Player) sender).getUniqueId())) {
+                plugin.mchat_toggle.remove(((Player) sender).getUniqueId());
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.ToggleOff")));
+            } else {
+                plugin.mchat_toggle.add(((Player) sender).getUniqueId());
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.ToggleOn")));
+            }
+
+            return true;
+        }
+
         String message = "";
         for (int i = 0; i < args.length; i++) {
             message = message + args[i] + " ";

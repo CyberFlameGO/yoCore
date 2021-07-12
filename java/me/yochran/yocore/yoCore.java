@@ -16,15 +16,11 @@ import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -89,6 +85,10 @@ public final class yoCore extends JavaPlugin {
     public List<UUID> chat_toggled = new ArrayList<>();
     public List<UUID> tsb = new ArrayList<>();
     public List<UUID> grant_custom_reason = new ArrayList<>();
+    public List<UUID> bchat_toggle = new ArrayList<>();
+    public List<UUID> schat_toggle = new ArrayList<>();
+    public List<UUID> achat_toggle = new ArrayList<>();
+    public List<UUID> mchat_toggle = new ArrayList<>();
 
     public Map<UUID, ItemStack[]> inventory_contents = new HashMap<>();
     public Map<UUID, ItemStack[]> armor_contents = new HashMap<>();
@@ -114,6 +114,7 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, UUID> tpa = new HashMap<>();
     public Map<UUID, Location> tpa_coords = new HashMap<>();
     public Map<UUID, Integer> tpa_timer = new HashMap<>();
+    public Map<UUID, Map<String, Location>> last_location = new HashMap<>();
 
     private void registerListeners() {
         manager.registerEvents(new PlayerLogListener(), this);
@@ -302,8 +303,6 @@ public final class yoCore extends JavaPlugin {
         getCommand("Freeze").setExecutor(new FreezeCommand());
         getCommand("Report").setExecutor(new ReportCommand());
         getCommand("BuildMode").setExecutor(new BuildModeCommand());
-        getCommand("Message").setExecutor(new MessageCommand());
-        getCommand("Reply").setExecutor(new ReplyCommand());
         getCommand("ToggleMessages").setExecutor(new ToggleMessagesCommand());
         getCommand("Alts").setExecutor(new AltsCommand());
         getCommand("OnlinePlayers").setExecutor(new ListCommand());
@@ -353,5 +352,8 @@ public final class yoCore extends JavaPlugin {
         getCommand("TeleportAccept").setExecutor(new TeleportCommands());
         getCommand("TeleportDeny").setExecutor(new TeleportCommands());
         getCommand("TeleportCancel").setExecutor(new TeleportCommands());
+        getCommand("BuildChat").setExecutor(new BuilderChatCommand());
+        getCommand("Message").setExecutor(new MessageCommand());
+        getCommand("Reply").setExecutor(new ReplyCommand());
     }
 }

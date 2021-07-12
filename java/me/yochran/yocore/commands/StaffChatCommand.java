@@ -37,6 +37,18 @@ public class StaffChatCommand implements CommandExecutor {
             return true;
         }
 
+        if (args.length == 1 && args[0].equalsIgnoreCase("toggle")) {
+            if (plugin.schat_toggle.contains(((Player) sender).getUniqueId())) {
+                plugin.schat_toggle.remove(((Player) sender).getUniqueId());
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.ToggleOff")));
+            } else {
+                plugin.schat_toggle.add(((Player) sender).getUniqueId());
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.ToggleOn")));
+            }
+
+            return true;
+        }
+
         String message = "";
         for (int i = 0; i < args.length; i++) {
             message = message + args[i] + " ";

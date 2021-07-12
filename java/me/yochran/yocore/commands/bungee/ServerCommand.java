@@ -12,7 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServerCommand implements CommandExecutor {
 
@@ -46,7 +48,35 @@ public class ServerCommand implements CommandExecutor {
             return true;
         }
 
-        playerManagement.sendToSpawn(args[0].toUpperCase(), (Player) sender);
+        if (plugin.modmode_players.contains(((Player) sender).getUniqueId())) {
+            ((Player) sender).getInventory().clear();
+
+            ((Player) sender).getInventory().setContents(plugin.inventory_contents.get(((Player) sender).getUniqueId()));
+            ((Player) sender).getInventory().setArmorContents(plugin.armor_contents.get(((Player) sender).getUniqueId()));
+
+            ((Player) sender).updateInventory();
+
+            ((Player) sender).setAllowFlight(false);
+            ((Player) sender).setFlying(false);
+
+            plugin.modmode_players.remove(((Player) sender).getUniqueId());
+        }
+
+        if (plugin.last_location.get(((Player) sender).getUniqueId()) == null) {
+            Map<String, Location> location = new HashMap<>();
+            location.put(serverManagement.getServer((Player) sender), ((Player) sender).getLocation());
+            plugin.last_location.put(((Player) sender).getUniqueId(), location);
+        }
+
+        plugin.last_location.get(((Player) sender).getUniqueId()).put(serverManagement.getServer((Player) sender), ((Player) sender).getLocation());
+
+        if (plugin.getConfig().getBoolean("Spawn.SpawnOnServerChange"))
+            playerManagement.sendToSpawn(args[0].toUpperCase(), (Player) sender);
+        else {
+            if (plugin.last_location.get(((Player) sender).getUniqueId()).containsKey(args[0].toUpperCase()))
+                ((Player) sender).teleport(plugin.last_location.get(((Player) sender).getUniqueId()).get(args[0].toUpperCase()));
+            else playerManagement.sendToSpawn(args[0].toUpperCase(), (Player) sender);
+        }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ServerCommand.Format")
                 .replace("%server%", serverManagement.getName(args[0].toUpperCase()))));

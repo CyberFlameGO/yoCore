@@ -10,40 +10,40 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class AdminChatCommand implements CommandExecutor {
+public class BuilderChatCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final ServerManagement serverManagement = new ServerManagement();
 
-    public AdminChatCommand() {
+    public BuilderChatCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.MustBePlayer")));
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.MustBePlayer")));
             return true;
         }
 
-        if (!sender.hasPermission("yocore.chats.admin")) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.NoPermission")));
+        if (!sender.hasPermission("yocore.chats.build")) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.NoPermission")));
             return true;
         }
 
         if (args.length < 1) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.IncorrectUsage")));
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.IncorrectUsage")));
             return true;
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("toggle")) {
-            if (plugin.achat_toggle.contains(((Player) sender).getUniqueId())) {
-                plugin.achat_toggle.remove(((Player) sender).getUniqueId());
-                sender.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.ToggleOff")));
+            if (plugin.bchat_toggle.contains(((Player) sender).getUniqueId())) {
+                plugin.bchat_toggle.remove(((Player) sender).getUniqueId());
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.ToggleOff")));
             } else {
-                plugin.achat_toggle.add(((Player) sender).getUniqueId());
-                sender.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.ToggleOn")));
+                plugin.bchat_toggle.add(((Player) sender).getUniqueId());
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.ToggleOn")));
             }
 
             return true;
@@ -54,9 +54,9 @@ public class AdminChatCommand implements CommandExecutor {
             message = message + args[i] + " ";
         }
 
-        for (Player admins : Bukkit.getOnlinePlayers()) {
-            if (admins.hasPermission("yocore.chats.admin")) {
-                admins.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
+        for (Player builders : Bukkit.getOnlinePlayers()) {
+            if (builders.hasPermission("yocore.chats.admin")) {
+                builders.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.Format")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%message%", message)
                         .replace("%server%", serverManagement.getName(serverManagement.getServer((Player) sender)))
