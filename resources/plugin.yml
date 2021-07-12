@@ -83,6 +83,8 @@ permissions:
     description: Permission.
   yocore.vanish:
     description: Permission
+  yocore.chats.build:
+    description: Permission.
   yocore.chats.staff:
     description: Permission
   yocore.chats.admin:
@@ -171,6 +173,9 @@ commands:
   ClearGrantHistory:
     description: Clear a players grant history.
     aliases: [cgh, cleargranthist]
+  BuildChat:
+    description: Talk privately with builders.
+    aliases: [bldc]
   StaffChat:
     description: Talk privately with staff members.
     aliases: [sc]
@@ -247,12 +252,6 @@ commands:
   BuildMode:
     description: Toggle your build mode.
     aliases: build
-  Message:
-    description: Privately message another player.
-    aliases: [msg, whisper, w, tell, t]
-  Reply:
-    description: Reply to a player messaging you.
-    aliases: r
   ToggleMessages:
     description: Toggle your private messages.
     aliases: tpm
@@ -361,3 +360,9 @@ commands:
   ItemName:
     description: Rename an item.
     aliases: iname
+  Message:
+    description: Message a player.
+    aliases: [msg, whisper, w, tell, t]
+  Reply:
+    description: Reply to a player messaging you.
+    aliases: r

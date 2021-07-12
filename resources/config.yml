@@ -542,22 +542,36 @@ Ungrant:
   InvalidGrant: "&cInvalid Grant!"
   ExecutorMessage: "&bYou have revoked grant &3#%grant% &bfrom %target%&b."
 
+BuildChat:
+  MustBePlayer: "&cYou must be a player to use that command."
+  NoPermission: "&cYou do not have permission to use that command."
+  IncorrectUsage: "&cIncorrect Usage! /bldc <message/toggle>"
+  ToggleOn: "&bYou have toggled on &2build &bchat."
+  ToggleOff: "&bYou have toggled off &2build &bchat."
+  Format: "&2[B] &3[%server%] %player%&7: &b%message%"
+
 StaffChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /sc <message>"
+  IncorrectUsage: "&cIncorrect Usage! /sc <message/toggle>"
+  ToggleOn: "&bYou have toggled on &3staff &bchat."
+  ToggleOff: "&bYou have toggled off &3staff &bchat."
   Format: "&b[S] &3[%server%] %player%&7: &b%message%"
 
 AdminChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /ac <message>"
+  IncorrectUsage: "&cIncorrect Usage! /ac <message/toggle>"
+  ToggleOn: "&bYou have toggled on &cadmin &bchat."
+  ToggleOff: "&bYou have toggled off &cadmin &bchat."
   Format: "&c[A] &3[%server%] %player%&7: &b%message%"
 
 ManagementChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /mc <message>"
+  IncorrectUsage: "&cIncorrect Usage! /mc <message/toggle>"
+  ToggleOn: "&bYou have toggled on &4management &bchat."
+  ToggleOff: "&bYou have toggled off &4management &bchat."
   Format: "&4[M] &3[%server%] %player%&7: &b%message%"
 
 StaffAlerts:
@@ -597,6 +611,7 @@ Vanish:
   ExecutorMessageOff: "&bYou have taken %target% &bout of &3vanish&b."
   TargetMessageOn: "&bYou are now in &3vanish&b."
   TargetMessageOff: "&bYou are no longer in &3vanish&b."
+  FakeJoin: true
   FakeLeave: true
 
 Gamemode:
