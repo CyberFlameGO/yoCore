@@ -15,6 +15,12 @@ public class TabSetter {
     }
 
     public void setTabName(Player player) {
-        player.setPlayerListName(Utils.translate(playerManagement.getPlayerColor(player)));
+        String displayName = playerManagement.getPlayerColor(player);
+        if (plugin.modmode_players.contains(player.getUniqueId()))
+            displayName = "&7[M] " + playerManagement.getPlayerColor(player);
+        if (plugin.vanished_players.contains(player.getUniqueId()))
+            displayName = "&7[V] " + playerManagement.getPlayerColor(player);
+
+        player.setPlayerListName(Utils.translate(displayName));
     }
 }

@@ -25,45 +25,42 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        if (event.getMessage().startsWith("# ") && event.getPlayer().hasPermission("yocore.chats.staff")) {
+        if (plugin.bchat_toggle.contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.staff")) {
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
-                            .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                            .replace("%message%", event.getMessage().replaceFirst("# ", ""))
-                            .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
-                            .replace("%world%", event.getPlayer().getWorld().getName())));
-                }
-            }
+            buildChat(event.getPlayer(), event.getMessage());
+            return;
+        }
+        if (plugin.schat_toggle.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+            staffChat(event.getPlayer(), event.getMessage());
+            return;
+        }
+        if (plugin.achat_toggle.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+            adminChat(event.getPlayer(), event.getMessage());
+            return;
+        }
+        if (plugin.mchat_toggle.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+            managementChat(event.getPlayer(), event.getMessage());
             return;
         }
 
-        if (event.getMessage().startsWith("@ ") && event.getPlayer().hasPermission("yocore.chats.admin")) {
+        if (event.getMessage().startsWith("$ ") && event.getPlayer().hasPermission("yocore.chats.build")) {
             event.setCancelled(true);
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.admin")) {
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
-                            .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                            .replace("%message%", event.getMessage().replaceFirst("@ ", ""))
-                            .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
-                            .replace("%world%", event.getPlayer().getWorld().getName())));
-                }
-            }
+            buildChat(event.getPlayer(), event.getMessage().replaceFirst("\\$ ", ""));
             return;
-        }
-
-        if (event.getMessage().startsWith("! ") && event.getPlayer().hasPermission("yocore.chats.management")) {
+        } else if (event.getMessage().startsWith("# ") && event.getPlayer().hasPermission("yocore.chats.staff")) {
             event.setCancelled(true);
-            for (Player staff : Bukkit.getOnlinePlayers()) {
-                if (staff.hasPermission("yocore.chats.management")) {
-                    staff.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
-                            .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                            .replace("%message%", event.getMessage().replaceFirst("! ", ""))
-                            .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
-                            .replace("%world%", event.getPlayer().getWorld().getName())));
-                }
-            }
+            staffChat(event.getPlayer(), event.getMessage().replaceFirst("# ", ""));
+            return;
+        } else if (event.getMessage().startsWith("@ ") && event.getPlayer().hasPermission("yocore.chats.admin")) {
+            event.setCancelled(true);
+            adminChat(event.getPlayer(), event.getMessage().replaceFirst("@ ", ""));
+            return;
+        } else if (event.getMessage().startsWith("! ") && event.getPlayer().hasPermission("yocore.chats.management")) {
+            event.setCancelled(true);
+            managementChat(event.getPlayer(), event.getMessage().replaceFirst("! ", ""));
             return;
         }
 
@@ -133,6 +130,54 @@ public class PlayerChatListener implements Listener {
                 event.getRecipients().remove(player);
             if (!serverManagement.getServer(event.getPlayer()).equalsIgnoreCase(serverManagement.getServer(player)) && plugin.getConfig().getBoolean("Servers.ChatSeparation"))
                 event.getRecipients().remove(player);
+        }
+    }
+
+    public void buildChat(Player player, String message) {
+        for (Player builders : Bukkit.getOnlinePlayers()) {
+            if (builders.hasPermission("yocore.chats.build")) {
+                builders.sendMessage(Utils.translate(plugin.getConfig().getString("BuildChat.Format")
+                        .replace("%player%", playerManagement.getPlayerColor(player))
+                        .replace("%message%", message)
+                        .replace("%server%", serverManagement.getName(serverManagement.getServer(player)))
+                        .replace("%world%", player.getWorld().getName())));
+            }
+        }
+    }
+
+    public void staffChat(Player player, String message) {
+        for (Player staff : Bukkit.getOnlinePlayers()) {
+            if (staff.hasPermission("yocore.chats.staff")) {
+                staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffChat.Format")
+                        .replace("%player%", playerManagement.getPlayerColor(player))
+                        .replace("%message%", message)
+                        .replace("%server%", serverManagement.getName(serverManagement.getServer(player)))
+                        .replace("%world%", player.getWorld().getName())));
+            }
+        }
+    }
+
+    public void adminChat(Player player, String message) {
+        for (Player admins : Bukkit.getOnlinePlayers()) {
+            if (admins.hasPermission("yocore.chats.admin")) {
+                admins.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
+                        .replace("%player%", playerManagement.getPlayerColor(player))
+                        .replace("%message%", message)
+                        .replace("%server%", serverManagement.getName(serverManagement.getServer(player)))
+                        .replace("%world%", player.getWorld().getName())));
+            }
+        }
+    }
+
+    public void managementChat(Player player, String message) {
+        for (Player managers : Bukkit.getOnlinePlayers()) {
+            if (managers.hasPermission("yocore.chats.management")) {
+                managers.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
+                        .replace("%player%", playerManagement.getPlayerColor(player))
+                        .replace("%message%", message)
+                        .replace("%server%", serverManagement.getName(serverManagement.getServer(player)))
+                        .replace("%world%", player.getWorld().getName())));
+            }
         }
     }
 }

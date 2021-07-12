@@ -66,7 +66,7 @@ public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
             Toolbar toolbar = new Toolbar(getGui(), "Reports", page, new ArrayList<>(pages), () -> new BukkitRunnable() {
                 @Override
                 public void run() {
-                    ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's report history.");
+                    ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's report history.");
                     reportHistoryGUI.setup(target, Toolbar.getNewPage().get());
                     GUI.open(reportHistoryGUI.getGui());
                 }

@@ -2,7 +2,6 @@ package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.gui.guis.OnlinePlayersGUI;
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;

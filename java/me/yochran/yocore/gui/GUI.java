@@ -55,11 +55,6 @@ public class GUI {
         }
     }
 
-    public void removeButton(int slot) {
-        buttons.remove(slot);
-        inventory.setItem(slot, null);
-    }
-
     public Button getButton(int slot) { return buttons.get(slot); }
 
     public void setFiller(int slots) {
