@@ -14,6 +14,7 @@ import me.yochran.yocore.commands.stats.staff.ResetStatsCommand;
 import me.yochran.yocore.data.*;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PermissionManagement;
+import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import org.bukkit.*;
@@ -45,6 +46,7 @@ public final class yoCore extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        getServer().setWhitelist(true);
         Bukkit.getConsoleSender().sendMessage("yoCore v1.0 by Yochran is loading...");
 
         permissionManagement = new PermissionManagement();
@@ -68,7 +70,38 @@ public final class yoCore extends JavaPlugin {
 
         chat_muted = false;
 
+        new BukkitRunnable() {
+            @Override
+            public void run() { registerLastLocations(); }
+        }.runTaskLater(this, 20 * 5);
+
         Bukkit.getConsoleSender().sendMessage("yoCore v1.0 by Yochran has successfully loaded.");
+        getServer().setWhitelist(false);
+    }
+
+    @Override
+    public void onDisable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (last_location.get(player.getUniqueId()) == null) {
+                Map<String, Location> location = new HashMap<>();
+                location.put(new ServerManagement().getServer(player), player.getLocation());
+                last_location.put(player.getUniqueId(), location);
+            }
+
+            last_location.get(player.getUniqueId()).put(new ServerManagement().getServer(player), player.getLocation());
+        }
+
+        for (Map.Entry<UUID, Map<String, Location>> entry : last_location.entrySet())
+            for (Map.Entry<String, Location> data : entry.getValue().entrySet()) {
+                playerData.config.set(entry.getKey().toString() + ".LastLocation." + data.getKey() + ".World", data.getValue().getWorld().getName());
+                playerData.config.set(entry.getKey().toString() + ".LastLocation." + data.getKey() + ".X", data.getValue().getX());
+                playerData.config.set(entry.getKey().toString() + ".LastLocation." + data.getKey() + ".Y", data.getValue().getY());
+                playerData.config.set(entry.getKey().toString() + ".LastLocation." + data.getKey() + ".Z", data.getValue().getZ());
+                playerData.config.set(entry.getKey().toString() + ".LastLocation." + data.getKey() + ".Yaw", data.getValue().getYaw());
+                playerData.config.set(entry.getKey().toString() + ".LastLocation." + data.getKey() + ".Pitch", data.getValue().getPitch());
+            }
+
+        playerData.saveData();
     }
 
     public List<String> ranks = new ArrayList<>();
@@ -260,6 +293,28 @@ public final class yoCore extends JavaPlugin {
             for (String player : punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false))
                 banned_players.put(UUID.fromString(player), punishmentData.config.getBoolean("BlacklistedPlayers." + player + ".Reason"));
         }
+    }
+
+    private void registerLastLocations() {
+        for (String player : playerData.config.getKeys(false)) {
+            if (playerData.config.contains(player + ".LastLocation")) {
+                last_location.put(UUID.fromString(player), new HashMap<>());
+                for (String server : playerData.config.getConfigurationSection(player + ".LastLocation").getKeys(false)) {
+                    String world = playerData.config.getString(player + ".LastLocation." + server + ".World");
+                    double X = playerData.config.getDouble(player + ".LastLocation." + server + ".X");
+                    double Y = playerData.config.getDouble(player + ".LastLocation." + server + ".Y");
+                    double Z = playerData.config.getDouble(player + ".LastLocation." + server + ".Z");
+                    double Yaw = playerData.config.getDouble(player + ".LastLocation." + server + ".Yaw");
+                    double Pitch = playerData.config.getDouble(player + ".LastLocation." + server + ".Pitch");
+                    last_location.get(UUID.fromString(player)).put(server,
+                            new Location(Bukkit.getWorld(world), X, Y, Z, (float) Yaw, (float) Pitch));
+                }
+            }
+
+            playerData.config.set(player + ".LastLocation", null);
+        }
+
+        playerData.saveData();
     }
 
     private void registerCommands() {

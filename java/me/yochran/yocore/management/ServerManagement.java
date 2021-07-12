@@ -47,4 +47,8 @@ public class ServerManagement {
 
         return players;
     }
+
+    public List<String> getWorlds(String server) {
+        return new ArrayList<>(plugin.worldData.config.getStringList("Servers." + server + ".Worlds"));
+    }
 }

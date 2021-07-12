@@ -4,6 +4,7 @@ import me.yochran.yocore.management.*;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +13,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PlayerLogListener implements Listener {
 
@@ -31,6 +34,8 @@ public class PlayerLogListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        event.setJoinMessage("");
+
         if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString())) playerManagement.setupPlayer(event.getPlayer());
         if (!plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString())) punishmentManagement.setupPlayer(event.getPlayer());
         if (!plugin.grantData.config.contains(event.getPlayer().getUniqueId().toString())) grantManagement.setupPlayer(event.getPlayer());
@@ -65,7 +70,6 @@ public class PlayerLogListener implements Listener {
         if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())) {
             event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
                     .replace("%reason%", plugin.blacklisted_players.get(event.getPlayer().getUniqueId()))));
-            event.setJoinMessage("");
             return;
         }
 
@@ -77,7 +81,6 @@ public class PlayerLogListener implements Listener {
             else
                 event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Permanent.TargetJoinScreen")
                         .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))));
-            event.setJoinMessage("");
             return;
         }
 
@@ -87,8 +90,6 @@ public class PlayerLogListener implements Listener {
 
             for (Player players : Bukkit.getOnlinePlayers())
                 event.getPlayer().hidePlayer(players);
-
-            event.setJoinMessage("");
         }
 
         if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin")) {
@@ -113,18 +114,22 @@ public class PlayerLogListener implements Listener {
                 }
             }
         }
-
-        if (plugin.getConfig().getBoolean("JoinMessage.Enabled") && !plugin.vanished_players.contains(event.getPlayer().getUniqueId()))
-            event.setJoinMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
-                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        event.setQuitMessage("");
+
         if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()))
             playerManagement.setupPlayer(event.getPlayer());
 
-        System.out.println(serverManagement.getServer(event.getPlayer()));
+        if (plugin.last_location.get(event.getPlayer().getUniqueId()) == null) {
+            Map<String, Location> location = new HashMap<>();
+            location.put(serverManagement.getServer(event.getPlayer()), event.getPlayer().getLocation());
+            plugin.last_location.put(event.getPlayer().getUniqueId(), location);
+        }
+
+        plugin.last_location.get(event.getPlayer().getUniqueId()).put(serverManagement.getServer(event.getPlayer()), event.getPlayer().getLocation());
 
         if (plugin.getConfig().getBoolean("QuitMessage.Staff.Enabled")) {
             if (event.getPlayer().hasPermission("yocore.chats.staff")) {
@@ -139,22 +144,22 @@ public class PlayerLogListener implements Listener {
             }
         }
 
+        plugin.player_permissions.remove(event.getPlayer().getUniqueId());
+
         if (plugin.vanished_players.contains(event.getPlayer().getUniqueId())) {
             plugin.vanished_players.remove(event.getPlayer().getUniqueId());
             plugin.vanish_logged.add(event.getPlayer().getUniqueId());
-            event.setQuitMessage("");
         }
 
         if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                 || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
-            event.setQuitMessage("");
             return;
         }
 
-        if (plugin.getConfig().getBoolean("QuitMessage.Enabled"))
-            event.setQuitMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
-                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
-
-        plugin.player_permissions.remove(event.getPlayer().getUniqueId());
+        if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
+            for (Player player : serverManagement.getPlayers(serverManagement.getServer(event.getPlayer())))
+                player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
+                        .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+        }
     }
 }
