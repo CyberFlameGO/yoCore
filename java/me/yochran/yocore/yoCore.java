@@ -178,7 +178,7 @@ public final class yoCore extends JavaPlugin {
         if (getConfig().getBoolean("Servers.WorldSeparation")) new WorldSeparator().runTaskTimer(this, 0, 5);
     }
 
-    private void registerData() {
+    public void registerData() {
         playerData = new PlayerData();
         playerData.setupData();
         playerData.saveData();
@@ -410,5 +410,6 @@ public final class yoCore extends JavaPlugin {
         getCommand("BuildChat").setExecutor(new BuilderChatCommand());
         getCommand("Message").setExecutor(new MessageCommand());
         getCommand("Reply").setExecutor(new ReplyCommand());
+        getCommand("Yoreload").setExecutor(new ReloadCommand());
     }
 }

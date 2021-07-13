@@ -73,7 +73,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeJoin")) {
-                    for (Player player : Bukkit.getOnlinePlayers())
+                    for (Player player : serverManagement.getPlayers(serverManagement.getServer((Player) sender)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
@@ -123,7 +123,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeJoin")) {
-                    for (Player player : Bukkit.getOnlinePlayers())
+                    for (Player player : serverManagement.getPlayers(serverManagement.getServer(target)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(target))));
                 }

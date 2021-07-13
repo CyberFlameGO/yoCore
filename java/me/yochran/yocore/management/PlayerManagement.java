@@ -78,7 +78,6 @@ public class PlayerManagement {
     }
 
     public void sendToSpawn(String server, Player player) {
-        System.out.println(server);
         String world = plugin.worldData.config.getString("Servers." + server.toUpperCase() + ".Spawn.World");
         double X = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.X");
         double Y = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.Y");
