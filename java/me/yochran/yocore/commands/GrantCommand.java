@@ -48,7 +48,7 @@ public class GrantCommand implements CommandExecutor {
         plugin.grant_reason.remove(((Player) sender).getUniqueId());
         plugin.grant_duration.remove(((Player) sender).getUniqueId());
 
-        GrantGUI grantGUI = new GrantGUI((Player) sender, 27, "&aSelect a grant.");
+        GrantGUI grantGUI = new GrantGUI((Player) sender, 18, "&aSelect a grant.");
         grantGUI.setup((Player) sender, target, 1);
         GUI.open(grantGUI.getGui());
 

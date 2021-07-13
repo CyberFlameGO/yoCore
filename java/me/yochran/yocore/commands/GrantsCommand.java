@@ -48,7 +48,7 @@ public class GrantsCommand implements CommandExecutor {
 
         plugin.selected_grant_history.remove(((Player) sender).getUniqueId());
 
-        GrantsGUI grantsGUI = new GrantsGUI((Player) sender, 27, playerManagement.getPlayerColor(target) + "&a's grant history.");
+        GrantsGUI grantsGUI = new GrantsGUI((Player) sender, 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
         grantsGUI.setup((Player) sender, target, 1);
         GUI.open(grantsGUI.getGui());
 

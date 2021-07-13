@@ -20,7 +20,6 @@ public class ReloadCommand implements CommandExecutor {
             return true;
         }
 
-        plugin.saveConfig();
         plugin.reloadConfig();
         plugin.registerData();
 

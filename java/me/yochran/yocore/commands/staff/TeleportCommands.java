@@ -93,8 +93,8 @@ public class TeleportCommands implements CommandExecutor {
                     return true;
                 }
 
-                if (args.length != 1) {
-                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsageHere")));
+                if (args.length < 1 || args.length > 2) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsage")));
                     return true;
                 }
 
@@ -141,8 +141,8 @@ public class TeleportCommands implements CommandExecutor {
                     return true;
                 }
 
-                if (args.length != 1) {
-                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsageRequest")));
+                if (args.length < 1 || args.length > 2) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.IncorrectUsage")));
                     return true;
                 }
 

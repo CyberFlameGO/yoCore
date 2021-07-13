@@ -39,7 +39,7 @@ public class TagsCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            TagsGUI tagsGUI = new TagsGUI((Player) sender, 27, "&aChat tags.");
+            TagsGUI tagsGUI = new TagsGUI((Player) sender, 18, "&aChat tags.");
             tagsGUI.setup(1);
             GUI.open(tagsGUI.getGui());
         } else {

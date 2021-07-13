@@ -33,7 +33,7 @@ public class ReplyCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.IncorrectUsageReply")));
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.IncorrectUsage")));
             return true;
         }
 
