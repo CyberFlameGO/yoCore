@@ -133,6 +133,8 @@ permissions:
     description: Permission.
   yocore.itemname:
     description: Permission.
+  yocore.reload:
+    description: Permission.
 commands:
   Setrank:
     description: Set a players rank.
@@ -366,3 +368,6 @@ commands:
   Reply:
     description: Reply to a player messaging you.
     aliases: r
+  Yoreload:
+    description: Reload the plugin.
+    aliases: yocorereload

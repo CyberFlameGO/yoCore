@@ -11,7 +11,6 @@ Ranks:
     Prefix: "&7[&4Owner&7] &4"
     Color: "&4"
     Display: "&4Owner"
-    Priority: 1
     TabIndex: "a"
     GrantItem: "REDSTONE_BLOCK"
   DEVELOPER:
@@ -19,7 +18,6 @@ Ranks:
     Prefix: "&7[&5&oDeveloper&7] &5&o"
     Color: "&5&o"
     Display: "&5&oDeveloper"
-    Priority: 2
     TabIndex: "b"
     GrantItem: "PURPLE_WOOL"
   MANAGER:
@@ -27,7 +25,6 @@ Ranks:
     Prefix: "&7[&c&oManager&7] &c&o"
     Color: "&c&o"
     Display: "&c&oManager"
-    Priority: 3
     TabIndex: "c"
     GrantItem: "RED_WOOL"
   ADMIN:
@@ -35,7 +32,6 @@ Ranks:
     Prefix: "&7[&cAdmin&7] &c"
     Color: "&c"
     Display: "&cAdmin"
-    Priority: 4
     TabIndex: "d"
     GrantItem: "RED_WOOL"
   SENIOR-MOD:
@@ -43,7 +39,6 @@ Ranks:
     Prefix: "&7[&6&oSenior-Mod&7] &6&o"
     Color: "&6&o"
     Display: "&6&oSenior-Mod"
-    Priority: 5
     TabIndex: "e"
     GrantItem: "ORANGE_WOOL"
   MOD:
@@ -51,7 +46,6 @@ Ranks:
     Prefix: "&7[&6Mod&7] &6"
     Color: "&6"
     Display: "&6Mod"
-    Priority: 6
     TabIndex: "f"
     GrantItem: "ORANGE_WOOL"
   TRIAL-MOD:
@@ -59,7 +53,6 @@ Ranks:
     Prefix: "&7[&eTrial-Mod&7] &e"
     Color: "&e"
     Display: "&eTrial-Mod"
-    Priority: 7
     TabIndex: "g"
     GrantItem: "YELLOW_WOOL"
   BUILDER:
@@ -67,7 +60,6 @@ Ranks:
     Prefix: "&7[&2Builder&7] &2"
     Color: "&2"
     Display: "&2Builder"
-    Priority: 8
     TabIndex: "h"
     GrantItem: "GREEN_WOOL"
   DEFAULT:
@@ -75,7 +67,6 @@ Ranks:
     Prefix: "&7"
     Color: "&7"
     Display: "&7Default"
-    Priority: 9
     TabIndex: "i"
     GrantItem: "GRAY_WOOL"
 
@@ -97,7 +88,10 @@ Tags:
 
 TagsCommand:
   MustBePlayer: "&cYou must be a player to use that command"
-  IncorrectUsage: "&cIncorrect Usage! /tags [off]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/tags)
+    &7- &b/tags
+    &7- &b/tags off
   FormatOn: "&bYou have set your tag to &3%tag%&b."
   FormatOff: "&bYou have removed your chat tag."
   TagItem: "NAME_TAG"
@@ -105,7 +99,12 @@ TagsCommand:
 TagCommand:
   MustBePlayer: "&cYou must be a player to use that command"
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /tag <add/remove/prefix/display> <tag> [prefix/display]"
+  IncorrectUsage: |-
+    "&cIncorrect Usage! &7(/tag)
+    &7- &b/tag add &3<name>
+    &7- &b/tag remove &3<name>
+    &7- &b/tag prefix &3<prefix>
+    &7- &b/tag display &3<displayname>"
   InvalidTag: "&cInvalid Tag!"
   AddedTag: "&bCreated tag &3%tag%&b."
   RemovedTag: "&bRemoved tag &3%tag%&b."
@@ -133,15 +132,15 @@ WorldChangeAlerts:
 RankCommand:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: |-
-    &cIncorrect Usage! /rank
-    &cArgument 1:
-    &c - <add/remove/prefix/color/display/item/gpermission/permissions>
-    &cArgument 2:
-    &c - <rank>
-    &cArgument 3 (Some are optional):
-    &c - [prefix/color/display/gpermission/add/remove]
-    &cArgument 4 (Permissions only):
-    &c - <permission>
+    &cIncorrect Usage! &7(/rank)
+    &7- &b/rank add &3<rank>
+    &7- &b/rank remove &3<rank>
+    &7- &b/rank prefix &3<rank> <prefix>
+    &7- &b/rank color &3<rank> <color>
+    &7- &b/rank display &3<rank> <displayname>
+    &7- &b/rank item &3<rank>
+    &7- &b/rank permission &3<rank> &badd &3<permission>
+    &7- &b/rank permission &3<rank> &bremove &3<permission>
   InvalidRank: "&cInvalid Rank!"
   InvalidItem: "&cInvalid Item! (Hold it in your hand)"
   CreatedRank: "&bCreated rank &3%rank%&b."
@@ -163,7 +162,11 @@ RankCommand:
 
 UserCommand:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /user <player> <add/remove/list> [permission]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/user)
+    &7- &b/user &3<player> &badd &3<permission>
+    &7- &b/user &3<player> &bremove &3<permission>
+    &7- &b/user &3<player> &blist
   InvalidPlayer: "&cInvalid Player!"
   PermissionAdded: "&bYou added the &3%permission% &bpermission to %target%&b."
   PermissionRemoved: "&bYou removed the &3%permission% &bpermission from %target%&b."
@@ -175,7 +178,9 @@ UserCommand:
     &7&m--------------------------
 
 SetRank:
-  IncorrectUsage: "&cIncorrect Usage! /setrank <player> <rank>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/setrank)
+    &7- &b/setrank &3<player> <rank>
   InvalidPlayer: "&cInvalid Player!"
   InvalidRank: "&cInvalid Rank!"
   ConsoleOnly: "&cThis command is Console only!"
@@ -186,17 +191,26 @@ SilentPrefix: "&7(Silent) "
 
 Warn:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /warn <player> [-s] <reason>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/warn)
+    &7- &b/warn &3<player> <reason>
+    &7- &b/warn &3<player> &b-s &3<reason>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have warned %target% &bfor &3%reason%&b."
   TargetMessage: "&6&l<!> &cYou have been warned for &4%reason%&c. &6&l<!>"
   BroadcastMessage: "%executor% &bhas warned %target%&b."
-  ReWarnIncorrectUsage: "&cIncorrect Usage! /rewarn <player> [-s] <reason>"
+  ReWarnIncorrectUsage: |-
+    &cIncorrect Usage! &7(/rewarn)
+    &7- &b/rewarn &3<player> <reason>
+    &7- &b/rewarn &3<player> &b-s &3<reason>
   ReWarnExecutorMessage: "&bYou have re-warned %target% &bfor &3%reason%&b."
 
 Kick:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /kick <player> [-s] <reason>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/kick)
+    &7- &b/kick &3<player> <reason>
+    &7- &b/kick &3<player> &b-s &3<reason>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have kicked %target% &bfor &3%reason%&b."
   BroadcastMessage: "%executor% &bhas kicked %target%&b."
@@ -210,29 +224,44 @@ Mute:
   TargetIsMuted: "&cTarget is already muted!"
   TargetNotMuted: "&cTarget is not muted!"
   Permanent:
-    IncorrectUsage: "&cIncorrect Usage! /mute <player> [-s] <reason>"
+    IncorrectUsage: |-
+      &cIncorrect Usage! &7(/mute)
+      &7- &b/mute &3<player> <reason>
+      &7- &b/mute &3<player> &b-s &3<reason>
     ExecutorMessage: "&bYou have permanently muted %target% &bfor &3%reason%&b."
     TargetMessage: "&6&l<!> &cYou have been &4permanently &cmuted for &4%reason%&c. &6&l<!>"
     BroadcastMessage: "%executor% &bhas permanently muted %target%&b."
     TargetAttemptToSpeak: |-
       &cYou cannot speak as you are muted for &4%reason%&c.
       &cThis mute will &4not &cexpire.
-    ReMuteIncorrectUsage: "&cIncorrect Usage! /remute <player> [-s] <reason>"
+    ReMuteIncorrectUsage: |-
+      &cIncorrect Usage! &7(/remute)
+      &7- &b/remute &3<player> <reason>
+      &7- &b/remute &3<player> &b-s &3<reason>
     ReMuteExecutorMessage: "&bYou have re-muted %target% &bfor &3%reason%&b."
   Temporary:
-    IncorrectUsage: "&cIncorrect Usage! /tempmute <player> <duration> [-s] <reason>"
+    IncorrectUsage: |-
+      &cIncorrect Usage! &7(/tempmute)
+      &7- &b/tempmute &3<player> <duration> <reason>
+      &7- &b/tempmute &3<player> <duration> &b-s &3<reason>
     ExecutorMessage: "&bYou have temporarily muted %target% &bfor &3%reason%&b. &7(%duration%)"
     TargetMessage: "&6&l<!> &cYou have been temporarily muted for &4%reason%&c. &7(%duration%) &6&l<!>"
     BroadcastMessage: "%executor% &bhas temporarily muted %target%&b."
     TargetAttemptToSpeak: |-
       &cYou cannot speak as you are muted for &4%reason%&c.
       &cThis mute will expire on &4%expiration%&c.
-    ReMuteIncorrectUsage: "&cIncorrect Usage! /retempmute <player> <duration> [-s] <reason>"
+    ReMuteIncorrectUsage: |-
+      &cIncorrect Usage! &7(/retempmute)
+      &7- &b/retempmute &3<player> <duration> <reason>
+      &7- &b/retempmute &3<player> <duration> &b-s &3<reason>
     ReMuteExecutorMessage: "&bYou have re-muted %target% &bfor &3%reason%&b. &7(%duration%)"
 
 Unmute:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /unmute <player> [-s]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/unmute)
+    &7- &b/unmute &3<player>
+    &7- &b/unmute &3<player> &b-s
   InvalidPlayer: "&cInvalid Player!"
   TargetIsNotMuted: "&cTarget is not muted!"
   ExecutorMessage: "&bYou have unmuted %target%&b."
@@ -245,7 +274,10 @@ Ban:
   TargetIsBanned: "&cTarget is already banned!"
   TargetNotBanned: "&cTarget is not banned!"
   Permanent:
-    IncorrectUsage: "&cIncorrect Usage! /ban <player> [-s] <reason>"
+    IncorrectUsage: |-
+      &cIncorrect Usage! &7(/ban)
+      &7- &b/ban &3<player> <reason>
+      &7- &b/ban &3<player> &b-s &3<reason>
     ExecutorMessage: "&bYou have permanently banned %target% &bfor &3%reason%&b."
     BroadcastMessage: "%executor% &bhas permanently banned %target%&b."
     TargetMessage: |-
@@ -256,10 +288,16 @@ Ban:
       &cYou cannot join this server as you are &4banned&c.
       &cYou were banned for&7: &f%reason%&7.
       &cThis ban will &4not &cexpire.
-    ReBanIncorrectUsage: "&cIncorrect Usage! /reban <player> [-s] <reason>"
+    ReBanIncorrectUsage: |-
+      &cIncorrect Usage! &7(/reban)
+      &7- &b/reban &3<player> <reason>
+      &7- &b/reban &3<player> &b-s &3<reason>
     ReBanExecutorMessage: "&bYou have re-banned %target% &bfor &3%reason%&b."
   Temporary:
-    IncorrectUsage: "&cIncorrect Usage! /tempban <player> <duration> [-s] <reason>"
+    IncorrectUsage: |-
+      &cIncorrect Usage! &7(/tempban)
+      &7- &b/tempban &3<player> <duration> <reason>
+      &7- &b/tempban &3<player> <duration> &b-s &3<reason>
     ExecutorMessage: "&bYou have temporarily banned %target% &bfor &3%reason%&b. &7(%duration%)"
     BroadcastMessage: "%executor% &bhas temporarily banned %target%&b."
     TargetMessage: |-
@@ -270,12 +308,18 @@ Ban:
       &cYou cannot join this server as you are &4banned&c.
       &cYou were banned for&7: &f%reason%&7.
       &cThis ban will expire on&7: &f%expiration%&7.
-    ReBanIncorrectUsage: "&cIncorrect Usage! /retempban <player> <duration> [-s] <reason>"
+    ReBanIncorrectUsage: |-
+      &cIncorrect Usage! &7(/retempban)
+      &7- &b/retempban &3<player> <duration> <reason>
+      &7- &b/retempban &3<player> <duration> &b-s &3<reason>
     ReBanExecutorMessage: "&bYou have re-banned %target% &bfor &3%reason%&b. &7(%duration%)"
 
 Unban:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /unban <player> [-s]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/unban)
+    &7- &b/unban &3<player>
+    &7- &b/unban &3<player> &b-s
   InvalidPlayer: "&cInvalid Player!"
   TargetIsNotBanned: "&cTarget is not banned!"
   ExecutorMessage: "&bYou have unbanned %target%&b."
@@ -286,7 +330,10 @@ Blacklist:
   InvalidPlayer: "&cInvalid Player!"
   TargetIsBlacklisted: "&cTarget is already blacklisted!"
   TargetNotBlacklisted: "&cTarget is not blacklisted!"
-  IncorrectUsage: "&cIncorrect Usage! /blacklist <player> [-s] <reason>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/blacklist)
+    &7- &b/blacklist &3<player> <reason>
+    &7- &b/blacklist &3<player> &b-s &3<reason>
   ExecutorMessage: "&bYou have permanently blacklisted %target% &bfor &3%reason%&b."
   BroadcastMessage: "%executor% &bhas permanently blacklisted %target%&b."
   TargetMessage: |-
@@ -297,12 +344,18 @@ Blacklist:
     &cYou cannot join this server as you are &4blacklisted&c.
     &cYou were blacklisted for&7: &f%reason%&7.
     &cThis blacklist will &4not &cexpire.
-  ReBlacklistIncorrectUsage: "&cIncorrect Usage! /reblacklist <player> [-s] <reason>"
+  ReBlacklistIncorrectUsage: |-
+    &cIncorrect Usage! &7(/reblacklist)
+    &7- &b/reblacklist &3<player> <reason>
+    &7- &b/reblacklist &3<player> &b-s &3<reason>
   ReBlacklistExecutorMessage: "&bYou have re-blacklisted %target% &bfor &3%reason%&b."
 
 Unblacklist:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /unblacklist <player> [-s]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/unblacklist)
+    &7- &b/unblacklist &3<player>
+    &7- &b/unblacklist &3<player> &b-s
   InvalidPlayer: "&cInvalid Player!"
   TargetIsNotBlacklisted: "&cTarget is not blacklisted!"
   ExecutorMessage: "&bYou have unblacklisted %target%&b."
@@ -311,29 +364,35 @@ Unblacklist:
 History:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /c <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/c)
+    &7- &b/c &3<player>
   InvalidPlayer: "&cInvalid Player!"
 
 ClearHistory:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /clearhistory <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/ch)
+    &7- &b/ch &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have cleared %target%&b's punishment history."
 
 Grant:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /grant <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/grant)
+    &7- &b/grant &3<player>
   InvalidPlayer: "&cInvalid Player!"
   NoPermissionItem: "GRAY_DYE"
   Permission:
     Lore:
-      - "&e&m----------------------------"
-      - "&ePermission: &f%permission%"
-      - "&e&m----------------------------"
-      - "&eType: &fPermission"
-      - "&e&m----------------------------"
+      - "&3&m----------------------------"
+      - "&bPermission: &3%permission%"
+      - "&bType: &3Permission"
+      - "&3 "
       - "%has_permission%"
+      - "&3&m----------------------------"
     Items:
       '1':
         Item: "PAPER"
@@ -367,6 +426,14 @@ Grant:
         Item: "PAPER"
         Name: "&fBeta-Tester Tag"
         Permission: "yocore.tags.betatester"
+      '9':
+        Item: "PAPER"
+        Name: "&fChat Color"
+        Permission: "yocore.chatcolor"
+      '10':
+        Item: "PAPER"
+        Name: "&fChat Color Codes"
+        Permission: "yocore.chatcolor.bypass"
   Duration:
     Items:
       TenSeconds:
@@ -425,11 +492,8 @@ Grant:
         ID: "Permanent"
         Slot: 24
     Lore:
-      - "&e&m----------------------------------------"
-      - "&eSelecting this will set the duration to %duration%."
-      - "&r"
+      - "&7Selecting this will set the duration to %duration%."
       - "&7(%target%&7)"
-      - "&e&m----------------------------------------"
   Reason:
     Items:
       NoReason:
@@ -468,36 +532,36 @@ Grant:
         ID: "Custom Reason"
         Slot: 16
     Lore:
-      - "&e&m----------------------------------------"
-      - "&eSelecting this will set the reason to %reason%."
-      - "&r"
+      - "&7Selecting this will set the reason to %reason%."
       - "&7(%target%&7)"
-      - "&e&m----------------------------------------"
     CustomReasonChatMessage: "&bEnter a custom reason."
     CustomReasonCommandAttempt: "&cYou cannot use commands right now."
   Confirm:
     Lore:
-      - "&e&m----------------------------------"
-      - "&6&lDetails:"
-      - "&e "
-      - "&eTarget: &6%target%"
-      - "&eGrant: &6%grant%"
-      - "&eDuration: &6%duration%"
-      - "&eReason: &6%reason%"
-      - "&e&m----------------------------------"
+      - "&3&m----------------------------------"
+      - "&3&lDetails:"
+      - "&b "
+      - "&bTarget: &3%target%"
+      - "&bGrant: &3%grant%"
+      - "&bDuration: &3%duration%"
+      - "&bReason: &3%reason%"
+      - "&3&m----------------------------------"
     CancelledGrant: "&cGrant has been cancelled."
     ConfirmedGrant: |-
-      &a&lGrant has been confirmed.
-      &eGranted User: %target%
-      &eGranted Rank/Permission: &6%grant%
-      &eGrant Duration: &6%duration%
-      &eGrant Reason: &6%reason%
+      &3&lGrant has been confirmed.
+      &bGranted User: %target%
+      &bGranted Rank/Permission: &3%grant%
+      &bGrant Duration: &3%duration%
+      &bGrant Reason: &3%reason%
   RevokedGrant: "&cGrant has been revoked."
 
 RankDisguise:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /rankdisguise <player> <rank/off>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/rankdisguise)
+    &7- &b/rankdisguise &3<player> <rank>
+    &7- &b/rankdisguise &3<player> &boff
   InvalidPlayer: "&cInvalid Player!"
   InvalidRank: "&cInvalid Rank!"
   TargetNotDisguised: "&cTarget is not disguised!"
@@ -507,7 +571,12 @@ RankDisguise:
 Nickname:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /nick <nick/off> [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/nick)
+    &7- &b/nick &3<nick>
+    &7- &b/nick off
+    &7- &b/nick &3<player> <nick>
+    &7- &b/nick &3<player> &boff
   InvalidPlayer: "&cInvalid Player!"
   NotNicked: "&cTarget is not nicked!"
   CannotNickAsPlayer: "&cCannot nick as this player!"
@@ -519,25 +588,33 @@ Nickname:
   FormatOffOther: "&bYou have removed %target%&b's nickname."
 
 RealName:
-  IncorrectUsage: "&cIncorrect Usage! /realname <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/realname)
+    &7- &b/realname &3<player>
   InvalidNick: "&cNo one has that nickname."
   Format: "%target% &bis nicked as &3%nickname%&b."
 
 GrantHistory:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /grants <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/cg)
+    &7- &b/cg &3<player>
   InvalidPlayer: "&cInvalid Player!"
 
 ClearGrantHistory:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /cleargranthistory <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/cgh)
+    &7- &b/cgh &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have cleared %target%&b's grant history."
 
 Ungrant:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /ungrant <player> <id>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/ungrant)
+    &7- &b/ungrant &3<player> <id>
   InvalidPlayer: "&cInvalid Player!"
   InvalidGrant: "&cInvalid Grant!"
   ExecutorMessage: "&bYou have revoked grant &3#%grant% &bfrom %target%&b."
@@ -545,7 +622,10 @@ Ungrant:
 BuildChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /bldc <message/toggle>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/bldc)
+    &7- &b/bldc &3<message>
+    &7- &b/bldc &btoggle
   ToggleOn: "&bYou have toggled on &2build &bchat."
   ToggleOff: "&bYou have toggled off &2build &bchat."
   Format: "&2[B] &3[%server%] %player%&7: &b%message%"
@@ -553,7 +633,10 @@ BuildChat:
 StaffChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /sc <message/toggle>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/sc)
+    &7- &b/sc &3<message>
+    &7- &b/sc &btoggle
   ToggleOn: "&bYou have toggled on &3staff &bchat."
   ToggleOff: "&bYou have toggled off &3staff &bchat."
   Format: "&b[S] &3[%server%] %player%&7: &b%message%"
@@ -561,7 +644,10 @@ StaffChat:
 AdminChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /ac <message/toggle>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/ac)
+    &7- &b/ac &3<message>
+    &7- &b/ac &btoggle
   ToggleOn: "&bYou have toggled on &cadmin &bchat."
   ToggleOff: "&bYou have toggled off &cadmin &bchat."
   Format: "&c[A] &3[%server%] %player%&7: &b%message%"
@@ -569,7 +655,10 @@ AdminChat:
 ManagementChat:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /mc <message/toggle>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/mc)
+    &7- &b/mc &3<message>
+    &7- &b/mc &btoggle
   ToggleOn: "&bYou have toggled on &4management &bchat."
   ToggleOff: "&bYou have toggled off &4management &bchat."
   Format: "&4[M] &3[%server%] %player%&7: &b%message%"
@@ -605,7 +694,10 @@ StaffAlerts:
 Vanish:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /vanish [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/v)
+    &7- &b/v
+    &7- &b/v &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessageOn: "&bYou have put %target% &binto &3vanish&b."
   ExecutorMessageOff: "&bYou have taken %target% &bout of &3vanish&b."
@@ -617,7 +709,14 @@ Vanish:
 Gamemode:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /gamemode <gamemode> [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/gamemode)
+    &7- &b/gamemode &3<gamemode>
+    &7- &b/gamemode &3<gamemode> <player>
+    &7- &b/gmc &3[player]
+    &7- &b/gms &3[player]
+    &7- &b/gma &3[player]
+    &7- &b/gmsp &3[player]
   InvalidPlayer: "&cInvalid Player!"
   InvalidGamemode: "&cInvalid Gamemode!"
   ExecutorMessage: "&bYou have put %target% &binto &3%gamemode% &bmode."
@@ -626,7 +725,10 @@ Gamemode:
 Heal:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /heal [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/heal)
+    &7- &b/heal
+    &7- &b/heal &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have healed %target%&b."
   TargetMessage: "&bYou have been healed."
@@ -634,7 +736,10 @@ Heal:
 Feed:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /feed [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/feed)
+    &7- &b/feed
+    &7- &b/feed &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have fed %target%&b."
   TargetMessage: "&bYou have been fed."
@@ -642,7 +747,10 @@ Feed:
 Clear:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /clear [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/ci)
+    &7- &b/ci
+    &7- &b/ci &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have cleared %target%&b's inventory."
   TargetMessage: "&bYour inventory has been cleared."
@@ -660,7 +768,10 @@ MuteChat:
 Fly:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /fly [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/fly)
+    &7- &b/fly
+    &7- &b/fly &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessageOn: "&bYou have put %target% &binto fly mode."
   TargetMessageOn: "&bYou are now in fly mode."
@@ -670,7 +781,10 @@ Fly:
 Speed:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /speed <speed> [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/speed)
+    &7- &b/speed &3<speed>
+    &7- &b/speed &3<speed> <player>
   InvalidPlayer: "&cInvalid Player!"
   InvalidSpeed: "&cInvalid Speed! Must be between -1 and 1."
   ExecutorMessage: "&bYou have set %target%&b's speed to &3%speed%&b."
@@ -679,7 +793,10 @@ Speed:
 Sudo:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /sudo <player> <command/message>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/sudo)
+    &7- &b/sudo &3<player> <message>
+    &7- &b/sudo &3<player> <command>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessageCommand: "&bYou have sudod %target% &bto run &3%command%&b."
   ExecutorMessageMessage: "&bYou have sudod %target% &bto type &3%message%&b."
@@ -687,9 +804,16 @@ Sudo:
 Teleport:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /tp <player> [player]"
-  IncorrectUsageHere: "&cIncorrect Usage! /tphere <player>"
-  IncorrectUsageRequest: "&cIncorrect Usage! /tpa <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/tp)
+    &7- &b/tp &3<player>
+    &7- &b/tp &3<player> <player>
+    &7- &b/tphere &3<player>
+    &7- &b/tpall
+    &7- &b/tpa &3<player>
+    &7- &b/tpaccept
+    &7- &b/tpdeny
+    &7- &b/tpcancel
   InvalidPlayer: "&cInvalid Player!"
   Teleport: "&bYou have teleported to %target%&b."
   TeleportHere: "&bYou have teleported %target% &bto yourself."
@@ -709,9 +833,11 @@ Teleport:
 
 Freeze:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /ss <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/ss)
+    &7- &b/ss &3<player>
   InvalidPlayer: "&cInvalid Player!"
-  OnCooldown: "&cYou're on cooldown for that."
+  OnCooldown: "&cYou're on cooldown for that!"
   ExecutorMessageOn: "&bYou have &3frozen %target%&b."
   ExecutorMessageOff: "&bYou have &3unfrozen %target%&b."
   TargetMessageOn: |-
@@ -725,7 +851,10 @@ Freeze:
 Modmode:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /modmode [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/modmode)
+    &7- &b/modmode
+    &7- &b/modmode &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessageOn: "&bYou have put %target% &binto &3modmode&b."
   TargetMessageOn: "&bYou have entered &3modmode&b."
@@ -735,7 +864,9 @@ Modmode:
 Report:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /report <player> <reason>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/report)
+    &7- &b/report &3<player> <reason>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have reported %target% &bfor &3%reason%&b."
   StaffAlert: "&b[S] &3[%server%] %player% &3has reported %target% &3for &b%reason%."
@@ -743,13 +874,17 @@ Report:
 Reports:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /reports <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/cr)
+    &7- &b/cr &3<player>
   InvalidPlayer: "&cInvalid Player!"
 
 ClearReports:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /clearreports <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/crh)
+    &7- &b/crh &3<player>
   InvalidPlayer: "&cInvalid Player!"
   Format: "&bYou have cleared %target%&b's report history."
 
@@ -762,8 +897,10 @@ BuildMode:
 
 Message:
   MustBePlayer: "&cYou must be a player to use that command."
-  IncorrectUsageMessage: "&cIncorrect Usage! /msg <player> <message>"
-  IncorrectUsageReply: "&cIncorrect Usage! /r <message>"
+  IncorrectUsageMessage: |-
+    &cIncorrect Usage! &7(/msg)
+    &7- &b/msg &3<player> <message>
+    &7- &b/r &3<message>
   InvalidPlayer: "&cInvalid Player!"
   NotMessaging: "&cYou're not currently messaging anyone!"
   MessagesOffSelf: "&cYou cannot send messages as your messages are off!"
@@ -775,7 +912,9 @@ Message:
 
 Alts:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /alts <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/alts)
+    &7- &b/alts &3<player>
   InvalidPlayer: "&cInvalid Player!"
   GatheringMessage: "&bGathering %target%&b's alts... &7(This could take some time)"
   ExecutorMessage: "%target%&b's alts &7(Offline, &aOnline&7, &6Muted&7, &cBanned&7, &4Blacklisted&7): &3%alts%"
@@ -783,13 +922,17 @@ Alts:
 Invsee:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /invsee <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/invsee)
+    &7- &b/invsee &3<player>
   InvalidPlayer: "&cInvalid Player!"
 
 EnderChest:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /echest <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/echest)
+    &7- &b/echest &3<player>
   InvalidPlayer: "&cInvalid Player!"
 
 ChatColor:
@@ -799,7 +942,9 @@ ChatColor:
 
 Broadcast:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /broadcast <message>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/bc)
+    &7- &b/bc &3<message>
   Message: "&7[&4&lALERT&7] &f%message%"
 
 Settings:
@@ -813,7 +958,10 @@ Settings:
 ServerManager:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /servermanager <runcmd/info> [command]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/sm)
+    &7- &b/sm runcmd &3<command>
+    &7- &b/sm info
   InfoFormat: |-
     &7&m-----------------------
     &bServer Version: &3%version%
@@ -824,21 +972,27 @@ ServerManager:
 
 Ping:
   MustBePlayer: "&cYou must be a player to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /ping [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/ping)
+    &7- &b/ping
+    &7- &b/ping &3<player>
   InvalidPlayer: "&cInvalid Player!"
   Format: "%player%&b's ping: &3%ping%&b."
 
 Seen:
   NoPermission: "&cYou do not have permission to use that command."
   InvalidPlayer: "&cInvalid Player!"
-  IncorrectUsage: "&cIncorrect Usage! /player <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/seen)
+    &7- &b/seen &3<player>
   Format: |-
     &7&m-----------------------
-    %target%&3's info:
+    %target%&3&l's info:
     &bUsername: &3%name%
     &bRank: &3%rank%
     &bFirst Joined: &3%firstjoined%
     &bPlay Time: &3%playtime%
+    &7
     &bCurrent IP: &3%ip%
     &bAll IPs:
     %all_ips%
@@ -847,7 +1001,10 @@ Seen:
 Powertool:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /pt <command/off>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/pt)
+    &7- &b/pt &3<command>
+    &7- &b/pt off
   InvalidItem: "&cInvalid Item! (Hold it in your hand)"
   FormatOn: "&bYou have set the command for &3%item% &bto &3%command%&b."
   FormatOff: "&bYou have removed the powertool for this item."
@@ -855,13 +1012,17 @@ Powertool:
 Skull:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /skull <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/skull)
+    &7- &b/skull &3<player>
   Format: "&bYou have given yourself &3%target%&b's skull."
 
 ItemName:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /iname <name>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/iname)
+    &7- &b/iname &3<name>
   InvalidItem: "&cInvalid Item! (Hold it in your hand)"
   Format: "&bYou have set your current item's name to &3%name%&b."
 
@@ -898,7 +1059,12 @@ Economy:
   Command:
     MustBePlayer: "&cYou must be a player to use that command."
     NoPermission: "&cYou do not have permission to use that command."
-    IncorrectUsage: "&cIncorrect Usage! /eco <set/give/take/reset> <player> [amount]"
+    IncorrectUsage: |-
+      &cIncorrect Usage! &7(/eco)
+      &7- &b/eco set &3<player> <amount>
+      &7- &b/eco give &3<player> <amount>
+      &7- &b/eco take &3<player> <amount>
+      &7- &b/eco reset &3<player>
     InvalidPlayer: "&cInvalid Player!"
     InvalidAmount: "&cInvalid Amount! Must be less than %maximum%."
     Format:
@@ -910,14 +1076,18 @@ Economy:
 
 Balance:
   MustBePlayer: "&cYou must be a player to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /bal <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/bal)
+    &7- &b/bal &3<player>
   InvalidPlayer: "&cInvalid Player!"
   Format: "%player%&b's balance: &3$%balance%&b."
 
 Pay:
   MustBePlayer: "&cYou must be a player to use that command."
   MinimumAmount: 10
-  IncorrectUsage: "&cIncorrect Usage! /pay <player> <amount>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/pay)
+    &7- &b/pay &3<player> <amount>
   InvalidPlayer: "&cInvalid Player!"
   InvalidAmount: "&cInvalid Amount! Must be at least $%minimum%, must be less than $%maximum%."
   NotEnoughMoney: "&cYou don't have enough money for that."
@@ -931,7 +1101,9 @@ Bounty:
   NotEnabledMessage: "&cBounty is not enabled in this server."
   MinimumAmount: 100
   RemoveFee: 1000
-  IncorrectUsage: "&cIncorrect Usage! /bounty <player> <amount>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/bounty)
+    &7- &b/bounty &3<player> <amount>
   InvalidPlayer: "&cInvalid Player!"
   InvalidAmount: "&cInvalid Amount! Must be more than $%minimum%, must be less than $%maximum%!"
   NotEnoughMoney: "&cYou don't have enough money for that."
@@ -944,7 +1116,9 @@ Bounty:
 Unbounty:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /unbounty <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/unbounty)
+    &7- &b/unbounty &3<player>
   InvalidPlayer: "&cInvalid Player!"
   PlayerNotBountied: "&cPlayer is not bountied!"
   Format: "&bYou have removed the bounty on %target%&b."
@@ -958,7 +1132,10 @@ Stats:
   StreakEndBroadcast: "&3&l<!> %player% &bhas ended %target%&b's &3%streak% &bkillstreak. &3&l<!>"
   Command:
     MustBePlayer: "&cYou must be a player to use that command."
-    IncorrectUsage: "&cIncorrect Usage! /stats [player]"
+    IncorrectUsage: |-
+      &cIncorrect Usage! &7(/stats)
+      &7- &b/stats
+      &7- &b/stats &3<player>
     InvalidPlayer: "&cInvalid Player!"
     Format: |-
       &7&m-----------------------
@@ -971,7 +1148,9 @@ Stats:
       &7&m-----------------------
 ResetStats:
   MustBePlayer: "&cYou must be a player to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /resetstats <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/resetstats)
+    &7- &b/resetstats &3<player>
   InvalidPlayer: "&cInvalid Player!"
   Format: "&bYou have successfully reset %target%&b's &3stats&b."
 
@@ -1041,20 +1220,26 @@ Servers:
 
 Find:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /find <player>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/find)
+    &7- &b/find &3<player>
   InvalidPlayer: "&cInvalid Player!"
   Format: "%target% &bis connected to &3%server%&b."
 
 ServerCommand:
   MustBePlayer: "&cYou must be a player to use that command."
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /server <server>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/server)
+    &7- &b/server &3<server>
   InvalidServer: "&cInvalid Server!"
   Format: "&bYou have sent yourself to &3%server%&b."
 
 Send:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /send <player> <server>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/send)
+    &7- &b/send &3<player> <server>
   InvalidPlayer: "&cInvalid Player!"
   InvalidServer: "&cInvalid Server!"
   ExecutorMessage: "&bYou have sent %target% &bto &3%server%&b."
@@ -1062,20 +1247,24 @@ Send:
 
 GList:
   NoPermission: "&cYou do not have permission to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /glist <server/showall>"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/bal)
+    &7- &b/glist
+    &7- &b/glist <server>
+    &7- &b/glist showall
   InvalidServer: "&cInvalid Server!"
   Format: |-
-    &7&m---------------------------
     &7(&3%server%&7) &3online: &b%server_online%&3.
-    &7 -
     %online_players%
-    &7&m---------------------------
 
 Spawn:
   SpawnOnServerChange: true
   OverrideBeds: true
   MustBePlayer: "&cYou must be a player to use that command."
-  IncorrectUsage: "&cIncorrect Usage! /spawn [player]"
+  IncorrectUsage: |-
+    &cIncorrect Usage! &7(/spawn)
+    &7- &b/spawn
+    &7- &b/spawn &3<player>
   InvalidPlayer: "&cInvalid Player!"
   ExecutorMessage: "&bYou have sent %target% &bto spawn."
   TargetMessage: "&bYou have been sent to spawn."
