@@ -41,18 +41,13 @@ public class Toolbar {
     public String getType() { return type; }
     public static AtomicInteger getNewPage() { return newPage; }
 
-    public void create(OfflinePlayer target, String type) {
+    public void create(OfflinePlayer target, String type, boolean bottomRow) {
         gui.setFiller(new int[] { 0,1,2,3,4,5,6,7,8 });
-        gui.setFiller(new int[] { 18,19,20,21,22,23,24,25,26 });
-
         ItemBuilder firstPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lYou are on the first page.", new ArrayList<>());
         ItemBuilder lastPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lYou are on the last page.", new ArrayList<>());
         ItemBuilder previousPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lNo previous page available", new ArrayList<>());
         ItemBuilder nextPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lNo next page available", new ArrayList<>());
         ItemBuilder findPage = new ItemBuilder(XMaterial.OAK_SIGN.parseItem(), 1, "&a&lFind a page.", new ArrayList<>());
-        ItemBuilder back = new ItemBuilder(XMaterial.ARROW.parseItem(), 1, "&6&lGo back to main menu.", new ArrayList<>());
-        ItemBuilder exit = new ItemBuilder(XMaterial.BARRIER.parseItem(), 1, "&4&lExit", new ArrayList<>());
-
         gui.setButton(0, new Button(firstPage.getItem(), firstPage.getName(), firstPage.getLore()));
         gui.setButton(1, new Button(previousPage.getItem(), previousPage.getName(), previousPage.getLore()));
         gui.setButton(4, new Button(
@@ -113,20 +108,28 @@ public class Toolbar {
                 reopen.run();
             }, firstPage.getName(), firstPage.getLore()));
         }
-        gui.setButton(18, new Button(back.getItem(), () -> {
-            GUI.close(gui);
 
-            if (getType().equalsIgnoreCase("Punishments")) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        PunishmentHistoryGUI punishmentHistoryGUI = new PunishmentHistoryGUI(getGui().getPlayer(), 36, "&aSelect punishment type.");
-                        punishmentHistoryGUI.setup(getGui().getPlayer(), target);
-                        GUI.open(punishmentHistoryGUI.getGui());
-                    }
-                }.runTaskLater(plugin, 1);
-            }
-        }, back.getName(), back.getLore()));
-        gui.setButton(26, new Button(exit.getItem(), () -> GUI.close(gui), exit.getName(), exit.getLore()));
+        if (bottomRow) {
+            gui.setFiller(new int[] { 18,19,20,21,22,23,24,25,26 });
+
+            ItemBuilder back = new ItemBuilder(XMaterial.ARROW.parseItem(), 1, "&6&lGo back to main menu.", new ArrayList<>());
+            ItemBuilder exit = new ItemBuilder(XMaterial.BARRIER.parseItem(), 1, "&4&lExit", new ArrayList<>());
+
+            gui.setButton(18, new Button(back.getItem(), () -> {
+                GUI.close(gui);
+
+                if (getType().equalsIgnoreCase("Punishments")) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            PunishmentHistoryGUI punishmentHistoryGUI = new PunishmentHistoryGUI(getGui().getPlayer(), 36, "&aSelect punishment type.");
+                            punishmentHistoryGUI.setup(getGui().getPlayer(), target);
+                            GUI.open(punishmentHistoryGUI.getGui());
+                        }
+                    }.runTaskLater(plugin, 1);
+                }
+            }, back.getName(), back.getLore()));
+            gui.setButton(26, new Button(exit.getItem(), () -> GUI.close(gui), exit.getName(), exit.getLore()));
+        }
     }
 }

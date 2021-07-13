@@ -39,30 +39,32 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
         for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false)) {
             loop++;
 
-            ItemBuilder itemBuilder = new ItemBuilder(
-                    Utils.getMaterialFromConfig(plugin.getConfig().getString("Ranks." + rank + ".GrantItem")),
-                    1,
-                    plugin.getConfig().getString("Ranks." + rank + ".Display"),
-                    ItemBuilder.formatLore(new String[] {
-                            "&e&m----------------------------",
-                            "&eID: &f" + plugin.getConfig().getString("Ranks." + rank + ".ID"),
-                            "&ePrefix: &f" + plugin.getConfig().getString("Ranks." + rank + ".Prefix"),
-                            "&eDisplay Name: &f" + plugin.getConfig().getString("Ranks." + rank + ".Display"),
-                            "&e&m----------------------------",
-                            "&eType: &fRank",
-                            "&e&m----------------------------"
-                    })
-            );
+            ItemStack item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Ranks." + rank + ".GrantItem"));
 
             String permission;
             if (player.hasPermission("yocore.grant." + plugin.getConfig().getString("Ranks." + rank + ".ID").toLowerCase()))
-                permission = "&a&lYou can grant this rank.";
+                permission = "&aYou can grant this rank.";
             else {
-                permission = "&c&lYou cannot grant this rank.";
-                itemBuilder.setItem(Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem")));
+                permission = "&cYou cannot grant this rank.";
+                item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem"));
             }
 
-            itemBuilder.getLore().add(Utils.translate(permission));
+            ItemBuilder itemBuilder = new ItemBuilder(
+                    item,
+                    1,
+                    plugin.getConfig().getString("Ranks." + rank + ".Display"),
+                    ItemBuilder.formatLore(new String[] {
+                            "&3&m----------------------------",
+                            "&bID: &3" + plugin.getConfig().getString("Ranks." + rank + ".ID"),
+                            "&bPrefix: &3" + plugin.getConfig().getString("Ranks." + rank + ".Prefix"),
+                            "&bDisplay Name: &3" + plugin.getConfig().getString("Ranks." + rank + ".Display"),
+                            "&bColor: &3" + plugin.getConfig().getString("Ranks." + rank + ".Color") + "Example",
+                            "&bType: &3Rank",
+                            "&b ",
+                            permission,
+                            "&3&m----------------------------",
+                    })
+            );
 
             Button button = new Button(
                     itemBuilder.getItem(),
@@ -97,8 +99,8 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
             ItemStack item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Item"));
 
             String permission;
-            if (player.hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))) { permission = "&a&lYou can grant this permission."; } else {
-                permission = "&c&lYou cannot grant this permission.";
+            if (player.hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))) { permission = "&aYou can grant this permission."; } else {
+                permission = "&cYou cannot grant this permission.";
                 item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem"));
             }
 
@@ -148,14 +150,14 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    GrantGUI grantGUI = new GrantGUI(player, 27, "&aSelect a grant.");
+                    GrantGUI grantGUI = new GrantGUI(player, 18, "&aSelect a grant.");
                     grantGUI.setup(player, target, Toolbar.getNewPage().get());
                     GUI.open(grantGUI.getGui());
                 }
             }.runTaskLater(plugin, 1);
         });
 
-        toolbar.create(target, null);
+        toolbar.create(target, null, false);
         setupPagedGUI(buttons, page);
     }
 }

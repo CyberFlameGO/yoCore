@@ -58,14 +58,14 @@ public class DetailedPunishmentHistoryGUI extends CustomGUI implements PagedGUI 
                 String silent = String.valueOf(plugin.punishmentData.config.getBoolean(target.getUniqueId().toString() + "." + type + "." + punishment + ".Silent"));
 
                 ItemBuilder itemBuilder = new ItemBuilder(XMaterial.BEDROCK.parseItem(), 1, "&4&lNULL", ItemBuilder.formatLore(new String[]{
-                        "&e&m----------------------------",
-                        "&eTarget: &f" + playerManagement.getPlayerColor(target),
-                        "&eDuration: &f" + duration,
-                        "&e&m----------------------------",
-                        "&eIssued By: &f" + executor,
-                        "&eIssued Reason: &f" + reason,
-                        "&eIssued Silently: &f" + silent,
-                        "&e&m----------------------------"
+                        "&3&m----------------------------",
+                        "&bTarget: &3" + playerManagement.getPlayerColor(target),
+                        "&bDuration: &3" + duration,
+                        "&b ",
+                        "&bIssued By: &3" + executor,
+                        "&bIssued Reason: &3" + reason,
+                        "&bIssued Silently: &3" + silent,
+                        "&3&m----------------------------"
                 }));
 
                 switch (plugin.punishmentData.config.getString(target.getUniqueId().toString() + "." + type + "." + punishment + ".Status").toLowerCase()) {
@@ -114,7 +114,7 @@ public class DetailedPunishmentHistoryGUI extends CustomGUI implements PagedGUI 
                 }
             }.runTaskLater(plugin, 1));
 
-            toolbar.create(target, type);
+            toolbar.create(target, type, true);
             setupPagedGUI(buttons, page);
         }
     }

@@ -43,27 +43,27 @@ public class FindPageGUI extends CustomGUI {
                                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                                         break;
                                     case "grants":
-                                        GrantsGUI grantsGUI = new GrantsGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's grant history.");
+                                        GrantsGUI grantsGUI = new GrantsGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
                                         grantsGUI.setup(getGui().getPlayer(), target, (page + 1));
                                         GUI.open(grantsGUI.getGui());
                                         break;
                                     case "reports":
-                                        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's report history.");
+                                        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's report history.");
                                         reportHistoryGUI.setup(target, (page + 1));
                                         GUI.open(reportHistoryGUI.getGui());
                                         break;
                                     case "grant":
-                                        GrantGUI grantGUI = new GrantGUI(getGui().getPlayer(), 27, "&aSelect a grant.");
+                                        GrantGUI grantGUI = new GrantGUI(getGui().getPlayer(), 18, "&aSelect a grant.");
                                         grantGUI.setup(getGui().getPlayer(), target, (page + 1));
                                         GUI.open(grantGUI.getGui());
                                         break;
                                     case "onlineplayers":
-                                        OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(getGui().getPlayer(), 27, "&aOnline players.");
+                                        OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(getGui().getPlayer(), 18, "&aOnline players.");
                                         onlinePlayersGUI.setup(page + 1);
                                         GUI.open(onlinePlayersGUI.getGui());
                                         break;
                                     case "tags":
-                                        TagsGUI tagsGUI = new TagsGUI(getGui().getPlayer(), 27, "&aChat tags.");
+                                        TagsGUI tagsGUI = new TagsGUI(getGui().getPlayer(), 18, "&aChat tags.");
                                         tagsGUI.setup(page + 1);
                                         GUI.open(tagsGUI.getGui());
                                         break;

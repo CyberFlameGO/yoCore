@@ -45,12 +45,11 @@ public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
                         1,
                         "&a&l(Active) " + Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".Report." + report  + ".Date")),
                         ItemBuilder.formatLore(new String[] {
-                                "&e&m----------------------------",
-                                "&eTarget: &f" + playerManagement.getPlayerColor(target),
-                                "&e&m----------------------------",
-                                "&eIssued By: &f" + playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Executor")))),
-                                "&eIssued Reason: &f" + plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Reason"),
-                                "&e&m----------------------------"
+                                "&3&m----------------------------",
+                                "&bTarget: &3" + playerManagement.getPlayerColor(target),
+                                "&bIssued By: &3" + playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Executor")))),
+                                "&bIssued Reason: &3" + plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Reason"),
+                                "&3&m----------------------------"
                         })
                 );
 
@@ -66,13 +65,13 @@ public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
             Toolbar toolbar = new Toolbar(getGui(), "Reports", page, new ArrayList<>(pages), () -> new BukkitRunnable() {
                 @Override
                 public void run() {
-                    ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's report history.");
+                    ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's report history.");
                     reportHistoryGUI.setup(target, Toolbar.getNewPage().get());
                     GUI.open(reportHistoryGUI.getGui());
                 }
             }.runTaskLater(plugin, 1));
 
-            toolbar.create(target, null);
+            toolbar.create(target, null, false);
             setupPagedGUI(buttons, page);
         }
     }

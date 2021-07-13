@@ -40,11 +40,11 @@ public class TagsGUI extends CustomGUI implements PagedGUI {
                     1,
                     plugin.getConfig().getString("Tags." + tag + ".Display"),
                     ItemBuilder.formatLore(new String[] {
-                            "&7&m--------------------",
-                            "&eTag: &f" + plugin.getConfig().getString("Tags." + tag + ".ID"),
-                            "&ePrefix: &f" + plugin.getConfig().getString("Tags." + tag + ".Prefix"),
-                            "&eDisplay: &f" + plugin.getConfig().getString("Tags." + tag + ".Display"),
-                            "&7&m--------------------"
+                            "&3&m-----------------------",
+                            "&bTag: &3" + plugin.getConfig().getString("Tags." + tag + ".ID"),
+                            "&bPrefix: &3" + plugin.getConfig().getString("Tags." + tag + ".Prefix"),
+                            "&bDisplay: &3" + plugin.getConfig().getString("Tags." + tag + ".Display"),
+                            "&3&m-----------------------"
                     })
             );
 
@@ -76,13 +76,13 @@ public class TagsGUI extends CustomGUI implements PagedGUI {
         Toolbar toolbar = new Toolbar(getGui(), "Tags", page, new ArrayList<>(pages), () -> new BukkitRunnable() {
             @Override
             public void run() {
-                TagsGUI tagsGUI = new TagsGUI(player, 27, "&aChat tags.");
+                TagsGUI tagsGUI = new TagsGUI(player,18, "&aChat tags.");
                 tagsGUI.setup(Toolbar.getNewPage().get());
                 GUI.open(tagsGUI.getGui());
             }
         }.runTaskLater(plugin, 1));
 
-        toolbar.create(null, null);
+        toolbar.create(null, null, false);
         setupPagedGUI(buttons, page);
     }
 }

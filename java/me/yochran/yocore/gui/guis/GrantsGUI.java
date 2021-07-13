@@ -69,17 +69,17 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
                 else revokePermission = "yocore.grant." + plugin.getConfig().getString("Ranks." + previousRank + ".ID").toLowerCase();
 
                 ItemBuilder itemBuilder = new ItemBuilder(XMaterial.BEDROCK.parseItem(), 1, "&4&lNULL", ItemBuilder.formatLore(new String[] {
-                        "&e&m----------------------------",
-                        "&eTarget: &f" + playerManagement.getPlayerColor(target),
-                        "&eType: &f" + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Type"),
-                        "&eDuration: &f" + duration,
-                        "&e&m----------------------------",
-                        "&eIssued Grant: &f" + issuedGrant,
-                        "&eIssued By: &f" + executor,
-                        "&eIssued Reason: &f" + reason,
-                        "&ePrevious Rank: &f" + previousRankDisplay,
-                        "&eGrant ID: &f" + ID,
-                        "&e&m----------------------------"
+                        "&3&m----------------------------",
+                        "&bTarget: &3" + playerManagement.getPlayerColor(target),
+                        "&bType: &3" + plugin.grantData.config.getString(target.getUniqueId().toString() + ".Grants." + grant + ".Type"),
+                        "&bDuration: &3" + duration,
+                        "&b ",
+                        "&bIssued Grant: &3" + issuedGrant,
+                        "&bIssued By: &3" + executor,
+                        "&bIssued Reason: &3" + reason,
+                        "&bPrevious Rank: &3" + previousRankDisplay,
+                        "&bGrant ID: &3" + ID,
+                        "&3&m----------------------------"
                 }));
 
                 boolean revokable = false;
@@ -148,7 +148,7 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
                 }
             }.runTaskLater(plugin, 1));
 
-            toolbar.create(target, null);
+            toolbar.create(target, null, false);
             setupPagedGUI(buttons, page);
         }
     }

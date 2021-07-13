@@ -51,12 +51,17 @@ public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
 
             String rank = plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank");
             String rankDisplay = plugin.getConfig().getString("Ranks." + rank.toUpperCase() + ".Display");
+            String vanish = String.valueOf(plugin.vanished_players.contains(players.getUniqueId()));
+            String modmode = String.valueOf(plugin.modmode_players.contains(players.getUniqueId()));
 
             List<String> itemLore = new ArrayList<>();
-            itemLore.add(Utils.translate("&7&m--------------------------"));
-            itemLore.add(Utils.translate("&eRank: &f" + rankDisplay));
-            itemLore.add(Utils.translate("&7&m--------------------------"));
-            itemLore.add(Utils.translate("&eClick to teleport to " + playerManagement.getPlayerColor(players)));
+            itemLore.add(Utils.translate("&3&m--------------------------"));
+            itemLore.add(Utils.translate("&bRank: &3" + rankDisplay));
+            itemLore.add(Utils.translate("&bVanish: &3" + vanish));
+            itemLore.add(Utils.translate("&bModMode: &3" + modmode));
+            itemLore.add(Utils.translate("&7 "));
+            itemLore.add(Utils.translate("&aClick to teleport to " + playerManagement.getPlayerColor(players) + "&a."));
+            itemLore.add(Utils.translate("&3&m--------------------------"));
 
             itemMeta.setLore(itemLore);
             item.setItemMeta(itemMeta);
@@ -79,13 +84,13 @@ public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(player, 27, "&aOnline players.");
+                    OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(player, 18, "&aOnline players.");
                     onlinePlayersGUI.setup(Toolbar.getNewPage().get());
                     GUI.open(onlinePlayersGUI.getGui());
                 }
             }.runTaskLater(plugin, 1);
         });
-        toolbar.create(null, null);
+        toolbar.create(null, null, false);
         setupPagedGUI(buttons, page);
     }
 }
