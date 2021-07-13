@@ -92,7 +92,8 @@ public class PlayerLogListener implements Listener {
                 event.getPlayer().hidePlayer(players);
         }
 
-        if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin")) {
+        if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin")
+                && !serverManagement.getServer(event.getPlayer()).equalsIgnoreCase(plugin.getConfig().getString("Servers.Hub.Server").toUpperCase())) {
             playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.Server"), event.getPlayer());
 
             if (plugin.getConfig().getBoolean("Servers.WorldSeparation")) {
@@ -131,6 +132,9 @@ public class PlayerLogListener implements Listener {
 
         plugin.last_location.get(event.getPlayer().getUniqueId()).put(serverManagement.getServer(event.getPlayer()), event.getPlayer().getLocation());
 
+        if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin"))
+            playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.Server").toUpperCase(), event.getPlayer());
+
         if (plugin.getConfig().getBoolean("QuitMessage.Staff.Enabled")) {
             if (event.getPlayer().hasPermission("yocore.chats.staff")) {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
@@ -154,12 +158,6 @@ public class PlayerLogListener implements Listener {
         if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())
                 || plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
             return;
-        }
-
-        if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
-            for (Player player : serverManagement.getPlayers(serverManagement.getServer(event.getPlayer())))
-                player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
-                        .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
         }
     }
 }

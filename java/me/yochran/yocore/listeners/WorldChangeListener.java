@@ -55,6 +55,22 @@ public class WorldChangeListener implements Listener {
                     }
                 }
             }
+
+            if (!plugin.vanished_players.contains(event.getPlayer().getUniqueId())) {
+                if (plugin.getConfig().getBoolean("JoinMessage.Enabled")) {
+                    for (Player player : serverManagement.getPlayers(serverManagement.getServer(event.getPlayer())))
+                        player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
+                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                }
+            }
+
+            if (!plugin.vanished_players.contains(event.getPlayer().getUniqueId())) {
+                if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
+                    for (Player player : serverManagement.getPlayers(oldServer.toUpperCase()))
+                        player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
+                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                }
+            }
         }
 
         plugin.tsb.add(event.getPlayer().getUniqueId());
@@ -66,22 +82,5 @@ public class WorldChangeListener implements Listener {
         }.runTaskLater(plugin, 5);
 
         plugin.tsb.remove(event.getPlayer().getUniqueId());
-
-
-        if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
-            for (String server : serverManagement.getServers()) {
-                if (serverManagement.getWorlds(server).contains(event.getFrom().getName())) {
-                    for (Player player : serverManagement.getPlayers(server))
-                        player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
-                }
-            }
-        }
-
-        if (plugin.getConfig().getBoolean("JoinMessage.Enabled")) {
-            for (Player player : serverManagement.getPlayers(serverManagement.getServer(event.getPlayer())))
-                player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
-                        .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
-        }
     }
 }
