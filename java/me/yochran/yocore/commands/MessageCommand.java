@@ -29,10 +29,6 @@ public class MessageCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.isOp()) {
-            return true;
-        }
-
         if (plugin.message_toggled.contains(((Player) sender).getUniqueId())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.MessagesOffSelf")));
             return true;

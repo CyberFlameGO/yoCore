@@ -52,15 +52,15 @@ public class SendCommand implements CommandExecutor {
         if (plugin.modmode_players.contains(target.getUniqueId())) {
             target.getInventory().clear();
 
-            target.getInventory().setContents(plugin.inventory_contents.get(((Player) sender).getUniqueId()));
-            target.getInventory().setArmorContents(plugin.armor_contents.get(((Player) sender).getUniqueId()));
+            target.getInventory().setContents(plugin.inventory_contents.get(target.getUniqueId()));
+            target.getInventory().setArmorContents(plugin.armor_contents.get(target.getUniqueId()));
 
             target.updateInventory();
 
             target.setAllowFlight(false);
             target.setFlying(false);
 
-            plugin.modmode_players.remove(((Player) sender).getUniqueId());
+            plugin.modmode_players.remove(target.getUniqueId());
         }
 
         if (plugin.last_location.get(target.getUniqueId()) == null) {

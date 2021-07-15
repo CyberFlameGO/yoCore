@@ -1,22 +1,16 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.GrantManagement;
 import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Wool;
 import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -36,7 +30,9 @@ public class RankCommand implements CommandExecutor {
             "display",
             "item",
             "permission",
-            "permissions"
+            "permissions",
+            "tabindex",
+            "index"
     };
 
     public RankCommand() {
@@ -81,7 +77,7 @@ public class RankCommand implements CommandExecutor {
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Prefix", "&7[" + args[1] + "&7] &7");
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Color", "&7");
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Display", "&7" + args[1]);
-                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".Priority", priority);
+                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".TabIndex", "z");
                 plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".GrantItem", "GRAY_WOOL");
                 plugin.saveConfig();
 
@@ -275,6 +271,31 @@ public class RankCommand implements CommandExecutor {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.GrantItemChanged")
                         .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".Display"))
                         .replace("%item%", name)));
+
+                break;
+            case "index":
+            case "tabindex":
+                if (args.length != 3) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.IncorrectUsage")));
+                    return true;
+                }
+
+                if (!plugin.ranks.contains(args[1].toUpperCase())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.InvalidRank")));
+                    return true;
+                }
+
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("RankCommand.TabIndexChanged")
+                        .replace("%rank%", plugin.getConfig().getString("Ranks." + args[1].toUpperCase() + ".TabIndex"))
+                        .replace("%index%", args[2])));
+
+                plugin.getConfig().set("Ranks." + args[1].toUpperCase() + ".TabIndex", args[2]);
+                plugin.saveConfig();
+
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    for (Team team : player1.getScoreboard().getTeams())
+                        player1.getScoreboard().getTeam(team.getName()).unregister();
+                }
 
                 break;
             case "permission":

@@ -31,20 +31,27 @@ public class EnderChestCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length != 1) {
+        if (args.length > 1) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("EnderChest.IncorrectUsage")));
             return true;
         }
 
-        Player target = Bukkit.getPlayer(args[0]);
-        if (target == null) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("EnderChest.InvalidPlayer")));
-            return true;
-        }
+        if (args.length == 0) {
+            ((Player) sender).openInventory(((Player) sender).getEnderChest());
+        } else {
+            if (!sender.hasPermission("yocore.echest.others")) {
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("EnderChest.NoPermission")));
+                return true;
+            }
 
-        Inventory inventory = Bukkit.createInventory((Player) sender, 27, Utils.translate("&aEnder Chest."));
-        inventory.setContents(target.getEnderChest().getContents());
-        ((Player) sender).openInventory(inventory);
+            Player target = Bukkit.getPlayer(args[0]);
+            if (target == null) {
+                sender.sendMessage(Utils.translate(plugin.getConfig().getString("EnderChest.InvalidPlayer")));
+                return true;
+            }
+
+            ((Player) sender).openInventory(target.getEnderChest());
+        }
 
         return true;
     }

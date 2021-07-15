@@ -23,10 +23,6 @@ public class ReplyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.isOp()) {
-            return true;
-        }
-
         if (!plugin.reply.containsKey(((Player) sender).getUniqueId())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.NotMessaging")));
             return true;
