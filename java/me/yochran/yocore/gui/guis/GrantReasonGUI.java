@@ -30,7 +30,7 @@ public class GrantReasonGUI extends CustomGUI {
             List<String> itemLore = new ArrayList<>();
             for (String line : plugin.getConfig().getStringList("Grant.Reason.Lore")) {
                 itemLore.add(line
-                        .replace("%duration%", plugin.getConfig().getString("Grant.Reason.Items." + cItem + ".Name"))
+                        .replace("%reason%", plugin.getConfig().getString("Grant.Reason.Items." + cItem + ".Name"))
                         .replace("%target%", playerManagement.getPlayerColor(target)));
             }
 

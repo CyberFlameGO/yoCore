@@ -7,6 +7,7 @@ import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -89,6 +90,12 @@ public class PlayerChatListener implements Listener {
 
         String message = event.getMessage().replaceAll("%", "%%");
 
+        if (!event.getPlayer().hasPermission("yocore.chatcolor"))
+            plugin.chat_color.remove(event.getPlayer().getUniqueId());
+
+        if (!event.getPlayer().hasPermission("yocore.chatcolor.bypass"))
+            message = message.replace("&", "");
+
         if (plugin.chat_color.containsKey(event.getPlayer().getUniqueId()) && event.getPlayer().hasPermission("yocore.chatcolor")) {
             switch (ChatColor.stripColor(plugin.chat_color.get(event.getPlayer().getUniqueId())).toLowerCase()) {
                 case "dark red": message = "&4" + message; break;
@@ -108,20 +115,21 @@ public class PlayerChatListener implements Listener {
             }
         }
 
-        if (!event.getPlayer().hasPermission("yocore.chatcolor.bypass") && !event.getPlayer().hasPermission("yocore.chatcolor")) {
-            plugin.chat_color.remove(event.getPlayer().getUniqueId());
-            message = message.replace("&", "");
-        }
-
         String tag = "";
         if (plugin.tag.containsKey(event.getPlayer().getUniqueId()))
             tag = plugin.getConfig().getString("Tags." + plugin.tag.get(event.getPlayer().getUniqueId()) + ".Prefix");
 
+        int playTime;
+        try {
+            playTime = (event.getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE) / 20) / 3600;
+        } catch (NoSuchFieldError ignored) { playTime = -1; }
+
         String format = plugin.getConfig().getString("ChatFormat")
-                    .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))
-                    .replace("%player_color%", playerManagement.getPlayerColor(event.getPlayer()))
-                    .replace("%message%", message)
-                    .replace("%player_tag%", tag);
+                .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))
+                .replace("%player_color%", playerManagement.getPlayerColor(event.getPlayer()))
+                .replace("%message%", message)
+                .replace("%player_playtime%", String.valueOf(playTime))
+                .replace("%player_tag%", tag);
 
         event.setFormat(Utils.translate(format));
 
