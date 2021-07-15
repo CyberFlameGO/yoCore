@@ -103,8 +103,8 @@ TagCommand:
     "&cIncorrect Usage! &7(/tag)
     &7- &b/tag add &3<name>
     &7- &b/tag remove &3<name>
-    &7- &b/tag prefix &3<prefix>
-    &7- &b/tag display &3<displayname>"
+    &7- &b/tag prefix &3<tag> <prefix>
+    &7- &b/tag display &3<tag> <displayname>"
   InvalidTag: "&cInvalid Tag!"
   AddedTag: "&bCreated tag &3%tag%&b."
   RemovedTag: "&bRemoved tag &3%tag%&b."
@@ -139,6 +139,7 @@ RankCommand:
     &7- &b/rank color &3<rank> <color>
     &7- &b/rank display &3<rank> <displayname>
     &7- &b/rank item &3<rank>
+    &7- &b/rank tabindex &3<rank> <int/char>
     &7- &b/rank permission &3<rank> &badd &3<permission>
     &7- &b/rank permission &3<rank> &bremove &3<permission>
   InvalidRank: "&cInvalid Rank!"
@@ -150,7 +151,7 @@ RankCommand:
   DisplayChanged: "%rank%&b's display name has been changed to &3%display%&b."
   PriorityChanged: "%rank%&b's priority has been changed to &3%priority%&b."
   GrantItemChanged: "%rank%&b's grant item has been changed to &3%item%&b."
-  GrantPermissionChanged: "%rank%&b's grant permission has been changed to &3%permission%&b."
+  TabIndexChanged: "%rank%&b's tab index has been changed to &3%index%&b."
   PermissionAdded: "&bYou added the &3%permission% &bpermission to %rank%&b."
   PermissionRemoved: "&bYou removed the &3%permission% &bpermission from %rank%&b."
   RankPermissions: |-
@@ -932,7 +933,7 @@ EnderChest:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: |-
     &cIncorrect Usage! &7(/echest)
-    &7- &b/echest &3<player>
+    &7- &b/echest &3[player]
   InvalidPlayer: "&cInvalid Player!"
 
 ChatColor:

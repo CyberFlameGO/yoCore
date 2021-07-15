@@ -45,6 +45,8 @@ permissions:
     description: Permission
   yocore.echest:
     description: Permission
+  yocore.echest.others:
+    description: Permission.
   yocore.staffalerts:
     description: Permission
   yocore.feed:
@@ -300,7 +302,7 @@ commands:
     aliases: tsb
   EnderChest:
     description: View a players ender chest.
-    aliases: echest
+    aliases: [echest, ec]
   ReWarn:
     description: Rewarn a player.
   ReMute:
