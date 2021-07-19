@@ -2,7 +2,7 @@ package me.yochran.yocore.commands.economy;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -20,7 +20,6 @@ public class BountyCommand implements CommandExecutor {
 
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public BountyCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,12 +32,14 @@ public class BountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.economyIsEnabled(serverManagement.getServer((Player) sender))) {
+        Server server = Server.getServer((Player) sender);
+
+        if (!economyManagement.economyIsEnabled(server)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.NotEnabledMessage")));
             return true;
         }
 
-        if (!economyManagement.bountyIsEnabled(serverManagement.getServer((Player) sender))) {
+        if (!economyManagement.bountyIsEnabled(server)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.NotEnabledMessage")));
             return true;
         }
@@ -63,7 +64,7 @@ public class BountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.hasEnoughMoney(serverManagement.getServer((Player) sender), (Player) sender, Double.parseDouble(args[1]))) {
+        if (!economyManagement.hasEnoughMoney(server, (Player) sender, Double.parseDouble(args[1]))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.NotEnoughMoney")));
             return true;
         }
@@ -75,8 +76,8 @@ public class BountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.isBountied(serverManagement.getServer((Player) sender), target)) {
-            economyManagement.setBounty(serverManagement.getServer((Player) sender), (Player) sender, target, Double.parseDouble(args[1]));
+        if (!economyManagement.isBountied(server, target)) {
+            economyManagement.setBounty(server, (Player) sender, target, Double.parseDouble(args[1]));
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.Format")
                     .replace("%target%", playerManagement.getPlayerColor(target))
@@ -88,17 +89,17 @@ public class BountyCommand implements CommandExecutor {
                         .replace("%target%", playerManagement.getPlayerColor(target))
                         .replace("%amount%", df.format(Double.parseDouble(args[1])))));
         } else {
-            economyManagement.increaseBounty(serverManagement.getServer((Player) sender), (Player) sender, target, Double.parseDouble(args[1]));
+            economyManagement.increaseBounty(server, (Player) sender, target, Double.parseDouble(args[1]));
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.FormatIncreased")
                     .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%amount%", df.format(economyManagement.getBountyAmount(serverManagement.getServer((Player) sender), target)))));
+                    .replace("%amount%", df.format(economyManagement.getBountyAmount(server, target)))));
 
             for (Player players : Bukkit.getWorld(((Player) sender).getWorld().getName()).getPlayers())
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.BroadcastIncreased")
                         .replace("%player%", playerManagement.getPlayerColor((Player) sender))
                         .replace("%target%", playerManagement.getPlayerColor(target))
-                        .replace("%amount%", df.format(economyManagement.getBountyAmount(serverManagement.getServer((Player) sender), target)))));
+                        .replace("%amount%", df.format(economyManagement.getBountyAmount(server, target)))));
         }
 
         return true;

@@ -1,23 +1,19 @@
 package me.yochran.yocore.commands.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class VanishCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
+    private final PlayerManagement playerManagement = new PlayerManagement();;
 
     public VanishCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -56,7 +52,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
-                    for (Player player : serverManagement.getPlayers(serverManagement.getServer((Player) sender)))
+                    for (Player player : Server.getPlayers(Server.getServer((Player) sender)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
@@ -73,7 +69,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeJoin")) {
-                    for (Player player : serverManagement.getPlayers(serverManagement.getServer((Player) sender)))
+                    for (Player player : Server.getPlayers(Server.getServer((Player) sender)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
                 }
@@ -103,7 +99,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
-                    for (Player player : serverManagement.getPlayers(serverManagement.getServer(target)))
+                    for (Player player : Server.getPlayers(Server.getServer(target)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(target))));
                 }
@@ -123,7 +119,7 @@ public class VanishCommand implements CommandExecutor {
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeJoin")) {
-                    for (Player player : serverManagement.getPlayers(serverManagement.getServer(target)))
+                    for (Player player : Server.getPlayers(Server.getServer(target)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(target))));
                 }

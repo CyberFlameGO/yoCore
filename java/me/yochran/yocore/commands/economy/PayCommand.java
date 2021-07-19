@@ -2,7 +2,7 @@ package me.yochran.yocore.commands.economy;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -20,7 +20,6 @@ public class PayCommand implements CommandExecutor {
 
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public PayCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,7 +32,9 @@ public class PayCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.economyIsEnabled(serverManagement.getServer((Player) sender))) {
+        Server server = Server.getServer((Player) sender);
+
+        if (!economyManagement.economyIsEnabled(server)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.NotEnabledMessage")));
             return true;
         }
@@ -59,21 +60,21 @@ public class PayCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.hasEnoughMoney(serverManagement.getServer((Player) sender), (Player) sender, Double.parseDouble(args[1]))) {
+        if (!economyManagement.hasEnoughMoney(server, (Player) sender, Double.parseDouble(args[1]))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Pay.NotEnoughMoney")));
             return true;
         }
 
         if (economyManagement.isUnderPayMinimum(Double.parseDouble(args[1])) || economyManagement.isOverMaximum(Double.parseDouble(args[1]))
-                || economyManagement.isOverMaximum(Double.parseDouble(args[1]) + economyManagement.getMoney(serverManagement.getServer((Player) sender), (Player) sender))) {
+                || economyManagement.isOverMaximum(Double.parseDouble(args[1]) + economyManagement.getMoney(server, (Player) sender))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Pay.InvalidAmount")
                     .replace("%minimum%", df.format(plugin.getConfig().getDouble("Pay.MinimumAmount")))
                     .replace("%maximum%", df.format(plugin.getConfig().getDouble("Economy.MaximumAmount")))));
             return true;
         }
 
-        economyManagement.removeMoney(serverManagement.getServer((Player) sender), (Player) sender, Double.parseDouble(args[1]));
-        economyManagement.addMoney(serverManagement.getServer((Player) sender), target, Double.parseDouble(args[1]));
+        economyManagement.removeMoney(server, (Player) sender, Double.parseDouble(args[1]));
+        economyManagement.addMoney(server, target, Double.parseDouble(args[1]));
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Pay.FormatSender")
                 .replace("%target%", playerManagement.getPlayerColor(target))

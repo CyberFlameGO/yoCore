@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.chats.ChatType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,8 +12,6 @@ import org.bukkit.entity.Player;
 public class AdminChatCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public AdminChatCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -55,13 +52,8 @@ public class AdminChatCommand implements CommandExecutor {
         }
 
         for (Player admins : Bukkit.getOnlinePlayers()) {
-            if (admins.hasPermission("yocore.chats.admin")) {
-                admins.sendMessage(Utils.translate(plugin.getConfig().getString("AdminChat.Format")
-                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%message%", message)
-                        .replace("%server%", serverManagement.getName(serverManagement.getServer((Player) sender)))
-                        .replace("%world%", ((Player) sender).getWorld().getName())));
-            }
+            if (admins.hasPermission("yocore.chats.admin"))
+                ChatType.sendMessage((Player) sender, admins, ChatType.ADMIN, message);
         }
 
         return true;

@@ -27,11 +27,8 @@ public class ClearChatCommand implements CommandExecutor {
         }
 
         String executorName;
-        if (sender instanceof Player) {
-            executorName = playerManagement.getPlayerColor((Player) sender);
-        } else {
-            executorName = "&c&lConsole";
-        }
+        if (sender instanceof Player) executorName = playerManagement.getPlayerColor((Player) sender);
+        else executorName = "&c&lConsole";
 
         for (Player players : Bukkit.getOnlinePlayers()) {
             for (int i = 0; i < 50; i++) {

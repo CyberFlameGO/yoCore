@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.chats.ChatType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,8 +12,6 @@ import org.bukkit.entity.Player;
 public class ManagementChatCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public ManagementChatCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -55,13 +52,8 @@ public class ManagementChatCommand implements CommandExecutor {
         }
 
         for (Player managers : Bukkit.getOnlinePlayers()) {
-            if (managers.hasPermission("yocore.chats.management")) {
-                managers.sendMessage(Utils.translate(plugin.getConfig().getString("ManagementChat.Format")
-                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%message%", message)
-                        .replace("%server%", serverManagement.getName(serverManagement.getServer((Player) sender)))
-                        .replace("%world%", ((Player) sender).getWorld().getName())));
-            }
+            if (managers.hasPermission("yocore.chats.management"))
+                ChatType.sendMessage((Player) sender, managers, ChatType.MANAGEMENT, message);
         }
 
         return true;

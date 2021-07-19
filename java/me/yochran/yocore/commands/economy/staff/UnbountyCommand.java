@@ -2,7 +2,7 @@ package me.yochran.yocore.commands.economy.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -20,7 +20,6 @@ public class UnbountyCommand implements CommandExecutor {
 
     private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public UnbountyCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,7 +32,9 @@ public class UnbountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.economyIsEnabled(serverManagement.getServer((Player) sender))) {
+        Server server = Server.getServer((Player) sender);
+
+        if (!economyManagement.economyIsEnabled(server)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.NotEnabledMessage")));
             return true;
         }
@@ -43,7 +44,7 @@ public class UnbountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.bountyIsEnabled(((Player) sender).getWorld().getName())) {
+        if (!economyManagement.bountyIsEnabled(server)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.NotEnabledMessage")));
             return true;
         }
@@ -59,15 +60,15 @@ public class UnbountyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!economyManagement.isBountied(serverManagement.getServer((Player) sender), target)) {
+        if (!economyManagement.isBountied(server, target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unbounty.PlayerNotBountied")));
             return true;
         }
 
-        OfflinePlayer executor = Bukkit.getOfflinePlayer(UUID.fromString(economyManagement.getBountyExecutor(serverManagement.getServer((Player) sender), target)));
+        OfflinePlayer executor = Bukkit.getOfflinePlayer(UUID.fromString(economyManagement.getBountyExecutor(server, target)));
 
-        economyManagement.addMoney(serverManagement.getServer((Player) sender), executor, economyManagement.getBountyAmount(serverManagement.getServer((Player) sender), target));
-        economyManagement.removeBounty(serverManagement.getServer((Player) sender), target);
+        economyManagement.addMoney(server, executor, economyManagement.getBountyAmount(server, target));
+        economyManagement.removeBounty(server, target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unbounty.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))));

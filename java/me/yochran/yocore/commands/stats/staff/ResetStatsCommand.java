@@ -1,8 +1,8 @@
 package me.yochran.yocore.commands.stats.staff;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.management.StatsManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -17,7 +17,6 @@ public class ResetStatsCommand implements CommandExecutor {
     private final yoCore plugin;
     private final StatsManagement statsManagement = new StatsManagement();
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public ResetStatsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -30,13 +29,15 @@ public class ResetStatsCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sender.hasPermission("yocore.resetstats")) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.NoPermission")));
+        Server server = Server.getServer((Player) sender);
+
+        if (!statsManagement.statsAreEnabled(server)) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.NotEnabledMessage")));
             return true;
         }
 
-        if (!statsManagement.statsAreEnabled(serverManagement.getServer((Player) sender))) {
-            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.NotEnabledMessage")));
+        if (!sender.hasPermission("yocore.resetstats")) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.NoPermission")));
             return true;
         }
 
@@ -51,7 +52,7 @@ public class ResetStatsCommand implements CommandExecutor {
             return true;
         }
 
-        statsManagement.resetPlayer(serverManagement.getServer((Player) sender), target);
+        statsManagement.resetPlayer(server, target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))));

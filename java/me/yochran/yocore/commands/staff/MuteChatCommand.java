@@ -26,11 +26,9 @@ public class MuteChatCommand implements CommandExecutor {
         }
 
         String executorName;
-        if (sender instanceof Player) {
-            executorName = playerManagement.getPlayerColor((Player) sender);
-        } else {
-            executorName = "&c&lConsole";
-        }
+        if (sender instanceof Player) executorName = playerManagement.getPlayerColor((Player) sender);
+        else executorName = "&c&lConsole";
+
 
         if (plugin.chat_muted) {
             plugin.chat_muted = false;

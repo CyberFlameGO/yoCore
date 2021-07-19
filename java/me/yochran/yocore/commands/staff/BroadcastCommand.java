@@ -20,6 +20,10 @@ public class BroadcastCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        String display;
+        if (sender instanceof Player) display = playerManagement.getPlayerColor((Player) sender);
+        else display = "&c&lConsole";
+
         if (!sender.hasPermission("yocore.broadcast")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Broadcast.NoPermission")));
             return true;
@@ -43,7 +47,7 @@ public class BroadcastCommand implements CommandExecutor {
         for (Player staff : Bukkit.getOnlinePlayers()) {
             if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.Broadcast")
-                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                        .replace("%player%", display)
                         .replace("%message%", message)));
         }
 

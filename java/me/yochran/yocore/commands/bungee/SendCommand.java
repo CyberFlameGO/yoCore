@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -11,16 +11,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SendCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public SendCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -44,7 +41,9 @@ public class SendCommand implements CommandExecutor {
             return true;
         }
 
-        if (!serverManagement.getServers().contains(args[1].toUpperCase())) {
+        Server server = Server.getServer(args[1]);
+
+        if (server == null|| !Server.getServers().containsKey(server.getName())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Send.InvalidServer")));
             return true;
         }
@@ -64,27 +63,27 @@ public class SendCommand implements CommandExecutor {
         }
 
         if (plugin.last_location.get(target.getUniqueId()) == null) {
-            Map<String, Location> location = new HashMap<>();
-            location.put(serverManagement.getServer(target), target.getLocation());
+            Map<Server, Location> location = new HashMap<>();
+            location.put(Server.getServer(target), target.getLocation());
             plugin.last_location.put(target.getUniqueId(), location);
         }
 
-        plugin.last_location.get(target.getUniqueId()).put(serverManagement.getServer(target), target.getLocation());
+        plugin.last_location.get(target.getUniqueId()).put(Server.getServer(target), target.getLocation());
 
         if (plugin.getConfig().getBoolean("Spawn.SpawnOnServerChange"))
-            playerManagement.sendToSpawn(args[1].toUpperCase(), target);
+            playerManagement.sendToSpawn(server, target);
         else {
-            if (plugin.last_location.get(target.getUniqueId()).containsKey(args[1].toUpperCase()))
-                target.teleport(plugin.last_location.get(target.getUniqueId()).get(args[1].toUpperCase()));
-            else playerManagement.sendToSpawn(args[1].toUpperCase(), target);
+            if (plugin.last_location.get(target.getUniqueId()).containsKey(server))
+                target.teleport(plugin.last_location.get(target.getUniqueId()).get(server));
+            else playerManagement.sendToSpawn(server, target);
         }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Send.ExecutorMessage")
                 .replace("%target%", playerManagement.getPlayerColor(target))
-                .replace("%server%", serverManagement.getName(args[1].toUpperCase()))));
+                .replace("%server%", server.getName())));
 
         target.sendMessage(Utils.translate(plugin.getConfig().getString("Send.TargetMessage")
-                .replace("%server%", serverManagement.getName(args[1].toUpperCase()))));
+                .replace("%server%", server.getName())));
 
         return true;
     }

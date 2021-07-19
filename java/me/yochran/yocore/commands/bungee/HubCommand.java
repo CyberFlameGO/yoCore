@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Location;
@@ -17,7 +17,6 @@ public class HubCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public HubCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -50,14 +49,14 @@ public class HubCommand implements CommandExecutor {
         }
 
         if (plugin.last_location.get(((Player) sender).getUniqueId()) == null) {
-            Map<String, Location> location = new HashMap<>();
-            location.put(serverManagement.getServer((Player) sender), ((Player) sender).getLocation());
+            Map<Server, Location> location = new HashMap<>();
+            location.put(Server.getServer((Player) sender), ((Player) sender).getLocation());
             plugin.last_location.put(((Player) sender).getUniqueId(), location);
         }
 
-        plugin.last_location.get(((Player) sender).getUniqueId()).put(serverManagement.getServer((Player) sender), ((Player) sender).getLocation());
+        plugin.last_location.get(((Player) sender).getUniqueId()).put(Server.getServer((Player) sender), ((Player) sender).getLocation());
 
-        playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.Server"), (Player) sender);
+        playerManagement.sendToSpawn(Server.getServer(plugin.getConfig().getString("Servers.Hub.Server")), (Player) sender);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Servers.Hub.Command.Format")));
 

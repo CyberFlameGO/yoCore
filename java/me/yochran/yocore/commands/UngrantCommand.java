@@ -1,6 +1,8 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.grants.Grant;
 import me.yochran.yocore.management.GrantManagement;
+import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -17,7 +19,7 @@ public class UngrantCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final GrantManagement grantManagement = new GrantManagement();
+    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public UngrantCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -41,23 +43,22 @@ public class UngrantCommand implements CommandExecutor {
             return true;
         }
 
-        List<Integer> grantIDs = new ArrayList<>();
-        for (String grant : plugin.grantData.config.getConfigurationSection(target.getUniqueId().toString() + ".Grants").getKeys(false)) {
-            grantIDs.add(plugin.grantData.config.getInt(target.getUniqueId().toString() + ".Grants." + grant + ".ID"));
-        }
-
         try { Integer.parseInt(args[1]); }
         catch (NumberFormatException ignored) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.IncorrectUsage")));
             return true;
         }
 
-        if (!grantIDs.contains(Integer.parseInt(args[1]))) {
+        if (!Grant.getGrants(target).containsKey(Integer.parseInt(args[1]))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.InvalidGrant")));
             return true;
         }
 
-        grantManagement.revokeGrant(target, Integer.parseInt(args[1]));
+        Grant grant = Grant.getGrants(target).get(Integer.parseInt(args[1]));
+        grant.revoke();
+
+        if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
+
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.ExecutorMessage")
                 .replace("%grant%", args[1])
                 .replace("%target%", playerManagement.getPlayerColor(target))));

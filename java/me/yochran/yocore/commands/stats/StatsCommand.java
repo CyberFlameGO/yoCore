@@ -1,8 +1,8 @@
 package me.yochran.yocore.commands.stats;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
 import me.yochran.yocore.management.StatsManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -19,7 +19,6 @@ public class StatsCommand implements CommandExecutor {
     private final yoCore plugin;
     private final StatsManagement statsManagement = new StatsManagement();
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public StatsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -32,7 +31,9 @@ public class StatsCommand implements CommandExecutor {
             return true;
         }
 
-        if (!statsManagement.statsAreEnabled(serverManagement.getServer((Player) sender))) {
+        Server server = Server.getServer((Player) sender);
+
+        if (!statsManagement.statsAreEnabled(server)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.NotEnabledMessage")));
             return true;
         }
@@ -43,7 +44,7 @@ public class StatsCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            Map<String, String> stats = statsManagement.getAllStats(serverManagement.getServer((Player) sender), (Player) sender);
+            Map<String, String> stats = statsManagement.getAllStats(server, (Player) sender);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.Format")
                     .replace("%player%", playerManagement.getPlayerColor((Player) sender))
@@ -58,7 +59,7 @@ public class StatsCommand implements CommandExecutor {
                 return true;
             }
 
-            Map<String, String> stats = statsManagement.getAllStats(serverManagement.getServer((Player) sender), target);
+            Map<String, String> stats = statsManagement.getAllStats(server, target);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.Format")
                     .replace("%player%", playerManagement.getPlayerColor(target))

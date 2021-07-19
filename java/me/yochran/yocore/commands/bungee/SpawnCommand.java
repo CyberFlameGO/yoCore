@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -14,7 +14,6 @@ public class SpawnCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public SpawnCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,7 +32,7 @@ public class SpawnCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            playerManagement.sendToSpawn(serverManagement.getServer((Player) sender), (Player) sender);
+            playerManagement.sendToSpawn(Server.getServer((Player) sender), (Player) sender);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Spawn.TargetMessage")));
         } else {
@@ -43,7 +42,7 @@ public class SpawnCommand implements CommandExecutor {
                 return true;
             }
 
-            playerManagement.sendToSpawn(serverManagement.getServer(target), target);
+            playerManagement.sendToSpawn(Server.getServer(target), target);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Spawn.ExecutorMessage")
                     .replace("%target%", playerManagement.getPlayerColor(target))));

@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -14,7 +14,6 @@ public class FindCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public FindCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -38,9 +37,16 @@ public class FindCommand implements CommandExecutor {
             return true;
         }
 
+        Server server = Server.getServer((Player) sender);
+
+        if (server == null) {
+            sender.sendMessage(Utils.translate(plugin.getConfig().getString("Find.InvalidPlayer")));
+            return true;
+        }
+
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Find.Format")
                 .replace("%target%", playerManagement.getPlayerColor(target))
-                .replace("%server%", serverManagement.getName(serverManagement.getServer(target)))));
+                .replace("%server%", server.getName())));
 
         return true;
     }
