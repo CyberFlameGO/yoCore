@@ -1,5 +1,7 @@
 package me.yochran.yocore.gui.guis;
 
+import me.yochran.yocore.grants.Grant;
+import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
@@ -21,6 +23,7 @@ public class GrantConfirmGUI extends CustomGUI {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final GrantManagement grantManagement = new GrantManagement();
 
     public GrantConfirmGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -30,7 +33,7 @@ public class GrantConfirmGUI extends CustomGUI {
 
     public void setup(Player player, OfflinePlayer target, String grant, String duration, String reason) {
         String finalGrant;
-        if (plugin.grant_type.get(player.getUniqueId()).equalsIgnoreCase("RANK"))
+        if (plugin.grant_type.get(player.getUniqueId()) == GrantType.RANK)
             finalGrant = plugin.getConfig().getString("Ranks." + grant + ".Display");
         else finalGrant = grant;
 
@@ -57,21 +60,15 @@ public class GrantConfirmGUI extends CustomGUI {
                             .replace("%duration%", plugin.grant_duration.get(player.getUniqueId()))
                             .replace("%reason%", plugin.grant_reason.get(player.getUniqueId()))));
 
-                    String previousRank;
-                    String type = plugin.grant_type.get(player.getUniqueId());
+                    Object dur = duration;
+                    if (!duration.equalsIgnoreCase("Permanent"))
+                        dur = grantManagement.getGrantDuration(duration);
 
-                    if (plugin.grant_type.get(player.getUniqueId()).equalsIgnoreCase("RANK")) {
-                        previousRank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setrank " + target.getName() + " " + plugin.grant_grant.get(player.getUniqueId()));
-                    } else {
-                        previousRank = "N/A";
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "user " + target.getName() + " add " + plugin.grant_grant.get(player.getUniqueId()));
-                    }
+                    Grant grant1 = new Grant(plugin.grant_type.get(player.getUniqueId()), grant, Bukkit.getOfflinePlayer(target.getUniqueId()), player, dur, reason);
+                    grant1.create();
+                    grant1.grant(plugin.grant_type.get(player.getUniqueId()), plugin.grant_grant.get(player.getUniqueId()));
 
                     if (target.isOnline()) new PermissionManagement().setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
-
-                    if (plugin.grant_duration.get(player.getUniqueId()).equalsIgnoreCase("Permanent")) new GrantManagement().addGrant(target, player.getUniqueId().toString(), type, plugin.grant_grant.get(player.getUniqueId()), "Permanent", System.currentTimeMillis(), reason, previousRank);
-                    else new GrantManagement().addGrant(target, player.getUniqueId().toString(), type, plugin.grant_grant.get(player.getUniqueId()), new GrantManagement().getGrantDuration(plugin.grant_duration.get(player.getUniqueId())), System.currentTimeMillis(), reason, previousRank);
 
                     plugin.grant_player.remove(player.getUniqueId());
                     plugin.grant_type.remove(player.getUniqueId());

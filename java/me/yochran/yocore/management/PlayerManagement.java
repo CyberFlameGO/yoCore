@@ -1,5 +1,6 @@
 package me.yochran.yocore.management;
 
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -55,12 +56,12 @@ public class PlayerManagement {
         if (plugin.nickname.containsKey(player.getUniqueId())) name = plugin.getConfig().getString("Nickname.NickPrefix") + plugin.nickname.get(player.getUniqueId());
         else name = player.getName();
 
-        System.out.println(name);
-
         return prefix + name;
     }
 
-    public boolean checkIP(OfflinePlayer player, String ip) { return (plugin.playerData.config.getString(player.getUniqueId().toString() + ".IP").equalsIgnoreCase(ip)); }
+    public boolean checkIP(OfflinePlayer player, String ip) {
+        return plugin.playerData.config.getString(player.getUniqueId().toString() + ".IP").equalsIgnoreCase(ip);
+    }
 
     public int getReportsAmount(OfflinePlayer target) {
         return plugin.playerData.config.getInt(target.getUniqueId().toString() + ".ReportsAmount");
@@ -77,15 +78,8 @@ public class PlayerManagement {
         plugin.playerData.saveData();
     }
 
-    public void sendToSpawn(String server, Player player) {
-        String world = plugin.worldData.config.getString("Servers." + server.toUpperCase() + ".Spawn.World");
-        double X = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.X");
-        double Y = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.Y");
-        double Z = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.Z");
-        double Yaw = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.Yaw");
-        double Pitch = plugin.worldData.config.getDouble("Servers." + server.toUpperCase() + ".Spawn.Pitch");
-
-        Location location = new Location(Bukkit.getWorld(world), X, Y, Z, (float) Yaw, (float) Pitch);
+    public void sendToSpawn(Server server, Player player) {
+        Location location = server.getSpawn();
 
         player.teleport(location);
     }

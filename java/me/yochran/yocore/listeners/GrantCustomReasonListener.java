@@ -1,14 +1,11 @@
 package me.yochran.yocore.listeners;
 
-import me.yochran.yocore.commands.GrantCommand;
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.gui.guis.GrantConfirmGUI;
-import me.yochran.yocore.gui.guis.GrantGUI;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -19,7 +16,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class GrantCustomReasonListener implements Listener {
 
     private final yoCore plugin;
-    private final GrantCommand grantCommand = new GrantCommand();
 
     public GrantCustomReasonListener() {
         plugin = yoCore.getPlugin(yoCore.class);

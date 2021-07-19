@@ -1,5 +1,6 @@
 package me.yochran.yocore.gui.guis;
 
+import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.gui.*;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
@@ -73,7 +74,7 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
                         if (player.hasPermission("yocore.grant." + plugin.getConfig().getString("Ranks." + rank + ".ID").toLowerCase())) {
                             GUI.close(gui);
 
-                            plugin.grant_type.put(player.getUniqueId(), "RANK");
+                            plugin.grant_type.put(player.getUniqueId(), GrantType.RANK);
                             plugin.grant_grant.put(player.getUniqueId(), plugin.getConfig().getString("Ranks." + rank + ".ID"));
 
                             new BukkitRunnable() {
@@ -124,7 +125,7 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
                         if (player.hasPermission(plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"))) {
                             GUI.close(gui);
 
-                            plugin.grant_type.put(player.getUniqueId(), "PERMISSION");
+                            plugin.grant_type.put(player.getUniqueId(), GrantType.PERMISSION);
                             plugin.grant_grant.put(player.getUniqueId(), plugin.getConfig().getString("Grant.Permission.Items." + perm + ".Permission"));
 
                             new BukkitRunnable() {

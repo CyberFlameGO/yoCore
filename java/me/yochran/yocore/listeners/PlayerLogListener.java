@@ -1,6 +1,7 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.*;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -26,7 +27,6 @@ public class PlayerLogListener implements Listener {
     private final EconomyManagement economyManagement = new EconomyManagement();
     private final StatsManagement statsManagement = new StatsManagement();
     private final PermissionManagement permissionManagement = new PermissionManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public PlayerLogListener() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -92,13 +92,15 @@ public class PlayerLogListener implements Listener {
                 event.getPlayer().hidePlayer(players);
         }
 
+        Server server = Server.getServer(event.getPlayer());
+
         if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin")
-                && !serverManagement.getServer(event.getPlayer()).equalsIgnoreCase(plugin.getConfig().getString("Servers.Hub.Server").toUpperCase())) {
-            playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.Server"), event.getPlayer());
+                && !server.getName().equalsIgnoreCase(plugin.getConfig().getString("Servers.Hub.Server").toUpperCase())) {
+            playerManagement.sendToSpawn(Server.getServer(plugin.getConfig().getString("Servers.Hub.Server")), event.getPlayer());
 
             if (plugin.getConfig().getBoolean("Servers.WorldSeparation")) {
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    if (!serverManagement.getServer(event.getPlayer()).equalsIgnoreCase(serverManagement.getServer(players)))
+                    if (!server.getName().equalsIgnoreCase(Server.getServer(players).getName()))
                         players.hidePlayer(event.getPlayer());
                 }
             }
@@ -110,7 +112,7 @@ public class PlayerLogListener implements Listener {
                     if (staff.hasPermission("yocore.chats.staff"))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Staff.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                                .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
+                                .replace("%server%", server.getName())
                                 .replace("%world%", event.getPlayer().getWorld().getName())));
                 }
             }
@@ -124,16 +126,18 @@ public class PlayerLogListener implements Listener {
         if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()))
             playerManagement.setupPlayer(event.getPlayer());
 
+        Server server = Server.getServer(event.getPlayer());
+
         if (plugin.last_location.get(event.getPlayer().getUniqueId()) == null) {
-            Map<String, Location> location = new HashMap<>();
-            location.put(serverManagement.getServer(event.getPlayer()), event.getPlayer().getLocation());
+            Map<Server, Location> location = new HashMap<>();
+            location.put(server, event.getPlayer().getLocation());
             plugin.last_location.put(event.getPlayer().getUniqueId(), location);
         }
 
-        plugin.last_location.get(event.getPlayer().getUniqueId()).put(serverManagement.getServer(event.getPlayer()), event.getPlayer().getLocation());
+        plugin.last_location.get(event.getPlayer().getUniqueId()).put(server, event.getPlayer().getLocation());
 
         if (plugin.getConfig().getBoolean("Servers.Hub.HubEveryJoin"))
-            playerManagement.sendToSpawn(plugin.getConfig().getString("Servers.Hub.Server").toUpperCase(), event.getPlayer());
+            playerManagement.sendToSpawn(Server.getServer(plugin.getConfig().getString("Servers.Hub.Server")), event.getPlayer());
 
         if (plugin.getConfig().getBoolean("QuitMessage.Staff.Enabled")) {
             if (event.getPlayer().hasPermission("yocore.chats.staff")) {
@@ -141,7 +145,7 @@ public class PlayerLogListener implements Listener {
                     if (staff.hasPermission("yocore.chats.staff")) {
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
                                 .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
-                                .replace("%server%", serverManagement.getName(serverManagement.getServer(event.getPlayer())))
+                                .replace("%server%", server.getName())
                                 .replace("%world%", event.getPlayer().getWorld().getName())));
                     }
                 }

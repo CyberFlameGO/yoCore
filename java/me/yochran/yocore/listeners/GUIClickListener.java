@@ -2,20 +2,12 @@ package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.GUI;
-import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
-import me.yochran.yocore.yoCore;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class GUIClickListener implements Listener {
-
-    private final yoCore plugin;
-
-    public GUIClickListener() {
-        plugin = yoCore.getPlugin(yoCore.class);
-    }
 
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
@@ -34,15 +26,5 @@ public class GUIClickListener implements Listener {
                 }
             }
         }
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == XMaterial.AIR.parseMaterial())
-            return;
-
-        if (event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aEnder Chest."))
-                || event.getView().getTitle().equalsIgnoreCase(Utils.translate("&aInventory Inspect")))
-            event.setCancelled(true);
     }
 }

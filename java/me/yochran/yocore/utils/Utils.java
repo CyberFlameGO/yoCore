@@ -131,6 +131,17 @@ public class Utils {
         return name;
     }
 
+    public static String capitalizeFirst(String str) {
+        String[] words = str.split(" ");
+        String capitalizedWord = "";
+        for(String character : words){
+            String first = character.substring(0,1);
+            String afterfirst = character.substring(1);
+            capitalizedWord += first.toUpperCase() + afterfirst + " ";
+        }
+        return capitalizedWord.trim();
+    }
+
     public static int[] getHistorySlotData(int id) {
         int[] data = new int[] { 1, 0 };
 

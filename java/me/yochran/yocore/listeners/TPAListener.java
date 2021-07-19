@@ -1,6 +1,5 @@
 package me.yochran.yocore.listeners;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.event.EventHandler;
@@ -10,7 +9,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class TPAListener implements Listener {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public TPAListener() {
         plugin = yoCore.getPlugin(yoCore.class);

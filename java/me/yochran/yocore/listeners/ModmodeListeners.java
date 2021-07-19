@@ -93,7 +93,7 @@ public class ModmodeListeners implements Listener {
     }
 
     @EventHandler
-    public void onFreeze(PlayerInteractAtEntityEvent event) {
+    public void onInteract(PlayerInteractAtEntityEvent event) {
         if (!plugin.modmode_players.contains(event.getPlayer().getUniqueId()))
             return;
 

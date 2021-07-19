@@ -2,6 +2,7 @@ package me.yochran.yocore.gui.guis;
 
 import me.yochran.yocore.gui.*;
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -38,7 +39,7 @@ public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
         Set<Integer> pages = new HashSet<>();
 
         int loop = -1;
-        for (Player players : Bukkit.getOnlinePlayers()) {
+        for (Player players : Server.getPlayers(Server.getServer(gui.getPlayer()))) {
             loop++;
             ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
             SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
