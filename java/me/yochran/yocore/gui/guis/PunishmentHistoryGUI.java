@@ -4,6 +4,8 @@ import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -17,6 +19,7 @@ public class PunishmentHistoryGUI extends CustomGUI {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
+    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public PunishmentHistoryGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -38,81 +41,81 @@ public class PunishmentHistoryGUI extends CustomGUI {
         Button banButton = new Button(bans.getItem(), bans.getName(), bans.getLore());
         Button blacklistButton = new Button(blacklists.getItem(), blacklists.getName(), blacklists.getLore());
 
-        if (plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".WarnsAmount") >= 1) {
+        if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + ".Warn")) {
             warnButton.setItem(XMaterial.YELLOW_WOOL.parseItem());
             warnButton.setName(playerManagement.getPlayerColor(target) + "&6's warns.");
-            warnButton.setAmount(plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".WarnsAmount"));
+            warnButton.setAmount(punishmentManagement.getAmount(target, PunishmentType.WARN));
             warnButton.setAction(() -> {
                 GUI.close(gui);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's warns.");
-                        detailedPunishmentHistoryGUI.setup("Warn", player, target, 1);
+                        detailedPunishmentHistoryGUI.setup(PunishmentType.WARN, player, target, 1);
                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                     }
                 }.runTaskLater(plugin, 1);
             });
         }
-        if (plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".MutesAmount") >= 1) {
+        if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + ".Mute")) {
             muteButton.setItem(XMaterial.ORANGE_WOOL.parseItem());
             muteButton.setName(playerManagement.getPlayerColor(target) + "&6's mutes.");
-            muteButton.setAmount(plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".MutesAmount"));
+            muteButton.setAmount(punishmentManagement.getAmount(target, PunishmentType.MUTE));
             muteButton.setAction(() -> {
                 GUI.close(gui);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's mutes.");
-                        detailedPunishmentHistoryGUI.setup("Mute", player, target, 1);
+                        detailedPunishmentHistoryGUI.setup(PunishmentType.MUTE, player, target, 1);
                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                     }
                 }.runTaskLater(plugin, 1);
             });
         }
-        if (plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".KicksAmount") >= 1) {
+        if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + ".Kick")) {
             kickButton.setItem(XMaterial.RED_WOOL.parseItem());
             kickButton.setName(playerManagement.getPlayerColor(target) + "&6's kicks.");
-            kickButton.setAmount(plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".KicksAmount"));
+            kickButton.setAmount(punishmentManagement.getAmount(target, PunishmentType.KICK));
             kickButton.setAction(() -> {
                 GUI.close(gui);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's kicks.");
-                        detailedPunishmentHistoryGUI.setup("Kick", player, target, 1);
+                        detailedPunishmentHistoryGUI.setup(PunishmentType.KICK, player, target, 1);
                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                     }
                 }.runTaskLater(plugin, 1);
             });
         }
-        if (plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BansAmount") >= 1) {
+        if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + ".Ban")) {
             banButton.setItem(XMaterial.RED_WOOL.parseItem());
             banButton.setName(playerManagement.getPlayerColor(target) + "&6's bans.");
-            banButton.setAmount(plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BansAmount"));
+            banButton.setAmount(punishmentManagement.getAmount(target, PunishmentType.BAN));
             banButton.setAction(() -> {
                 GUI.close(gui);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's bans.");
-                        detailedPunishmentHistoryGUI.setup("Ban", player, target, 1);
+                        detailedPunishmentHistoryGUI.setup(PunishmentType.BAN, player, target, 1);
                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                     }
                 }.runTaskLater(plugin, 1);
             });
         }
-        if (plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BlacklistsAmount") >= 1) {
+        if (plugin.punishmentData.config.contains(target.getUniqueId().toString() + ".Blacklist")) {
             blacklistButton.setItem(XMaterial.REDSTONE_BLOCK.parseItem());
             blacklistButton.setName(playerManagement.getPlayerColor(target) + "&6's blacklists.");
-            blacklistButton.setAmount(plugin.punishmentData.config.getInt(target.getUniqueId().toString() + ".BlacklistsAmount"));
+            blacklistButton.setAmount(punishmentManagement.getAmount(target, PunishmentType.BLACKLIST));
             blacklistButton.setAction(() -> {
                 GUI.close(gui);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(player, 27, playerManagement.getPlayerColor(target) + "&a's blacklists.");
-                        detailedPunishmentHistoryGUI.setup("Blacklist", player, target, 1);
+                        detailedPunishmentHistoryGUI.setup(PunishmentType.BLACKLIST, player, target, 1);
                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                     }
                 }.runTaskLater(plugin, 1);

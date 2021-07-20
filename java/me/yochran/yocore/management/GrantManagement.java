@@ -15,7 +15,7 @@ public class GrantManagement {
     }
 
     public void setupPlayer(OfflinePlayer target) {
-        plugin.grantData.config.set(target.getUniqueId().toString() + ".GrantsAmount", 0);
+        plugin.grantData.config.set(target.getUniqueId().toString() + ".Grants", null);
         plugin.grantData.saveData();
     }
 

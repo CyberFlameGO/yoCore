@@ -1,17 +1,18 @@
 package me.yochran.yocore.runnables;
 
-import me.yochran.yocore.management.PunishmentManagement;
-import me.yochran.yocore.utils.Utils;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class MuteUpdater extends BukkitRunnable {
 
     private final yoCore plugin;
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public MuteUpdater() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -20,13 +21,20 @@ public class MuteUpdater extends BukkitRunnable {
     @Override
     public void run() {
         if (plugin.punishmentData.config.contains("MutedPlayers")) {
-            for (String players : plugin.punishmentData.config.getConfigurationSection("MutedPlayers").getKeys(false)) {
-                if (plugin.punishmentData.config.getBoolean("MutedPlayers." + players + ".Temporary")) {
-                    if (plugin.punishmentData.config.getLong(players + ".Mute." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Mute") + ".Duration") <= System.currentTimeMillis()) {
-                        plugin.muted_players.remove(UUID.fromString(players));
-                        plugin.punishmentData.config.set("MutedPlayers." + players, null);
-                        plugin.punishmentData.config.set(players + ".Mute." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Mute") + ".Status", "Expired");
-                        plugin.punishmentData.saveData();
+            for (String entry : plugin.punishmentData.config.getConfigurationSection("MutedPlayers").getKeys(false)) {
+                OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(entry));
+
+                if (Punishment.getPunishments(player).size() <= 0)
+                    return;
+
+                for (Map.Entry<Integer, Punishment> punishment : Punishment.getPunishments(player).entrySet()) {
+                    if (punishment.getValue().getType() == PunishmentType.MUTE) {
+                        if (punishment.getValue().getStatus().equalsIgnoreCase("Active")) {
+                            if (!(punishment.getValue().getDuration() instanceof String)) {
+                                if ((long) punishment.getValue().getDuration() <= System.currentTimeMillis())
+                                    punishment.getValue().expire();
+                            }
+                        }
                     }
                 }
             }

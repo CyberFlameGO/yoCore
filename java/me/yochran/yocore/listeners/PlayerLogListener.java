@@ -1,6 +1,8 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.*;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -68,19 +70,35 @@ public class PlayerLogListener implements Listener {
         }
 
         if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())) {
-            event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
-                    .replace("%reason%", plugin.blacklisted_players.get(event.getPlayer().getUniqueId()))));
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(event.getPlayer()).entrySet()) {
+                if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active"))
+                    event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
+                            .replace("%reason%", entry.getValue().getReason())));
+            }
+
             return;
         }
 
         if (plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
-            if (plugin.banned_players.get(event.getPlayer().getUniqueId()))
+            Punishment punishment = null;
+
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(event.getPlayer()).entrySet()) {
+                if (entry.getValue().getType() == PunishmentType.BAN && entry.getValue().getStatus().equalsIgnoreCase("Active"))
+                    punishment = entry.getValue();
+            }
+
+            if (punishment == null)
+                return;
+
+            if (plugin.banned_players.get(event.getPlayer().getUniqueId())) {
                 event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Temporary.TargetJoinScreen")
-                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))
-                        .replace("%expiration%", Utils.getExpirationDate(plugin.punishmentData.config.getLong(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Duration")))));
-            else
+                        .replace("%reason%", punishment.getReason())
+                        .replace("%expiration%", Utils.getExpirationDate((long) punishment.getDuration()))));
+            } else {
                 event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Ban.Permanent.TargetJoinScreen")
-                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Ban." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Ban") + ".Reason"))));
+                        .replace("%reason%", punishment.getReason())));
+            }
+
             return;
         }
 

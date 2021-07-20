@@ -26,14 +26,12 @@ public class GrantUpdater extends BukkitRunnable {
                 return;
 
             for (Map.Entry<Integer, Grant> grant : Grant.getGrants(player).entrySet()) {
-                if (!grant.getValue().getStatus().equalsIgnoreCase("Active"))
-                    return;
-
-                if (grant.getValue().getDuration() instanceof String)
-                    return;
-
-                if ((long) grant.getValue().getDuration() <= System.currentTimeMillis())
-                    grant.getValue().expire();
+                if (grant.getValue().getStatus().equalsIgnoreCase("Active")) {
+                    if (!(grant.getValue().getDuration() instanceof String)) {
+                        if ((long) grant.getValue().getDuration() <= System.currentTimeMillis())
+                            grant.getValue().expire();
+                    }
+                }
             }
         }
     }

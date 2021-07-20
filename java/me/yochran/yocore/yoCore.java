@@ -16,6 +16,8 @@ import me.yochran.yocore.grants.Grant;
 import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PermissionManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import me.yochran.yocore.server.Server;
@@ -66,6 +68,7 @@ public final class yoCore extends JavaPlugin {
                 registerCommands();
                 registerListeners();
                 runRunnables();
+                registerPunishments();
                 refreshPunishments();
                 registerGrants();
                 registerRanks();
@@ -303,6 +306,28 @@ public final class yoCore extends JavaPlugin {
         }
     }
 
+    private void registerPunishments() {
+        for (String player : punishmentData.config.getKeys(false)) {
+            for (PunishmentType type : PunishmentType.values()) {
+                if (punishmentData.config.contains(player + "." + PunishmentType.convertToString(type))) {
+                    for (String entry : punishmentData.config.getConfigurationSection(player + "." + PunishmentType.convertToString(type)).getKeys(false)) {
+                        OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(player));
+                        String executor = punishmentData.config.getString(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Executor");
+                        Object duration = punishmentData.config.get(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Duration");
+                        boolean silent = punishmentData.config.getBoolean(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Silent");
+                        String reason = punishmentData.config.getString(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Reason");
+
+                        Punishment punishment = new Punishment(type, target, executor, duration, silent, reason);
+                        punishment.setStatus(punishmentData.config.getString(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Status"));
+                        punishment.setDate(punishmentData.config.getLong(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Date"));
+
+                        Punishment.getPunishments().put(punishmentData.config.getInt(player + "." + PunishmentType.convertToString(type) + "." + entry + ".ID"), punishment);
+                    }
+                }
+            }
+        }
+    }
+
     private void refreshPunishments() {
         if (punishmentData.config.contains("MutedPlayers")) {
             for (String player : punishmentData.config.getConfigurationSection("MutedPlayers").getKeys(false))
@@ -316,7 +341,7 @@ public final class yoCore extends JavaPlugin {
 
         if (punishmentData.config.contains("BlacklistedPlayers")) {
             for (String player : punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false))
-                banned_players.put(UUID.fromString(player), punishmentData.config.getBoolean("BlacklistedPlayers." + player + ".Reason"));
+                blacklisted_players.put(UUID.fromString(player), punishmentData.config.getString("BlacklistedPlayers." + player + ".Reason"));
         }
     }
 
@@ -332,6 +357,8 @@ public final class yoCore extends JavaPlugin {
                     String reason = grantData.config.getString(player + ".Grants." + grants + ".Reason");
 
                     Grant grant = new Grant(type, granted, target, executor, duration, reason);
+                    grant.setStatus(grantData.config.getString(player + ".Grants." + grants + ".Status"));
+                    grant.setDate(grantData.config.getLong(player + ".Grants." + grants + ".Date"));
 
                     Grant.getGrants().put(grantData.config.getInt(player + ".Grants." + grants + ".ID"), grant);
                 }

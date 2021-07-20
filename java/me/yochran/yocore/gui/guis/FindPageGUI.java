@@ -4,6 +4,7 @@ import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -23,7 +24,7 @@ public class FindPageGUI extends CustomGUI {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
-    public void setup(String cl, String type, OfflinePlayer target, int pages) {
+    public void setup(String cl, PunishmentType type, OfflinePlayer target, int pages) {
         ItemBuilder itemBuilder = new ItemBuilder(XMaterial.BOOK.parseItem(), 1, "&4&lNULL", new ArrayList<>());
 
         for (int i = 0; i < pages; i++) {
@@ -38,7 +39,7 @@ public class FindPageGUI extends CustomGUI {
                             public void run() {
                                 switch (cl.toLowerCase()) {
                                     case "punishments":
-                                        DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's " + type.toLowerCase() + "&as.");
+                                        DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's " + type.toString().toLowerCase() + "&as.");
                                         detailedPunishmentHistoryGUI.setup(type, getGui().getPlayer(), target, (page + 1));
                                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                                         break;

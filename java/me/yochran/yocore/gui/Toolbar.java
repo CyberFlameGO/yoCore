@@ -2,6 +2,7 @@ package me.yochran.yocore.gui;
 
 import me.yochran.yocore.gui.guis.FindPageGUI;
 import me.yochran.yocore.gui.guis.PunishmentHistoryGUI;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -41,7 +42,7 @@ public class Toolbar {
     public String getType() { return type; }
     public static AtomicInteger getNewPage() { return newPage; }
 
-    public void create(OfflinePlayer target, String type, boolean bottomRow) {
+    public void create(OfflinePlayer target, PunishmentType type, boolean bottomRow) {
         gui.setFiller(new int[] { 0,1,2,3,4,5,6,7,8 });
         ItemBuilder firstPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lYou are on the first page.", new ArrayList<>());
         ItemBuilder lastPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, "&c&lYou are on the last page.", new ArrayList<>());

@@ -3,6 +3,8 @@ package me.yochran.yocore.listeners;
 import me.yochran.yocore.chats.ChatType;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -13,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Map;
 
 public class PlayerChatListener implements Listener {
 
@@ -55,16 +59,27 @@ public class PlayerChatListener implements Listener {
         }
 
         if (plugin.muted_players.containsKey(event.getPlayer().getUniqueId())) {
-            event.setCancelled(true);
+            Punishment punishment = null;
+
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(event.getPlayer()).entrySet()) {
+                if (entry.getValue().getType() == PunishmentType.MUTE && entry.getValue().getStatus().equalsIgnoreCase("Active"))
+                    punishment = entry.getValue();
+            }
+
+            if (punishment == null)
+                return;
 
             if (plugin.muted_players.get(event.getPlayer().getUniqueId())) {
                 event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.TargetAttemptToSpeak")
-                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Mute") + ".Reason"))
-                        .replace("%expiration%", Utils.getExpirationDate(plugin.punishmentData.config.getLong(event.getPlayer().getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Mute") + ".Duration")))));
+                        .replace("%reason%", punishment.getReason())
+                        .replace("%expiration%", Utils.getExpirationDate((long) punishment.getDuration()))));
             } else {
                 event.getPlayer().sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Permanent.TargetAttemptToSpeak")
-                        .replace("%reason%", plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(event.getPlayer(), "Mute") + ".Reason"))));
+                        .replace("%reason%", punishment.getReason())));
+
             }
+
+            event.setCancelled(true);
         }
 
         if (plugin.chat_muted && !event.getPlayer().hasPermission("yocore.mutechat.bypass")) {
