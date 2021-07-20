@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -59,7 +61,8 @@ public class WarnCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Warn", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
+        Punishment punishment = new Punishment(PunishmentType.WARN, target, executor, "Permanent", silent, reason);
+        punishment.create();
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.ExecutorMessage")

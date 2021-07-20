@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -65,8 +67,9 @@ public class MuteCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Mute", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
-        punishmentManagement.addMute(target, false);
+        Punishment punishment = new Punishment(PunishmentType.MUTE, target, executor, "Permanent", silent, reason);
+        punishment.create();
+        punishment.execute();
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Permanent.ExecutorMessage")

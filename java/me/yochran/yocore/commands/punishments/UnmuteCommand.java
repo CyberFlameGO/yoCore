@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -10,6 +12,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class UnmuteCommand implements CommandExecutor {
 
@@ -56,10 +60,10 @@ public class UnmuteCommand implements CommandExecutor {
             silent = true;
         }
 
-        plugin.punishmentData.config.set(target.getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(target, "Mute") + ".Status", "Revoked");
-        plugin.punishmentData.config.set("MutedPlayers." + target.getUniqueId().toString(), null);
-        plugin.punishmentData.saveData();
-        plugin.muted_players.remove(target.getUniqueId());
+        for (Map.Entry<Integer, Punishment> punishment : Punishment.getPunishments(target).entrySet()) {
+            if (punishment.getValue().getType() == PunishmentType.MUTE && punishment.getValue().getStatus().equalsIgnoreCase("Active"))
+                punishment.getValue().revoke();
+        }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Unmute.ExecutorMessage")

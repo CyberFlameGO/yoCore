@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -69,8 +71,9 @@ public class BlacklistCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.addInfraction("Blacklist", target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
-        punishmentManagement.addBlacklist(target, reason);
+        Punishment punishment = new Punishment(PunishmentType.BLACKLIST, target, executor, "Permanent", silent, reason);
+        punishment.create();
+        punishment.execute();
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.ExecutorMessage")
@@ -100,9 +103,10 @@ public class BlacklistCommand implements CommandExecutor {
             if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)
                     || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players + ".IP"))
                     || plugin.playerData.config.getStringList(players + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
-                if (!plugin.playerData.config.getString(players + ".Name").equalsIgnoreCase(target.getName())) {
-                    punishmentManagement.addInfraction("Blacklist", Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, reason + "(Linked to " + target.getName() + ")", System.currentTimeMillis(), "Permanent", silent);
-                    punishmentManagement.addBlacklist(Bukkit.getOfflinePlayer(UUID.fromString(players)), reason + "(Linked to " + target.getName() + ")");
+                if (!UUID.fromString(players).equals(target.getUniqueId())) {
+                    Punishment linkedPunishment = new Punishment(PunishmentType.BLACKLIST, Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, "Permanent", silent, reason + " (Linked to " + target.getName() + ")");
+                    linkedPunishment.create();
+                    linkedPunishment.execute();
                 }
             }
         }

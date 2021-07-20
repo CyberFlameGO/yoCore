@@ -1,12 +1,8 @@
 package me.yochran.yocore.commands.punishments;
 
-import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.gui.guis.PunishmentHistoryGUI;
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
 import me.yochran.yocore.utils.Utils;
-import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -15,15 +11,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 public class HistoryCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public HistoryCommand() {
         plugin = yoCore.getPlugin(yoCore.class);

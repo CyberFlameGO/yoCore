@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -11,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class ReBlacklistCommand implements CommandExecutor {
@@ -69,8 +72,12 @@ public class ReBlacklistCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.redoInfraction("Blacklist", punishmentManagement.getInfractionAmount(target, "Blacklist"), target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
-        punishmentManagement.redoBlacklist(target, reason);
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet()) {
+            if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
+                Punishment.redo(entry.getValue(), target, executor, "Permanent", silent, reason);
+                entry.getValue().reexecute();
+            }
+        }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.ReBlacklistExecutorMessage")
@@ -97,9 +104,14 @@ public class ReBlacklistCommand implements CommandExecutor {
         }
 
         for (String players : plugin.punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false)) {
-            if (plugin.punishmentData.config.getString("BlacklistedPlayers." + players + ".Reason").contains("(Linked to " + target.getName() + ")") && !target.getName().equalsIgnoreCase(plugin.playerData.config.getString(players + ".Name"))) {
-                punishmentManagement.redoInfraction("Blacklist", punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Blacklist"), Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, reason + "(Linked to " + target.getName() + ")", System.currentTimeMillis(), "Permanent", silent);
-                punishmentManagement.redoBlacklist(Bukkit.getOfflinePlayer(UUID.fromString(players)), reason + "(Linked to " + target.getName() + ")");
+            if (!UUID.fromString(players).equals(target.getUniqueId())
+                    && plugin.punishmentData.config.getString("BlacklistedPlayers." + players + ".Reason").contains("(Linked to " + target.getName() + ")")) {
+                for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(Bukkit.getOfflinePlayer(UUID.fromString(players))).entrySet()) {
+                    if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
+                        Punishment.redo(entry.getValue(), Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, "Permanent", silent, reason + " (Linked to " + target.getName() + ")");
+                        entry.getValue().reexecute();
+                    }
+                }
             }
         }
 

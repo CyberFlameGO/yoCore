@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -11,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class UnblacklistCommand implements CommandExecutor {
@@ -65,10 +68,12 @@ public class UnblacklistCommand implements CommandExecutor {
                 if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)
                         || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players + ".IP"))
                         || plugin.playerData.config.getStringList(players + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
-                    plugin.punishmentData.config.set(players + ".Blacklist." + punishmentManagement.getInfractionAmount(Bukkit.getOfflinePlayer(UUID.fromString(players)), "Blacklist") + ".Status", "Revoked");
-                    plugin.punishmentData.config.set("BlacklistedPlayers." + players, null);
-                    plugin.punishmentData.saveData();
-                    plugin.blacklisted_players.remove(UUID.fromString(players));
+                    for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments().entrySet()) {
+                        if (entry.getValue().getTarget().getUniqueId().equals(UUID.fromString(players))
+                                && entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
+                            entry.getValue().revoke();
+                        }
+                    }
                 }
             }
         }

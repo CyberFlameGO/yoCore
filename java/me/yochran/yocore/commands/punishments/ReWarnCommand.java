@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -10,11 +12,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
+
 public class ReWarnCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public ReWarnCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -38,7 +41,9 @@ public class ReWarnCommand implements CommandExecutor {
             return true;
         }
 
-        if (punishmentManagement.getInfractionAmount(target, "Warn") < 1) {
+        if (!plugin.punishmentData.config.contains(target.getUniqueId().toString())
+                || !plugin.punishmentData.config.contains(target.getUniqueId().toString() + ".Warn")
+                || plugin.punishmentData.config.getConfigurationSection(target.getUniqueId().toString() + ".Warn").getKeys(false).size() < 1) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.InvalidPlayer")));
             return true;
         }
@@ -64,7 +69,10 @@ public class ReWarnCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.redoInfraction("Warn", punishmentManagement.getInfractionAmount(target, "Warn"), target, executor, reason, System.currentTimeMillis(), "Permanent", silent);
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet()) {
+            if (entry.getValue().getType() == PunishmentType.WARN && entry.getValue().getStatus().equalsIgnoreCase("Active"))
+                Punishment.redo(entry.getValue(), target, executor, "Permanent", silent, reason);
+        }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.ReWarnExecutorMessage")

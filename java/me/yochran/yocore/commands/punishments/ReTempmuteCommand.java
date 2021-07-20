@@ -2,6 +2,8 @@ package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -10,6 +12,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class ReTempmuteCommand implements CommandExecutor {
 
@@ -68,8 +72,12 @@ public class ReTempmuteCommand implements CommandExecutor {
             silent = true;
         }
 
-        punishmentManagement.redoInfraction("Mute", punishmentManagement.getInfractionAmount(target, "Mute"), target, executor, reason, System.currentTimeMillis(), durationMS, silent);
-        punishmentManagement.redoMute(target, true);
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet()) {
+            if (entry.getValue().getType() == PunishmentType.MUTE && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
+                Punishment.redo(entry.getValue(), target, executor, durationMS, silent, reason);
+                entry.getValue().reexecute();
+            }
+        }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Mute.Temporary.ReMuteExecutorMessage")

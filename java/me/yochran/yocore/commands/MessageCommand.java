@@ -2,6 +2,8 @@ package me.yochran.yocore.commands;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.punishments.Punishment;
+import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XSound;
 import me.yochran.yocore.yoCore;
@@ -12,11 +14,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
+import java.util.Map;
+
 public class MessageCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public MessageCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -35,14 +38,25 @@ public class MessageCommand implements CommandExecutor {
         }
 
         if (plugin.muted_players.containsKey(((Player) sender).getUniqueId())) {
-            if (plugin.muted_players.get(((Player) sender).getUniqueId())) {
-                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.TargetAttemptToSpeak")
-                        .replace("%reason%", plugin.punishmentData.config.getString(((Player) sender).getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(((Player) sender), "Mute") + ".Reason"))
-                        .replace("%expiration%", Utils.getExpirationDate(plugin.punishmentData.config.getLong(((Player) sender).getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(((Player) sender), "Mute") + ".Duration")))));
-            } else {
-                sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Permanent.TargetAttemptToSpeak")
-                        .replace("%reason%", plugin.punishmentData.config.getString(((Player) sender).getUniqueId().toString() + ".Mute." + punishmentManagement.getInfractionAmount(((Player) sender), "Mute") + ".Reason"))));
+            Punishment punishment = null;
+
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(((Player) sender)).entrySet()) {
+                if (entry.getValue().getType() == PunishmentType.MUTE && entry.getValue().getStatus().equalsIgnoreCase("Active"))
+                    punishment = entry.getValue();
             }
+
+            if (punishment != null) {
+                if (plugin.muted_players.get(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Temporary.TargetAttemptToSpeak")
+                            .replace("%reason%", punishment.getReason())
+                            .replace("%expiration%", Utils.getExpirationDate((long) punishment.getDuration()))));
+                } else {
+                    sender.sendMessage(Utils.translate(plugin.getConfig().getString("Mute.Permanent.TargetAttemptToSpeak")
+                            .replace("%reason%", punishment.getReason())));
+
+                }
+            }
+
             return true;
         }
 
