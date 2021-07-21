@@ -4,6 +4,7 @@ import me.yochran.yocore.gui.*;
 import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.server.Server;
+import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -56,16 +57,17 @@ public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
             String vanish = String.valueOf(plugin.vanished_players.contains(players.getUniqueId()));
             String modmode = String.valueOf(plugin.modmode_players.contains(players.getUniqueId()));
 
-            List<String> itemLore = new ArrayList<>();
-            itemLore.add(Utils.translate("&3&m--------------------------"));
-            itemLore.add(Utils.translate("&bRank: &3" + rank.getDisplay()));
-            itemLore.add(Utils.translate("&bVanish: &3" + vanish));
-            itemLore.add(Utils.translate("&bModMode: &3" + modmode));
-            itemLore.add(Utils.translate("&7 "));
-            itemLore.add(Utils.translate("&aClick to teleport to " + yoPlayer.getDisplayName() + "&a."));
-            itemLore.add(Utils.translate("&3&m--------------------------"));
+            String[] lore = new String[] {
+                    "&3&m--------------------------",
+                    "&bRank: &3" + rank.getDisplay(),
+                    "&bVanish: &3" + vanish,
+                    "&bModMode: &3" + modmode,
+                    "&7 ",
+                    "&aClick to teleport to " + yoPlayer.getDisplayName() + "&a.",
+                    "&3&m--------------------------"
+            };
 
-            itemMeta.setLore(itemLore);
+            itemMeta.setLore(ItemBuilder.formatLore(lore));
             item.setItemMeta(itemMeta);
 
             Button button = new Button(
