@@ -1,21 +1,16 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class NickCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public NickCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -39,18 +34,20 @@ public class NickCommand implements CommandExecutor {
         }
 
         if (args.length == 1) {
+            yoPlayer player = new yoPlayer((Player) sender);
+
             if (args[0].equalsIgnoreCase("off")) {
-                if (!plugin.nickname.containsKey(((Player) sender).getUniqueId())) {
+                if (!player.isNicked()) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.NotNicked")));
                     return true;
                 }
 
-                plugin.nickname.remove(((Player) sender).getUniqueId());
+                player.removeNick();
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.FormatOffSelf")));
             } else {
-                for (String player : plugin.playerData.config.getKeys(false)) {
-                    if (plugin.playerData.config.getString(player + ".Name").equalsIgnoreCase(args[0].replace("&", ""))) {
+                for (String players : plugin.playerData.config.getKeys(false)) {
+                    if (plugin.playerData.config.getString(players + ".Name").equalsIgnoreCase(args[0].replace("&", ""))) {
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.CannotNickAsPlayer")));
                         return true;
                     }
@@ -64,29 +61,30 @@ public class NickCommand implements CommandExecutor {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.FormatOnSelf")
                         .replace("%nickname%", args[0].replace("&", ""))));
 
-                plugin.nickname.remove(((Player) sender).getUniqueId());
-                plugin.nickname.put(((Player) sender).getUniqueId(), args[0].replace("&", ""));
+                player.removeNick();
+                player.setNickname(args[0].replace("&", ""));
             }
         } else {
-            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-            if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
+            yoPlayer target = new yoPlayer(args[1]);
+
+            if (!plugin.playerData.config.contains(target.getPlayer().getUniqueId().toString())) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.InvalidPlayer")));
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("off")) {
-                if (!plugin.nickname.containsKey(((Player) sender).getUniqueId())) {
+                if (!target.isNicked()) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.NotNicked")));
                     return true;
                 }
 
-                plugin.nickname.remove(target.getUniqueId());
+                target.removeNick();
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.FormatOffOther")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", target.getDisplayName())));
             } else {
-                for (String player : plugin.playerData.config.getKeys(false)) {
-                    if (plugin.playerData.config.getString(player + ".Name").equalsIgnoreCase(args[0].replace("&", ""))) {
+                for (String players : plugin.playerData.config.getKeys(false)) {
+                    if (plugin.playerData.config.getString(players + ".Name").equalsIgnoreCase(args[0].replace("&", ""))) {
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.CannotNickAsPlayer")));
                         return true;
                     }
@@ -99,10 +97,10 @@ public class NickCommand implements CommandExecutor {
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Nickname.FormatOnOther")
                         .replace("%nickname%", args[0].replace("&", ""))
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", target.getDisplayName())));
 
-                plugin.nickname.remove(target.getUniqueId());
-                plugin.nickname.put(target.getUniqueId(), args[0].replace("&", ""));
+                target.removeNick();
+                target.setNickname(args[0].replace("&", ""));
             }
         }
 

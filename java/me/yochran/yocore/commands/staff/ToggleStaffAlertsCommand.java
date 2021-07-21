@@ -1,6 +1,5 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.command.Command;
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player;
 public class ToggleStaffAlertsCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ToggleStaffAlertsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);

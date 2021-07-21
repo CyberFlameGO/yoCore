@@ -1,20 +1,16 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
-import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class InvseeCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public InvseeCommand() {
         plugin = yoCore.getPlugin(yoCore.class);

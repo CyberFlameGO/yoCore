@@ -1,6 +1,5 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.command.Command;
@@ -8,14 +7,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
 public class TagCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    public PlayerManagement playerManagement = new PlayerManagement();
 
     public TagCommand() {
         plugin = yoCore.getPlugin(yoCore.class);

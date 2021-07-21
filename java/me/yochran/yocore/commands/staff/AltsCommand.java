@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -16,7 +16,6 @@ import java.util.UUID;
 public class AltsCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public AltsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -35,26 +34,30 @@ public class AltsCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Alts.InvalidPlayer")));
             return true;
         }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Alts.GatheringMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))));
+                .replace("%target%", yoTarget.getDisplayName())));
 
         List<String> alts = new ArrayList<>();
 
         for (String alt : plugin.playerData.config.getKeys(false)) {
-            if (plugin.playerData.config.getString(alt + ".IP").equalsIgnoreCase(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP"))
-                    || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(alt + ".IP"))
-                    || plugin.playerData.config.getStringList(alt + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
-                if (!target.getName().equalsIgnoreCase(plugin.playerData.config.getString(alt + ".Name"))) {
-                    String display = "&7" + plugin.playerData.config.getString(alt + ".Name");
-                    if (Bukkit.getPlayer(UUID.fromString(alt)) != null) display = "&a" + plugin.playerData.config.getString(alt + ".Name");
-                    if (plugin.muted_players.containsKey(UUID.fromString(alt))) display = "&6" + plugin.playerData.config.getString(alt + ".Name");
-                    if (plugin.banned_players.containsKey(UUID.fromString(alt))) display = "&c" + plugin.playerData.config.getString(alt + ".Name");
-                    if (plugin.blacklisted_players.containsKey(UUID.fromString(alt))) display = "&4" + plugin.playerData.config.getString(alt + ".Name");
+            yoPlayer yoPlayer = new yoPlayer(UUID.fromString(alt));
+
+            if (yoPlayer.getIP().equalsIgnoreCase(yoTarget.getIP())
+                    || (yoTarget.getAllIPs().contains(yoPlayer.getIP())
+                    || yoPlayer.getAllIPs().contains(yoTarget.getIP()))) {
+                if (!target.getName().equalsIgnoreCase(yoPlayer.getPlayer().getName())) {
+                    String display = "&7" + yoPlayer.getPlayer().getName();
+                    if (yoPlayer.getPlayer().isOnline()) display = "&a" + yoPlayer.getPlayer().getName();
+                    if (plugin.muted_players.containsKey(yoPlayer.getPlayer().getUniqueId())) display = "&6" + yoPlayer.getPlayer().getName();
+                    if (plugin.banned_players.containsKey(yoPlayer.getPlayer().getUniqueId())) display = "&c" + yoPlayer.getPlayer().getName();
+                    if (plugin.blacklisted_players.containsKey(yoPlayer.getPlayer().getUniqueId())) display = "&4" + yoPlayer.getPlayer().getName();
 
                     alts.add(display);
                 }
@@ -68,7 +71,7 @@ public class AltsCommand implements CommandExecutor {
         }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Alts.ExecutorMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))
+                .replace("%target%", yoTarget.getDisplayName())
                 .replace("%alts%", altMessage)));
 
         return true;

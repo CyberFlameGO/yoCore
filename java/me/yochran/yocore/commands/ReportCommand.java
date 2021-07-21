@@ -1,6 +1,8 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -31,6 +33,8 @@ public class ReportCommand implements CommandExecutor {
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (target == null) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Report.InvalidPlayer")));
             return true;
@@ -45,16 +49,17 @@ public class ReportCommand implements CommandExecutor {
         playerManagement.addReport(target, ((Player) sender).getUniqueId().toString(), reason, System.currentTimeMillis());
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Report.ExecutorMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))
+                .replace("%target%", yoTarget.getDisplayName())
                 .replace("%reason%", reason)));
 
         for (Player staff : Bukkit.getOnlinePlayers()) {
             if (staff.hasPermission("yocore.chats.staff"))
                 staff.sendMessage(Utils.translate(plugin.getConfig().getString("Report.StaffAlert")
-                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%target%", playerManagement.getPlayerColor(target))
+                        .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                        .replace("%target%", yoTarget.getDisplayName())
                         .replace("%reason%", reason)
-                        .replace("%server%", plugin.getConfig().getString("ServerName"))));
+                        .replace("%word%", ((Player) sender).getWorld().getName())
+                        .replace("%server%", Server.getServer((Player) sender).getName())));
         }
 
         return true;

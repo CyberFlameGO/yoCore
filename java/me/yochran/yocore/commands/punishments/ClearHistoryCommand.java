@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.punishments;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 public class ClearHistoryCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public ClearHistoryCommand() {
@@ -33,6 +32,8 @@ public class ClearHistoryCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("ClearHistory.InvalidPlayer")));
             return true;
@@ -40,7 +41,7 @@ public class ClearHistoryCommand implements CommandExecutor {
 
         punishmentManagement.clearHistory(target);
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ClearHistory.ExecutorMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))));
+                .replace("%target%", yoTarget.getDisplayName())));
 
         return true;
     }

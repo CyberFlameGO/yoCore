@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -14,12 +15,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class ListCommand implements CommandExecutor, Listener {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ListCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -33,18 +34,21 @@ public class ListCommand implements CommandExecutor, Listener {
 
         List<String> players = new ArrayList<>();
 
-        for (String rank : plugin.ranks) {
+        for (Map.Entry<String, Rank> rank : Rank.getRanks().entrySet()) {
             for (Player player : Server.getPlayers(server)) {
-                if (!plugin.vanished_players.contains(player.getUniqueId()) && plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank)) {
-                    players.add(playerManagement.getPlayerColor(player));
+                yoPlayer yoPlayer = new yoPlayer(player);
+
+                if (!plugin.vanished_players.contains(player.getUniqueId())
+                        && yoPlayer.getRank() == rank.getValue()) {
+                    players.add(yoPlayer.getDisplayName());
                 }
             }
         }
 
         String rankMessage = "";
-        for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false)) {
-            if (rankMessage.equalsIgnoreCase("")) rankMessage = plugin.getConfig().getString("Ranks." + rank + ".Display");
-            else rankMessage = rankMessage + "&7, " + plugin.getConfig().getString("Ranks." + rank + ".Display");
+        for (Map.Entry<String, Rank> rank : Rank.getRanks().entrySet()) {
+            if (rankMessage.equalsIgnoreCase("")) rankMessage = rank.getValue().getDisplay();
+            else rankMessage = rankMessage + "&7, " + rank.getValue().getDisplay();
         }
 
         String playerMessage = "";

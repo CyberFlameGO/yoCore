@@ -1,5 +1,6 @@
 package me.yochran.yocore.commands;
 
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -31,17 +32,19 @@ public class RealNameCommand implements CommandExecutor {
             return true;
         }
 
-        OfflinePlayer nicked = null;
+        OfflinePlayer target;
+        yoPlayer yoTarget = null;
+
         for (Map.Entry<UUID, String> iterator : plugin.nickname.entrySet()) {
-            if (plugin.nickname.get(iterator.getKey()).equalsIgnoreCase(iterator.getValue()))
-                nicked = Bukkit.getOfflinePlayer(iterator.getKey());
+            if (plugin.nickname.get(iterator.getKey()).equalsIgnoreCase(iterator.getValue())) {
+                target = Bukkit.getOfflinePlayer(iterator.getKey());
+                yoTarget = new yoPlayer(target);
+            }
         }
 
-        String targetDisplay = plugin.getConfig().getString("Ranks." + plugin.playerData.config.getString(nicked.getUniqueId().toString() + ".Rank") + ".Color") + nicked.getName();
-
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("RealName.Format")
-                .replace("%target%", targetDisplay)
-                .replace("%nickname%", plugin.nickname.get(nicked.getUniqueId()))));
+                .replace("%target%", yoTarget.getDisplayName())
+                .replace("%nickname%", yoTarget.getNickname())));
 
         return true;
     }

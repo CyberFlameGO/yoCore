@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -14,7 +14,6 @@ import org.bukkit.potion.PotionEffectType;
 public class HealCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public HealCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -51,10 +50,12 @@ public class HealCommand implements CommandExecutor {
             for (Player staff : Bukkit.getOnlinePlayers()) {
                 if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.HealSelf")
-                            .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                            .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
             }
         } else {
             Player target = Bukkit.getPlayer(args[0]);
+            yoPlayer yoTarget = new yoPlayer(target);
+
             if (target == null) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Heal.InvalidPlayer")));
                 return true;
@@ -69,14 +70,14 @@ public class HealCommand implements CommandExecutor {
             }
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Heal.ExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                    .replace("%target%", yoTarget.getDisplayName())));
             target.sendMessage(Utils.translate(plugin.getConfig().getString("Heal.TargetMessage")));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
                 if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.HealOther")
-                            .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                            .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

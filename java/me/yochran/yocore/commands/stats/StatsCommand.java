@@ -2,6 +2,7 @@ package me.yochran.yocore.commands.stats;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.StatsManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -47,13 +48,15 @@ public class StatsCommand implements CommandExecutor {
             Map<String, String> stats = statsManagement.getAllStats(server, (Player) sender);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.Format")
-                    .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                    .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
                     .replace("%kills%", stats.get("Kills"))
                     .replace("%deaths%", stats.get("Deaths"))
                     .replace("%kdr%", stats.get("KDR"))
                     .replace("%streak%", stats.get("Streak"))));
         } else {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+            yoPlayer yoTarget = new yoPlayer(target);
+
             if (!statsManagement.isInitialized(target)) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.InvalidPlayer")));
                 return true;
@@ -62,7 +65,7 @@ public class StatsCommand implements CommandExecutor {
             Map<String, String> stats = statsManagement.getAllStats(server, target);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.Command.Format")
-                    .replace("%player%", playerManagement.getPlayerColor(target))
+                    .replace("%player%", yoTarget.getDisplayName())
                     .replace("%kills%", stats.get("Kills"))
                     .replace("%deaths%", stats.get("Deaths"))
                     .replace("%kdr%", stats.get("KDR"))

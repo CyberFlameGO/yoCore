@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 public class VanishCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();;
 
     public VanishCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -48,13 +47,13 @@ public class VanishCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.VanishOnSelf")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
                     for (Player player : Server.getPlayers(Server.getServer((Player) sender)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
                 }
             } else {
                 plugin.vanished_players.remove(((Player) sender).getUniqueId());
@@ -65,17 +64,19 @@ public class VanishCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.VanishOffSelf")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeJoin")) {
                     for (Player player : Server.getPlayers(Server.getServer((Player) sender)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
                 }
             }
         } else {
             Player target = Bukkit.getPlayer(args[0]);
+            yoPlayer yoTarget = new yoPlayer(target);
+
             if (target == null) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.InvalidPlayer")));
                 return true;
@@ -85,7 +86,7 @@ public class VanishCommand implements CommandExecutor {
                 plugin.vanished_players.add(target.getUniqueId());
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.TargetMessageOn")));
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.ExecutorMessageOn")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
                 for (Player players : Bukkit.getOnlinePlayers()) {
                     if (!players.hasPermission("yocore.vanish"))
                         players.hidePlayer(target);
@@ -94,34 +95,34 @@ public class VanishCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.VanishOnOther")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                                .replace("%target%", playerManagement.getPlayerColor(target))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                                .replace("%target%", yoTarget.getDisplayName())));
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeLeave")) {
                     for (Player player : Server.getPlayers(Server.getServer(target)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(target))));
+                                .replace("%player%", yoTarget.getDisplayName())));
                 }
             } else {
                 plugin.vanished_players.remove(target.getUniqueId());
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.TargetMessageOff")));
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Vanish.ExecutorMessageOff")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
                 for (Player players : Bukkit.getOnlinePlayers())
                     target.showPlayer(players);
 
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.VanishOffOther")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                                .replace("%target%", playerManagement.getPlayerColor(target))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                                .replace("%target%", yoTarget.getDisplayName())));
                 }
 
                 if (plugin.getConfig().getBoolean("Vanish.FakeJoin")) {
                     for (Player player : Server.getPlayers(Server.getServer(target)))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(target))));
+                                .replace("%player%", yoTarget.getDisplayName())));
                 }
             }
         }

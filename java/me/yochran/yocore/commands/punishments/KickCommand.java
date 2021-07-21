@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.punishments;
 
 import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
@@ -16,7 +16,6 @@ public class KickCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public KickCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -35,6 +34,8 @@ public class KickCommand implements CommandExecutor {
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (target == null) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Kick.InvalidPlayer")));
             return true;
@@ -52,7 +53,7 @@ public class KickCommand implements CommandExecutor {
             executorName = "&c&lConsole";
         } else {
             executor = ((Player) sender).getUniqueId().toString();
-            executorName = playerManagement.getPlayerColor((Player) sender);
+            executorName = yoTarget.getDisplayName();
         }
 
         boolean silent = false;
@@ -61,16 +62,16 @@ public class KickCommand implements CommandExecutor {
             silent = true;
         }
 
-        Punishment punishment = new Punishment(PunishmentType.KICK, target, executor, "Permanent", silent, reason);
+        Punishment punishment = new Punishment(PunishmentType.KICK, yoTarget, executor, "Permanent", silent, reason);
         punishment.create();
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Kick.ExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)));
         } else {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Kick.ExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)));
         }
 
@@ -82,12 +83,12 @@ public class KickCommand implements CommandExecutor {
                 if (players.hasPermission("yocore.silent")) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Kick.BroadcastMessage")
                             .replace("%executor%", executorName)
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%target%", yoTarget.getDisplayName())));
                 }
             } else {
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Kick.BroadcastMessage")
                         .replace("%executor%", executorName)
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

@@ -2,8 +2,7 @@ package me.yochran.yocore.commands;
 
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.gui.guis.GrantsGUI;
-import me.yochran.yocore.management.GrantManagement;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -16,8 +15,6 @@ import org.bukkit.entity.Player;
 public class GrantsCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final GrantManagement grantManagement = new GrantManagement();
 
     public GrantsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -41,6 +38,8 @@ public class GrantsCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("GrantHistory.InvalidPlayer")));
             return true;
@@ -48,7 +47,7 @@ public class GrantsCommand implements CommandExecutor {
 
         plugin.selected_grant_history.remove(((Player) sender).getUniqueId());
 
-        GrantsGUI grantsGUI = new GrantsGUI((Player) sender, 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
+        GrantsGUI grantsGUI = new GrantsGUI((Player) sender, 18, yoTarget.getDisplayName() + "&a's grant history.");
         grantsGUI.setup((Player) sender, target, 1);
         GUI.open(grantsGUI.getGui());
 

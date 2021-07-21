@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.economy;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -18,7 +18,6 @@ public class BountyCommand implements CommandExecutor {
 
     private final yoCore plugin;
 
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
 
     public BountyCommand() {
@@ -50,6 +49,8 @@ public class BountyCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!economyManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.InvalidPlayer")));
             return true;
@@ -80,25 +81,25 @@ public class BountyCommand implements CommandExecutor {
             economyManagement.setBounty(server, (Player) sender, target, Double.parseDouble(args[1]));
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.Format")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%amount%", df.format(Double.parseDouble(args[1])))));
 
             for (Player players : Bukkit.getWorld(((Player) sender).getWorld().getName()).getPlayers())
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.Broadcast")
-                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%target%", playerManagement.getPlayerColor(target))
+                        .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                        .replace("%target%", yoTarget.getDisplayName())
                         .replace("%amount%", df.format(Double.parseDouble(args[1])))));
         } else {
             economyManagement.increaseBounty(server, (Player) sender, target, Double.parseDouble(args[1]));
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.FormatIncreased")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%amount%", df.format(economyManagement.getBountyAmount(server, target)))));
 
             for (Player players : Bukkit.getWorld(((Player) sender).getWorld().getName()).getPlayers())
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.BroadcastIncreased")
-                        .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                        .replace("%target%", playerManagement.getPlayerColor(target))
+                        .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                        .replace("%target%", yoTarget.getDisplayName())
                         .replace("%amount%", df.format(economyManagement.getBountyAmount(server, target)))));
         }
 

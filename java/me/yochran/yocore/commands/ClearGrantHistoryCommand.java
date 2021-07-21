@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.management.GrantManagement;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 public class ClearGrantHistoryCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final GrantManagement grantManagement = new GrantManagement();
 
     public ClearGrantHistoryCommand() {
@@ -33,6 +32,8 @@ public class ClearGrantHistoryCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("ClearGrantHistory.InvalidPlayer")));
             return true;
@@ -40,7 +41,7 @@ public class ClearGrantHistoryCommand implements CommandExecutor {
 
         grantManagement.clearHistory(target);
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ClearGrantHistory.ExecutorMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))));
+                .replace("%target%", yoTarget.getDisplayName())));
 
         return true;
     }

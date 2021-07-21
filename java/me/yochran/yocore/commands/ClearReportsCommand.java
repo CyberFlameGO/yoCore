@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 public class ClearReportsCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ClearReportsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -37,6 +36,8 @@ public class ClearReportsCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("ClearReports.InvalidPlayer")));
             return true;
@@ -47,7 +48,7 @@ public class ClearReportsCommand implements CommandExecutor {
         plugin.playerData.saveData();
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ClearReports.Format")
-                .replace("%target%", playerManagement.getPlayerColor(target))));
+                .replace("%target%", yoTarget.getDisplayName())));
 
         return true;
     }

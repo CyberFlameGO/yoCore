@@ -2,6 +2,7 @@ package me.yochran.yocore.commands.economy;
 
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -45,6 +46,8 @@ public class PayCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!economyManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Pay.InvalidPlayer")));
             return true;
@@ -77,12 +80,12 @@ public class PayCommand implements CommandExecutor {
         economyManagement.addMoney(server, target, Double.parseDouble(args[1]));
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Pay.FormatSender")
-                .replace("%target%", playerManagement.getPlayerColor(target))
+                .replace("%target%", yoTarget.getDisplayName())
                 .replace("%amount%", df.format(Double.parseDouble(args[1])))));
 
         if (target.isOnline()) {
             Bukkit.getPlayer(target.getName()).sendMessage(Utils.translate(plugin.getConfig().getString("Pay.FormatTarget")
-                    .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                    .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
                     .replace("%amount%", df.format(Double.parseDouble(args[1])))));
         }
 

@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
@@ -12,14 +11,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 
 import java.util.Map;
 
 public class MessageCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public MessageCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -40,7 +37,7 @@ public class MessageCommand implements CommandExecutor {
         if (plugin.muted_players.containsKey(((Player) sender).getUniqueId())) {
             Punishment punishment = null;
 
-            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(((Player) sender)).entrySet()) {
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer.getYoPlayer((Player) sender)).entrySet()) {
                 if (entry.getValue().getType() == PunishmentType.MUTE && entry.getValue().getStatus().equalsIgnoreCase("Active"))
                     punishment = entry.getValue();
             }
@@ -66,6 +63,8 @@ public class MessageCommand implements CommandExecutor {
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (target == null) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.InvalidPlayer")));
             return true;
@@ -87,10 +86,10 @@ public class MessageCommand implements CommandExecutor {
         }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Message.ExecutorMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))
+                .replace("%target%", yoTarget.getDisplayName())
                 .replace("%message%", message)));
         target.sendMessage(Utils.translate(plugin.getConfig().getString("Message.TargetMessage")
-                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
                 .replace("%message%", message)));
 
         if (!plugin.message_sounds_toggled.contains(target.getUniqueId()))

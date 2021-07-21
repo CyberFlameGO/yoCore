@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -16,7 +17,6 @@ import java.util.Map;
 public class GListCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public GListCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -43,10 +43,12 @@ public class GListCommand implements CommandExecutor {
             }
 
             List<String> players = new ArrayList<>();
-            for (String rank : plugin.ranks) {
+            for (Map.Entry<String, Rank> rank : Rank.getRanks().entrySet()) {
                 for (Player player : Server.getPlayers(server)) {
-                    if (plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank))
-                        players.add(playerManagement.getPlayerColor(player));
+                    yoPlayer yoPlayer = new yoPlayer(player);
+
+                    if (yoPlayer.getRank() == rank.getValue())
+                        players.add(yoPlayer.getDisplayName());
                 }
             }
 
@@ -67,10 +69,12 @@ public class GListCommand implements CommandExecutor {
             for (Map.Entry<String, Server> entry : Server.getServers().entrySet()) {
                 List<String> players = new ArrayList<>();
 
-                for (String rank : plugin.ranks) {
+                for (Map.Entry<String, Rank> rank : Rank.getRanks().entrySet()) {
                     for (Player player : Server.getPlayers(entry.getValue())) {
-                        if (plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank").equalsIgnoreCase(rank))
-                            players.add(playerManagement.getPlayerColor(player));
+                        yoPlayer yoPlayer = new yoPlayer(player);
+
+                        if (yoPlayer.getRank() == rank.getValue())
+                            players.add(yoPlayer.getDisplayName());
                     }
                 }
 

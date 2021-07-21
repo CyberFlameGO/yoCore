@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.economy.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -18,7 +18,6 @@ public class EconomyCommand implements CommandExecutor {
 
     private final yoCore plugin;
 
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
 
     public EconomyCommand() {
@@ -50,6 +49,8 @@ public class EconomyCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!economyManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.InvalidPlayer")));
             return true;
@@ -67,7 +68,7 @@ public class EconomyCommand implements CommandExecutor {
                 economyManagement.resetPlayer(server, target);
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Reset")
-                        .replace("%target%", playerManagement.getPlayerColor(target))
+                        .replace("%target%", yoTarget.getDisplayName())
                         .replace("%amount%", df.format(economyManagement.getMoney(server, target)))));
 
                 if (target.isOnline()) {
@@ -90,11 +91,11 @@ public class EconomyCommand implements CommandExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("set")) {
-                    plugin.economyData.config.set(target.getUniqueId().toString() + "." + server + "." + ".Balance", Double.parseDouble(args[2]));
+                    plugin.economyData.config.set(target.getUniqueId().toString() + "." + server.getName().toUpperCase() + "." + ".Balance", Double.parseDouble(args[2]));
                     plugin.economyData.saveData();
 
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Set")
-                            .replace("%target%", playerManagement.getPlayerColor(target))
+                            .replace("%target%", yoTarget.getDisplayName())
                             .replace("%amount%", df.format(economyManagement.getMoney(server, target)))));
 
                     if (target.isOnline()) {
@@ -116,7 +117,7 @@ public class EconomyCommand implements CommandExecutor {
                     economyManagement.addMoney(server, target, Double.parseDouble(args[2]));
 
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Give")
-                            .replace("%target%", playerManagement.getPlayerColor(target))
+                            .replace("%target%", yoTarget.getDisplayName())
                             .replace("%amount%", df.format(Double.parseDouble(args[2])))));
 
                     if (target.isOnline()) {
@@ -133,7 +134,7 @@ public class EconomyCommand implements CommandExecutor {
                     economyManagement.removeMoney(server, target, Double.parseDouble(args[2]));
 
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Economy.Command.Format.Take")
-                            .replace("%target%", playerManagement.getPlayerColor(target))
+                            .replace("%target%", yoTarget.getDisplayName())
                             .replace("%amount%", df.format(Double.parseDouble(args[2])))));
 
                     if (target.isOnline()) {

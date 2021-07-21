@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,7 +14,6 @@ import org.bukkit.command.CommandSender;
 public class SeenCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public SeenCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -32,6 +32,8 @@ public class SeenCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Seen.InvalidPlayer")));
             return true;
@@ -39,35 +41,24 @@ public class SeenCommand implements CommandExecutor {
 
         String ip;
         if (sender.hasPermission("yocore.seen.ip"))
-            ip = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
+            ip = yoTarget.getIP();
         else ip = "Hidden";
-
-        String rank = plugin.playerData.config.getString(target.getUniqueId().toString() + ".Rank");
-        String rankDisplay = plugin.getConfig().getString("Ranks." + rank + ".Display");
-
-        long ticks;
-        long hours;
-        String playTime;
-        try {
-            ticks = target.getStatistic(Statistic.PLAY_ONE_MINUTE);
-            hours = (ticks / 20) / 3600;
-            playTime = hours + " hours.";
-        } catch (NoSuchFieldError ignored) { playTime = "Unavailable."; }
-
+        Rank rank = yoTarget.getRank();
+        String playTime = yoTarget.getPlayTime();
         String allIPsMessage = "";
         if (sender.hasPermission("yocore.seen.ip")) {
-            for (String entry : plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs")) {
+            for (String entry : yoTarget.getAllIPs()) {
                 if (allIPsMessage.equalsIgnoreCase("")) allIPsMessage = "&7- " + entry;
                 else allIPsMessage = allIPsMessage + "\n&7- " + entry;
             }
         } else allIPsMessage = "Hidden";
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Seen.Format")
-                .replace("%target%", playerManagement.getPlayerColor(target))
+                .replace("%target%", yoTarget.getDisplayName())
                 .replace("%name%", target.getName())
-                .replace("%rank%", rankDisplay)
+                .replace("%rank%", rank.getDisplay())
                 .replace("%ip%", ip)
-                .replace("%firstjoined%", Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".FirstJoined")))
+                .replace("%firstjoined%", Utils.getExpirationDate(yoTarget.getFirstJoined()))
                 .replace("%all_ips%", allIPsMessage)
                 .replace("%playtime%", playTime)));
 

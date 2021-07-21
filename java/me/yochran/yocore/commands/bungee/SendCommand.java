@@ -1,6 +1,7 @@
 package me.yochran.yocore.commands.bungee;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -79,7 +80,7 @@ public class SendCommand implements CommandExecutor {
         }
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Send.ExecutorMessage")
-                .replace("%target%", playerManagement.getPlayerColor(target))
+                .replace("%target%", yoPlayer.getYoPlayer(target).getDisplayName())
                 .replace("%server%", server.getName())));
 
         target.sendMessage(Utils.translate(plugin.getConfig().getString("Send.TargetMessage")

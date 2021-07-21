@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -16,7 +16,6 @@ import java.util.List;
 public class FreezeCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public FreezeCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -40,6 +39,8 @@ public class FreezeCommand implements CommandExecutor {
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (target == null) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.InvalidPlayer")));
             return true;
@@ -56,28 +57,28 @@ public class FreezeCommand implements CommandExecutor {
             plugin.frozen_coordinates.put(target.getUniqueId(), coordinates);
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.ExecutorMessageOn")
-                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                    .replace("%target%", yoTarget.getDisplayName())));
             target.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.TargetMessageOn")));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
                 if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.FreezeOn")
-                            .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                            .replace("%target%", yoTarget.getDisplayName())));
             }
         } else {
             plugin.frozen_players.remove(target.getUniqueId());
             plugin.frozen_coordinates.remove(target.getUniqueId());
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.ExecutorMessageOff")
-                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                    .replace("%target%", yoTarget.getDisplayName())));
             target.sendMessage(Utils.translate(plugin.getConfig().getString("Freeze.TargetMessageOff")));
 
             for (Player staff : Bukkit.getOnlinePlayers()) {
                 if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                     staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.FreezeOff")
-                            .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                            .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

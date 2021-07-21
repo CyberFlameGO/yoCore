@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.economy;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -18,7 +18,6 @@ public class BalanceCommand implements CommandExecutor {
 
     private final yoCore plugin;
 
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
 
     public BalanceCommand() {
@@ -48,17 +47,18 @@ public class BalanceCommand implements CommandExecutor {
 
         if (args.length == 0) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Balance.Format")
-                    .replace("%player%", playerManagement.getPlayerColor((Player) sender))
+                    .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
                     .replace("%balance%", df.format(economyManagement.getMoney(server, (Player) sender)))));
         } else {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+
             if (!economyManagement.isInitialized(target)) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Balance.InvalidPlayer")));
                 return true;
             }
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Balance.Format")
-                    .replace("%player%", playerManagement.getPlayerColor(target))
+                    .replace("%player%", yoPlayer.getYoPlayer(target).getDisplayName())
                     .replace("%balance%", df.format(economyManagement.getMoney(server, target)))));
         }
 

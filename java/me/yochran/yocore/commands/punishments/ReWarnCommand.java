@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands.punishments;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
@@ -17,7 +16,6 @@ import java.util.Map;
 public class ReWarnCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ReWarnCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -36,6 +34,8 @@ public class ReWarnCommand implements CommandExecutor {
         }
 
         Player target = Bukkit.getPlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (target == null) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.InvalidPlayer")));
             return true;
@@ -60,7 +60,7 @@ public class ReWarnCommand implements CommandExecutor {
             executorName = "&c&lConsole";
         } else {
             executor = ((Player) sender).getUniqueId().toString();
-            executorName = playerManagement.getPlayerColor((Player) sender);
+            executorName = yoPlayer.getYoPlayer((Player) sender).getDisplayName();
         }
 
         boolean silent = false;
@@ -69,18 +69,18 @@ public class ReWarnCommand implements CommandExecutor {
             silent = true;
         }
 
-        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet()) {
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoTarget).entrySet()) {
             if (entry.getValue().getType() == PunishmentType.WARN && entry.getValue().getStatus().equalsIgnoreCase("Active"))
-                Punishment.redo(entry.getValue(), target, executor, "Permanent", silent, reason);
+                Punishment.redo(entry.getValue(), yoTarget, executor, "Permanent", silent, reason);
         }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.ReWarnExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)));
         } else {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.ReWarnExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)));
         }
 
@@ -92,12 +92,12 @@ public class ReWarnCommand implements CommandExecutor {
                 if (players.hasPermission("yocore.silent")) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Warn.BroadcastMessage")
                             .replace("%executor%", executorName)
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%target%", yoTarget.getDisplayName())));
                 }
             } else {
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Warn.BroadcastMessage")
                         .replace("%executor%", executorName)
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

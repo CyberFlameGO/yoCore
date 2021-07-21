@@ -1,9 +1,8 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.grants.Grant;
-import me.yochran.yocore.management.GrantManagement;
 import me.yochran.yocore.management.PermissionManagement;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -12,13 +11,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UngrantCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public UngrantCommand() {
@@ -38,6 +33,8 @@ public class UngrantCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString()) || !plugin.grantData.config.contains(target.getUniqueId().toString()) || !plugin.grantData.config.contains(target.getUniqueId().toString() + ".Grants")) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.InvalidPlayer")));
             return true;
@@ -49,19 +46,20 @@ public class UngrantCommand implements CommandExecutor {
             return true;
         }
 
-        if (!Grant.getGrants(target).containsKey(Integer.parseInt(args[1]))) {
+        if (!Grant.getGrants(yoTarget).containsKey(Integer.parseInt(args[1]))) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.InvalidGrant")));
             return true;
         }
 
-        Grant grant = Grant.getGrants(target).get(Integer.parseInt(args[1]));
+        Grant grant = Grant.getGrants(yoTarget).get(Integer.parseInt(args[1]));
+
+        sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.ExecutorMessage")
+                .replace("%grant%", String.valueOf(grant.getID()))
+                .replace("%target%", yoTarget.getDisplayName())));
+
         grant.revoke();
 
         if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
-
-        sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ungrant.ExecutorMessage")
-                .replace("%grant%", args[1])
-                .replace("%target%", playerManagement.getPlayerColor(target))));
 
         return true;
     }

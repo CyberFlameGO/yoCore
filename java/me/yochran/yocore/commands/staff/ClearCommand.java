@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 public class ClearCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ClearCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -47,6 +46,8 @@ public class ClearCommand implements CommandExecutor {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Clear.TargetMessage")));
         } else {
             Player target = Bukkit.getPlayer(args[0]);
+            yoPlayer yoTarget = new yoPlayer(target);
+
             if (target == null) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Clear.InvalidPlayer")));
                 return true;
@@ -60,7 +61,7 @@ public class ClearCommand implements CommandExecutor {
             target.updateInventory();
 
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Clear.ExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                    .replace("%target%", yoTarget.getDisplayName())));
             target.sendMessage(Utils.translate(plugin.getConfig().getString("Clear.TargetMessage")));
         }
 

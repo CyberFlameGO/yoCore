@@ -16,11 +16,14 @@ import me.yochran.yocore.grants.Grant;
 import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PermissionManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import me.yochran.yocore.server.Server;
+import me.yochran.yocore.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -118,7 +121,6 @@ public final class yoCore extends JavaPlugin {
         playerData.saveData();
     }
 
-    public List<String> ranks = new ArrayList<>();
     public List<String> tags = new ArrayList<>();
     public List<UUID> vanished_players = new ArrayList<>();
     public List<UUID> vanish_logged = new ArrayList<>();
@@ -152,7 +154,7 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, GrantType> grant_type = new HashMap<>();
     public Map<UUID, String> grant_duration = new HashMap<>();
     public Map<UUID, String> grant_reason = new HashMap<>();
-    public Map<UUID, String> rank_disguise = new HashMap<>();
+    public Map<UUID, Rank> rank_disguise = new HashMap<>();
     public Map<UUID, String> nickname = new HashMap<>();
     public Map<UUID, String> tag = new HashMap<>();
     public Map<UUID, PermissionAttachment> player_permissions = new HashMap<>();
@@ -278,13 +280,20 @@ public final class yoCore extends JavaPlugin {
 
         for (String rank : getConfig().getConfigurationSection("Ranks").getKeys(false)) {
             Permission permission = new Permission("yocore.grant." + getConfig().getString("Ranks." + rank + ".ID").toLowerCase());
+            permission.setDescription("Permission");
 
-            if (!permissionManagement.getAllServerPerms().contains(permission)) {
-                permission.setDescription("Permission");
+            if (!permissionManagement.getAllServerPerms().contains(permission))
                 getServer().getPluginManager().addPermission(permission);
-            }
 
-            ranks.add(getConfig().getString("Ranks." + rank + ".ID"));
+            String ID = getConfig().getString("Ranks." + rank + ".ID");
+            String prefix = getConfig().getString("Ranks." + rank + ".Prefix");
+            String color = getConfig().getString("Ranks." + rank + ".Color");
+            String display = getConfig().getString("Ranks." + rank + ".Display");
+            String tabIndex = getConfig().getString("Ranks." + rank + ".TabIndex");
+            ItemStack grantItem = Utils.getMaterialFromConfig(getConfig().getString("Ranks." + rank + ".GrantItem"));
+            boolean isDefault = getConfig().getBoolean("Ranks." + rank + ".Default");
+
+            Rank.getRanks().put(ID, new Rank(ID, prefix, color, display, tabIndex, grantItem, isDefault));
         }
     }
 
@@ -311,7 +320,7 @@ public final class yoCore extends JavaPlugin {
             for (PunishmentType type : PunishmentType.values()) {
                 if (punishmentData.config.contains(player + "." + PunishmentType.convertToString(type))) {
                     for (String entry : punishmentData.config.getConfigurationSection(player + "." + PunishmentType.convertToString(type)).getKeys(false)) {
-                        OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(player));
+                        yoPlayer target = new yoPlayer(UUID.fromString(player));
                         String executor = punishmentData.config.getString(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Executor");
                         Object duration = punishmentData.config.get(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Duration");
                         boolean silent = punishmentData.config.getBoolean(player + "." + PunishmentType.convertToString(type) + "." + entry + ".Silent");
@@ -351,12 +360,12 @@ public final class yoCore extends JavaPlugin {
                 for (String grants : grantData.config.getConfigurationSection(player + ".Grants").getKeys(false)) {
                     GrantType type = GrantType.valueOf(grantData.config.getString(player + ".Grants." + grants + ".Type"));
                     String granted = grantData.config.getString(player + ".Grants." + grants + ".Grant");
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(player));
+                    yoPlayer target = new yoPlayer(UUID.fromString(player));
                     OfflinePlayer executor = Bukkit.getOfflinePlayer(UUID.fromString(grantData.config.getString(player + ".Grants." + grants + ".Executor")));
                     Object duration = grantData.config.get(player + ".Grants." + grants + ".Duration");
                     String reason = grantData.config.getString(player + ".Grants." + grants + ".Reason");
 
-                    Grant grant = new Grant(type, granted, target, executor, duration, reason);
+                    Grant grant = new Grant(type, granted, target, executor, duration, reason, grantData.config.getString(player + ".Grants." + grants + ".PreviousRank"));
                     grant.setStatus(grantData.config.getString(player + ".Grants." + grants + ".Status"));
                     grant.setDate(grantData.config.getLong(player + ".Grants." + grants + ".Date"));
 

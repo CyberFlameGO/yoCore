@@ -1,6 +1,6 @@
 package me.yochran.yocore.chats;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -14,7 +14,6 @@ public enum ChatType {
     MANAGEMENT;
 
     private static final yoCore plugin = yoCore.getInstance();
-    private static final PlayerManagement playerManagement = new PlayerManagement();
 
     public static ChatType getChatFromPrefix(String prefix) {
         switch (prefix) {
@@ -33,7 +32,7 @@ public enum ChatType {
 
     public static void sendMessage(Player player, Player target, ChatType type, String message) {
         target.sendMessage(Utils.translate(plugin.getConfig().getString(Utils.capitalizeFirst(type.toString().toLowerCase()) + "Chat.Format")
-                .replace("%player%", playerManagement.getPlayerColor(player))
+                .replace("%player%", yoPlayer.getYoPlayer(player).getDisplayName())
                 .replace("%message%", message)
                 .replace("%server%", Server.getServer(player).getName())
                 .replace("%world%", player.getWorld().getName())));

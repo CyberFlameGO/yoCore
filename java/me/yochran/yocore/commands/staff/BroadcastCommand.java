@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 public class BroadcastCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public BroadcastCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -21,7 +20,7 @@ public class BroadcastCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String display;
-        if (sender instanceof Player) display = playerManagement.getPlayerColor((Player) sender);
+        if (sender instanceof Player) display = yoPlayer.getYoPlayer((Player) sender).getDisplayName();
         else display = "&c&lConsole";
 
         if (!sender.hasPermission("yocore.broadcast")) {

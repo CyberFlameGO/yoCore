@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 public class GamemodeCommands implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public GamemodeCommands() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -55,15 +54,17 @@ public class GamemodeCommands implements CommandExecutor {
                 }
 
                 Player target;
-                if (args.length == 1) {
-                    target = (Player) sender;
-                } else {
+                if (args.length == 1) target = (Player) sender;
+                else {
                     target = Bukkit.getPlayer(args[1]);
+
                     if (target == null) {
                         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.InvalidPlayer")));
                         return true;
                     }
                 }
+
+                yoPlayer yoTarget = new yoPlayer(target);
 
                 switch (args[0].toLowerCase()) {
                     case "creative":
@@ -76,7 +77,7 @@ public class GamemodeCommands implements CommandExecutor {
                         if (target != sender) {
                             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                                     .replace("%gamemode%", "creative")
-                                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                                    .replace("%target%", yoTarget.getDisplayName())));
                         }
 
                         break;
@@ -90,7 +91,7 @@ public class GamemodeCommands implements CommandExecutor {
                         if (target != sender) {
                             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                                     .replace("%gamemode%", "survival")
-                                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                                    .replace("%target%", yoTarget.getDisplayName())));
                         }
 
                         break;
@@ -104,7 +105,7 @@ public class GamemodeCommands implements CommandExecutor {
                         if (target != sender) {
                             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                                     .replace("%gamemode%", "adventure")
-                                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                                    .replace("%target%", yoTarget.getDisplayName())));
                         }
 
                         break;
@@ -118,7 +119,7 @@ public class GamemodeCommands implements CommandExecutor {
                         if (target != sender) {
                             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                                     .replace("%gamemode%", "spectator")
-                                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                                    .replace("%target%", yoTarget.getDisplayName())));
                         }
 
                         break;
@@ -129,7 +130,7 @@ public class GamemodeCommands implements CommandExecutor {
             case "gmc":
                 if (args.length > 1) {
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.IncorrectUsage")));
-                    return true;
+                     return true;
                 }
 
                 if (args.length == 0) {
@@ -147,7 +148,7 @@ public class GamemodeCommands implements CommandExecutor {
                             .replace("%gamemode%", "creative")));
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                             .replace("%gamemode%", "creative")
-                            .replace("%target%", playerManagement.getPlayerColor(Bukkit.getPlayer(args[0])))));
+                            .replace("%target%", yoPlayer.getYoPlayer(Bukkit.getPlayer(args[0])).getDisplayName())));
                 }
 
                 break;
@@ -172,7 +173,7 @@ public class GamemodeCommands implements CommandExecutor {
                             .replace("%gamemode%", "survival")));
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                             .replace("%gamemode%", "survival")
-                            .replace("%target%", playerManagement.getPlayerColor(Bukkit.getPlayer(args[0])))));
+                            .replace("%target%", yoPlayer.getYoPlayer(Bukkit.getPlayer(args[0])).getDisplayName())));
                 }
 
                 break;
@@ -197,7 +198,7 @@ public class GamemodeCommands implements CommandExecutor {
                             .replace("%gamemode%", "spectator")));
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                             .replace("%gamemode%", "spectator")
-                            .replace("%target%", playerManagement.getPlayerColor(Bukkit.getPlayer(args[0])))));
+                            .replace("%target%", yoPlayer.getYoPlayer(Bukkit.getPlayer(args[0])).getDisplayName())));
                 }
 
                 break;
@@ -222,7 +223,7 @@ public class GamemodeCommands implements CommandExecutor {
                             .replace("%gamemode%", "adventure")));
                     sender.sendMessage(Utils.translate(plugin.getConfig().getString("Gamemode.ExecutorMessage")
                             .replace("%gamemode%", "adventure")
-                            .replace("%target%", playerManagement.getPlayerColor(Bukkit.getPlayer(args[0])))));
+                            .replace("%target%", yoPlayer.getYoPlayer(Bukkit.getPlayer(args[0])).getDisplayName())));
                 }
 
                 break;

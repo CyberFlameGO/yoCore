@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.stats.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.StatsManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -16,7 +16,6 @@ public class ResetStatsCommand implements CommandExecutor {
 
     private final yoCore plugin;
     private final StatsManagement statsManagement = new StatsManagement();
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ResetStatsCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -47,6 +46,8 @@ public class ResetStatsCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!statsManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.InvalidPlayer")));
             return true;
@@ -55,7 +56,7 @@ public class ResetStatsCommand implements CommandExecutor {
         statsManagement.resetPlayer(server, target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("ResetStats.Format")
-                .replace("%target%", playerManagement.getPlayerColor(target))));
+                .replace("%target%", yoTarget.getDisplayName())));
 
         return true;
     }

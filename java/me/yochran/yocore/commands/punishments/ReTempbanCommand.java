@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands.punishments;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
@@ -18,8 +17,6 @@ import java.util.Map;
 public class ReTempbanCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public ReTempbanCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -38,6 +35,8 @@ public class ReTempbanCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ban.InvalidPlayer")));
             return true;
@@ -63,7 +62,7 @@ public class ReTempbanCommand implements CommandExecutor {
             executorName = "&c&lConsole";
         } else {
             executor = ((Player) sender).getUniqueId().toString();
-            executorName = playerManagement.getPlayerColor((Player) sender);
+            executorName = yoPlayer.getYoPlayer((Player) sender).getDisplayName();
         }
 
         boolean silent = false;
@@ -72,21 +71,21 @@ public class ReTempbanCommand implements CommandExecutor {
             silent = true;
         }
 
-        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet()) {
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoTarget).entrySet()) {
             if (entry.getValue().getType() == PunishmentType.BAN && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
-                Punishment.redo(entry.getValue(), target, executor, durationMS, silent, reason);
+                Punishment.redo(entry.getValue(), yoTarget, executor, durationMS, silent, reason);
                 entry.getValue().reexecute();
             }
         }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Ban.Temporary.ReBanExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)
                     .replace("%duration%", durationStr)));
         } else {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Ban.Temporary.ReBanExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)
                     .replace("%duration%", durationStr)));
         }
@@ -102,12 +101,12 @@ public class ReTempbanCommand implements CommandExecutor {
                 if (players.hasPermission("yocore.silent")) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Ban.Temporary.BroadcastMessage")
                             .replace("%executor%", executorName)
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%target%", yoTarget.getDisplayName())));
                 }
             } else {
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Ban.Temporary.BroadcastMessage")
                         .replace("%executor%", executorName)
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

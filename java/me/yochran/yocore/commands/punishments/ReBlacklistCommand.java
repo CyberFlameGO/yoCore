@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands.punishments;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
@@ -19,8 +18,6 @@ import java.util.UUID;
 public class ReBlacklistCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public ReBlacklistCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -39,12 +36,12 @@ public class ReBlacklistCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.InvalidPlayer")));
             return true;
         }
-
-        String targetIP = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
 
         if (!plugin.blacklisted_players.containsKey(target.getUniqueId())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.TargetNotBlacklisted")));
@@ -63,7 +60,7 @@ public class ReBlacklistCommand implements CommandExecutor {
             executorName = "&c&lConsole";
         } else {
             executor = ((Player) sender).getUniqueId().toString();
-            executorName = playerManagement.getPlayerColor((Player) sender);
+            executorName = yoPlayer.getYoPlayer((Player) sender).getDisplayName();
         }
 
         boolean silent = false;
@@ -72,20 +69,20 @@ public class ReBlacklistCommand implements CommandExecutor {
             silent = true;
         }
 
-        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet()) {
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoTarget).entrySet()) {
             if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
-                Punishment.redo(entry.getValue(), target, executor, "Permanent", silent, reason);
+                Punishment.redo(entry.getValue(), yoTarget, executor, "Permanent", silent, reason);
                 entry.getValue().reexecute();
             }
         }
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.ReBlacklistExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)));
         } else {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.ReBlacklistExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", reason)));
         }
 
@@ -95,9 +92,11 @@ public class ReBlacklistCommand implements CommandExecutor {
         }
 
         for (Player players : Bukkit.getOnlinePlayers()) {
-            if (players.getAddress().getAddress().getHostAddress().equals(targetIP)
-                    || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players.getUniqueId().toString() + ".IP"))
-                    || plugin.playerData.config.getStringList(players.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
+            yoPlayer yoPlayer = new yoPlayer(players);
+
+            if (players.getAddress().getAddress().getHostAddress().equals(yoTarget.getIP())
+                    || (yoTarget.getAllIPs().contains(yoPlayer.getIP())
+                    || yoPlayer.getAllIPs().contains(yoTarget.getIP()))) {
                 players.kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetMessage")
                         .replace("%reason%", reason)));
             }
@@ -106,9 +105,11 @@ public class ReBlacklistCommand implements CommandExecutor {
         for (String players : plugin.punishmentData.config.getConfigurationSection("BlacklistedPlayers").getKeys(false)) {
             if (!UUID.fromString(players).equals(target.getUniqueId())
                     && plugin.punishmentData.config.getString("BlacklistedPlayers." + players + ".Reason").contains("(Linked to " + target.getName() + ")")) {
-                for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(Bukkit.getOfflinePlayer(UUID.fromString(players))).entrySet()) {
+                yoPlayer yoPlayer = new yoPlayer(UUID.fromString(players));
+
+                for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer).entrySet()) {
                     if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
-                        Punishment.redo(entry.getValue(), Bukkit.getOfflinePlayer(UUID.fromString(players)), executor, "Permanent", silent, reason + " (Linked to " + target.getName() + ")");
+                        Punishment.redo(entry.getValue(), yoPlayer, executor, "Permanent", silent, reason + " (Linked to " + target.getName() + ")");
                         entry.getValue().reexecute();
                     }
                 }
@@ -120,12 +121,12 @@ public class ReBlacklistCommand implements CommandExecutor {
                 if (players.hasPermission("yocore.silent")) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Blacklist.BroadcastMessage")
                             .replace("%executor%", executorName)
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%target%", yoTarget.getDisplayName())));
                 }
             } else {
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Blacklist.BroadcastMessage")
                         .replace("%executor%", executorName)
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands.punishments;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.Utils;
@@ -19,8 +18,6 @@ import java.util.UUID;
 public class UnblacklistCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     public UnblacklistCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -39,12 +36,12 @@ public class UnblacklistCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!plugin.playerData.config.contains(target.getUniqueId().toString())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unblacklist.InvalidPlayer")));
             return true;
         }
-
-        String targetIP = plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP");
 
         if (!plugin.blacklisted_players.containsKey(target.getUniqueId())) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unblacklist.TargetIsNotBlacklisted")));
@@ -55,7 +52,7 @@ public class UnblacklistCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             executorName = "&c&lConsole";
         } else {
-            executorName = playerManagement.getPlayerColor((Player) sender);
+            executorName = yoPlayer.getYoPlayer((Player) sender).getDisplayName();
         }
 
         boolean silent = false;
@@ -65,14 +62,14 @@ public class UnblacklistCommand implements CommandExecutor {
 
         for (String players : plugin.playerData.config.getKeys(false)) {
             if (plugin.blacklisted_players.containsKey(UUID.fromString(players))) {
-                if (plugin.playerData.config.getString(players + ".IP").equalsIgnoreCase(targetIP)
-                        || (plugin.playerData.config.getStringList(target.getUniqueId().toString() + ".TotalIPs").contains(plugin.playerData.config.getString(players + ".IP"))
-                        || plugin.playerData.config.getStringList(players + ".TotalIPs").contains(plugin.playerData.config.getString(target.getUniqueId().toString() + ".IP")))) {
-                    for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments().entrySet()) {
-                        if (entry.getValue().getTarget().getUniqueId().equals(UUID.fromString(players))
-                                && entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active")) {
+                yoPlayer yoPlayer = new yoPlayer(UUID.fromString(players));
+
+                if (yoPlayer.getIP().equalsIgnoreCase(yoTarget.getIP())
+                        || (yoTarget.getAllIPs().contains(yoPlayer.getIP())
+                        || yoPlayer.getAllIPs().contains(yoTarget.getIP()))) {
+                    for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer).entrySet()) {
+                        if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active"))
                             entry.getValue().revoke();
-                        }
                     }
                 }
             }
@@ -80,10 +77,10 @@ public class UnblacklistCommand implements CommandExecutor {
 
         if (silent) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Unblacklist.ExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))));
+                    .replace("%target%", yoTarget.getDisplayName())));
         } else {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unblacklist.ExecutorMessage")
-                    .replace("%target%", playerManagement.getPlayerColor(target))
+                    .replace("%target%", yoTarget.getDisplayName())
                     .replace("%reason%", "N/A")));
         }
 
@@ -92,12 +89,12 @@ public class UnblacklistCommand implements CommandExecutor {
                 if (players.hasPermission("yocore.silent")) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("SilentPrefix") + plugin.getConfig().getString("Unblacklist.BroadcastMessage")
                             .replace("%executor%", executorName)
-                            .replace("%target%", playerManagement.getPlayerColor(target))));
+                            .replace("%target%", yoTarget.getDisplayName())));
                 }
             } else {
                 players.sendMessage(Utils.translate(plugin.getConfig().getString("Unblacklist.BroadcastMessage")
                         .replace("%executor%", executorName)
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

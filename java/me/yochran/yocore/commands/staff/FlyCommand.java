@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 public class FlyCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public FlyCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -54,6 +53,8 @@ public class FlyCommand implements CommandExecutor {
             }
 
             Player target = Bukkit.getPlayer(args[0]);
+            yoPlayer yoTarget = new yoPlayer(target);
+
             if (target == null) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Fly.InvalidPlayer")));
                 return true;
@@ -65,14 +66,14 @@ public class FlyCommand implements CommandExecutor {
 
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Fly.TargetMessageOn")));
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Fly.ExecutorMessageOn")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             } else {
                 target.setAllowFlight(false);
                 target.setFlying(false);
 
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Fly.TargetMessageOff")));
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Fly.ExecutorMessageOff")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
             }
         }
 

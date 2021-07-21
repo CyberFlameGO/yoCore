@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ClearChatCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ClearChatCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -27,7 +26,7 @@ public class ClearChatCommand implements CommandExecutor {
         }
 
         String executorName;
-        if (sender instanceof Player) executorName = playerManagement.getPlayerColor((Player) sender);
+        if (sender instanceof Player) executorName = yoPlayer.getYoPlayer((Player) sender).getDisplayName();
         else executorName = "&c&lConsole";
 
         for (Player players : Bukkit.getOnlinePlayers()) {

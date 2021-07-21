@@ -1,6 +1,6 @@
 package me.yochran.yocore.commands.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -10,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -19,7 +17,6 @@ import java.util.ArrayList;
 public class ModmodeCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ModmodeCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -53,7 +50,7 @@ public class ModmodeCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOnSelf")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
                 }
             } else {
                 plugin.modmode_players.remove(((Player) sender).getUniqueId());
@@ -76,11 +73,13 @@ public class ModmodeCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOffSelf")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
                 }
             }
         } else {
             Player target = Bukkit.getPlayer(args[0]);
+            yoPlayer yoTarget = new yoPlayer(target);
+
             if (target == null) {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Modmode.InvalidPlayer")));
                 return true;
@@ -90,7 +89,7 @@ public class ModmodeCommand implements CommandExecutor {
                 plugin.modmode_players.add(target.getUniqueId());
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Modmode.ExecutorMessageOn")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Modmode.TargetMessageOn")));
 
                 enterModmode(target);
@@ -98,14 +97,14 @@ public class ModmodeCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOnOther")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                                .replace("%target%", playerManagement.getPlayerColor(target))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                                .replace("%target%", yoTarget.getDisplayName())));
                 }
             } else {
                 plugin.modmode_players.remove(target.getUniqueId());
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Modmode.ExecutorMessageOff")
-                        .replace("%target%", playerManagement.getPlayerColor(target))));
+                        .replace("%target%", yoTarget.getDisplayName())));
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Modmode.TargetMessageOff")));
 
                 target.setAllowFlight(false);
@@ -124,8 +123,8 @@ public class ModmodeCommand implements CommandExecutor {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.staffalerts") && plugin.staff_alerts.contains(staff.getUniqueId()))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("StaffAlerts.ModmodeOffOther")
-                                .replace("%player%", playerManagement.getPlayerColor((Player) sender))
-                                .replace("%target%", playerManagement.getPlayerColor(target))));
+                                .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())
+                                .replace("%target%", yoTarget.getDisplayName())));
                 }
             }
         }

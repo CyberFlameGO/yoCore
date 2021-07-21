@@ -1,7 +1,7 @@
 package me.yochran.yocore.commands.economy.staff;
 
-import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -18,7 +18,6 @@ public class UnbountyCommand implements CommandExecutor {
 
     private final yoCore plugin;
 
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
 
     public UnbountyCommand() {
@@ -55,6 +54,8 @@ public class UnbountyCommand implements CommandExecutor {
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        yoPlayer yoTarget = new yoPlayer(target);
+
         if (!economyManagement.isInitialized(target)) {
             sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unbounty.InvalidPlayer")));
             return true;
@@ -71,7 +72,7 @@ public class UnbountyCommand implements CommandExecutor {
         economyManagement.removeBounty(server, target);
 
         sender.sendMessage(Utils.translate(plugin.getConfig().getString("Unbounty.Format")
-                .replace("%target%", playerManagement.getPlayerColor(target))));
+                .replace("%target%", yoTarget.getDisplayName())));
 
         return true;
     }
