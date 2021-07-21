@@ -13,6 +13,7 @@ Ranks:
     Display: "&4Owner"
     TabIndex: "a"
     GrantItem: "REDSTONE_BLOCK"
+    Default: false
   DEVELOPER:
     ID: "DEVELOPER"
     Prefix: "&7[&5&oDeveloper&7] &5&o"
@@ -20,6 +21,7 @@ Ranks:
     Display: "&5&oDeveloper"
     TabIndex: "b"
     GrantItem: "PURPLE_WOOL"
+    Default: false
   MANAGER:
     ID: "MANAGER"
     Prefix: "&7[&c&oManager&7] &c&o"
@@ -27,6 +29,7 @@ Ranks:
     Display: "&c&oManager"
     TabIndex: "c"
     GrantItem: "RED_WOOL"
+    Default: false
   ADMIN:
     ID: "ADMIN"
     Prefix: "&7[&cAdmin&7] &c"
@@ -34,6 +37,7 @@ Ranks:
     Display: "&cAdmin"
     TabIndex: "d"
     GrantItem: "RED_WOOL"
+    Default: false
   SENIOR-MOD:
     ID: "SENIOR-MOD"
     Prefix: "&7[&6&oSenior-Mod&7] &6&o"
@@ -41,6 +45,7 @@ Ranks:
     Display: "&6&oSenior-Mod"
     TabIndex: "e"
     GrantItem: "ORANGE_WOOL"
+    Default: false
   MOD:
     ID: "MOD"
     Prefix: "&7[&6Mod&7] &6"
@@ -48,6 +53,7 @@ Ranks:
     Display: "&6Mod"
     TabIndex: "f"
     GrantItem: "ORANGE_WOOL"
+    Default: false
   TRIAL-MOD:
     ID: "TRIAL-MOD"
     Prefix: "&7[&eTrial-Mod&7] &e"
@@ -55,6 +61,7 @@ Ranks:
     Display: "&eTrial-Mod"
     TabIndex: "g"
     GrantItem: "YELLOW_WOOL"
+    Default: false
   BUILDER:
     ID: "BUILDER"
     Prefix: "&7[&2Builder&7] &2"
@@ -62,6 +69,7 @@ Ranks:
     Display: "&2Builder"
     TabIndex: "h"
     GrantItem: "GREEN_WOOL"
+    Default: false
   DEFAULT:
     ID: "DEFAULT"
     Prefix: "&7"
@@ -69,8 +77,9 @@ Ranks:
     Display: "&7Default"
     TabIndex: "i"
     GrantItem: "GRAY_WOOL"
+    Default: true
 
-ChatFormat: "%player_tag%%player_prefix%&7: &f%message%"
+ChatFormat: "%player_tag%%player_prefix%%player%&7: &f%message%"
 
 # Tag names and IDs MUST be in all caps!
 # Tag IDs MUST match tag names!
