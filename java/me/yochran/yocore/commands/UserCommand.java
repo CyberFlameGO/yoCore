@@ -59,7 +59,7 @@ public class UserCommand implements CommandExecutor {
                         .replace("%target%", yoTarget.getDisplayName())
                         .replace("%permission%", args[2])));
 
-                permissionManagement.addPlayerPermission(target, args[2]);
+                yoTarget.permissions().add(args[2].toLowerCase());
 
                 break;
             case "remove":
@@ -72,7 +72,7 @@ public class UserCommand implements CommandExecutor {
                         .replace("%target%", yoTarget.getDisplayName())
                         .replace("%permission%", args[2])));
 
-                permissionManagement.removePlayerPermission(target, args[2]);
+                yoTarget.permissions().remove(args[2].toLowerCase());
 
                 break;
             case "list":

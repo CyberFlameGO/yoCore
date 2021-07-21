@@ -16,6 +16,7 @@ import me.yochran.yocore.grants.Grant;
 import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.listeners.*;
 import me.yochran.yocore.management.PermissionManagement;
+import me.yochran.yocore.permissions.Permissions;
 import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
@@ -79,10 +80,8 @@ public final class yoCore extends JavaPlugin {
 
                 permissionManagement.initialize();
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    if (player_permissions.containsKey(players.getUniqueId()))
-                        permissionManagement.setupPlayer(players);
-
-                    permissionManagement.refreshPlayer(players);
+                    if (player_permissions.containsKey(players.getUniqueId())) Permissions.setup(yoPlayer.getYoPlayer(players));
+                    else Permissions.refresh(yoPlayer.getYoPlayer(players));
                 }
 
                 registerServers();
@@ -273,17 +272,17 @@ public final class yoCore extends JavaPlugin {
     }
 
     private void registerRanks() {
-        for (Permission grant_permission : permissionManagement.getAllServerPerms()) {
-            if (grant_permission.getName().contains("yocore.grant."))
-                getServer().getPluginManager().removePermission(grant_permission);
+        for (Permission permission : Permissions.getAllServerPermissions()) {
+            if (permission.getName().contains("yocore.grant."))
+                getServer().getPluginManager().removePermission(permission);
         }
 
         for (String rank : getConfig().getConfigurationSection("Ranks").getKeys(false)) {
             Permission permission = new Permission("yocore.grant." + getConfig().getString("Ranks." + rank + ".ID").toLowerCase());
             permission.setDescription("Permission");
 
-            if (!permissionManagement.getAllServerPerms().contains(permission))
-                getServer().getPluginManager().addPermission(permission);
+            if (!Permissions.getAllServerPermissions().contains(permission))
+                manager.addPermission(permission);
 
             String ID = getConfig().getString("Ranks." + rank + ".ID");
             String prefix = getConfig().getString("Ranks." + rank + ".Prefix");
@@ -298,18 +297,17 @@ public final class yoCore extends JavaPlugin {
     }
 
     private void registerTags() {
-        for (Permission tag_permission : getServer().getPluginManager().getPermissions()) {
-            if (tag_permission.getName().contains("yocore.tags."))
-                getServer().getPluginManager().removePermission(tag_permission);
+        for (Permission permission : getServer().getPluginManager().getPermissions()) {
+            if (permission.getName().contains("yocore.tags."))
+                getServer().getPluginManager().removePermission(permission);
         }
 
         for (String tag : getConfig().getConfigurationSection("Tags").getKeys(false)) {
             Permission permission = new Permission(getConfig().getString("Tags." + tag + ".Permission"));
+            permission.setDescription("Permission");
 
-            if (!permissionManagement.getAllServerPerms().contains(permission)) {
-                permission.setDescription("Permission");
-                getServer().getPluginManager().addPermission(permission);
-            }
+            if (!Permissions.getAllServerPermissions().contains(permission))
+                manager.addPermission(permission);
 
             tags.add(getConfig().getString("Tags." + tag + ".ID"));
         }

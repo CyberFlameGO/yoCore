@@ -260,7 +260,7 @@ public class RankCommand implements CommandExecutor {
                                 .replace("%permission%", args[3])
                                 .replace("%rank%", rpermission.getDisplay())));
 
-                        permissionManagement.addRankPermission(rpermission.getID(), args[3]);
+                        rpermission.permissions().add(args[3].toLowerCase());
 
                         break;
                     case "remove":
@@ -273,7 +273,7 @@ public class RankCommand implements CommandExecutor {
                                 .replace("%permission%", args[3])
                                 .replace("%rank%", rpermission.getDisplay())));
 
-                        permissionManagement.removeRankPermission(rpermission.getID(), args[3]);
+                        rpermission.permissions().remove(args[3].toLowerCase());
 
                         break;
                     case "list":
@@ -283,7 +283,7 @@ public class RankCommand implements CommandExecutor {
                         }
 
                         String permissions = "";
-                        for (String perm : permissionManagement.getRankPermissions(rpermission.getID())) {
+                        for (String perm : rpermission.permissions().getPermissions()) {
                             if (permissions.equalsIgnoreCase("")) permissions = "&7 - " + perm;
                             else permissions = permissions + "\n&7 - " + perm;
                         }

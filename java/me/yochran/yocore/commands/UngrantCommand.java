@@ -1,7 +1,6 @@
 package me.yochran.yocore.commands;
 
 import me.yochran.yocore.grants.Grant;
-import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -14,7 +13,6 @@ import org.bukkit.command.CommandSender;
 public class UngrantCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public UngrantCommand() {
         plugin = yoCore.getPlugin(yoCore.class);
@@ -58,8 +56,6 @@ public class UngrantCommand implements CommandExecutor {
                 .replace("%target%", yoTarget.getDisplayName())));
 
         grant.revoke();
-
-        if (target.isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
 
         return true;
     }
