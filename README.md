@@ -146,4 +146,4 @@ Permissions look like this:
   - `yocore.granthistory` (/cg)
   - `yocore.chats.staff` (/sc, #)
 
-***All Permissions are listed in the [plugin.yml](https://github.com/Yochran/yoCore/blob/main/resources/config.yml).***
+***All Permissions are listed in the [plugin.yml](https://github.com/Yochran/yoCore/blob/main/resources/plugin.yml).***
