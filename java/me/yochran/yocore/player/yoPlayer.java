@@ -1,6 +1,7 @@
 package me.yochran.yocore.player;
 
 import me.yochran.yocore.management.PermissionManagement;
+import me.yochran.yocore.permissions.Permissions;
 import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.yoCore;
 import org.bukkit.Bukkit;
@@ -9,14 +10,11 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class yoPlayer {
 
     private final yoCore plugin = yoCore.getInstance();
-    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     private OfflinePlayer player;
 
@@ -35,7 +33,8 @@ public class yoPlayer {
         plugin.playerData.config.set(getPlayer().getUniqueId().toString() + ".Rank", rank.getID());
         plugin.playerData.saveData();
 
-        if (getPlayer().isOnline()) permissionManagement.refreshPlayer(Bukkit.getPlayer(getPlayer().getUniqueId()));
+        if (getPlayer().isOnline())
+            Permissions.refresh(this);
     }
 
     public boolean isRankDisguised() { return plugin.rank_disguise.containsKey(getPlayer().getUniqueId()); }
@@ -46,15 +45,6 @@ public class yoPlayer {
     public String getDisplayName() { return getColor() + getPlayer().getName(); }
     public String getDisplayNickname() { return plugin.getConfig().getString("Nickname.NickPrefix") + getNickname(); }
     public String getPrefix() { return getRank().getPrefix(); }
-
-    public List<String> getPermissions() {
-        List<String> permissions = new ArrayList<>();
-
-        permissions.addAll(plugin.permissionsData.config.getStringList("Players." + getPlayer().getUniqueId().toString() + ".Permissions"));
-        permissions.addAll(getRank().getPermissions());
-
-        return permissions;
-    }
 
     public String getIP() { return plugin.playerData.config.getString(getPlayer().getUniqueId().toString() + ".IP"); }
     public List<String> getAllIPs() { return plugin.playerData.config.getStringList(getPlayer().getUniqueId().toString() + ".TotalIPs"); }
@@ -98,4 +88,6 @@ public class yoPlayer {
 
         return ping;
     }
+
+    public Permissions permissions() { return new Permissions(this); }
 }

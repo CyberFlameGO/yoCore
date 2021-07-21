@@ -1,6 +1,5 @@
 package me.yochran.yocore.listeners;
 
-import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.event.EventHandler;

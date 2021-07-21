@@ -2,6 +2,7 @@ package me.yochran.yocore.ranks;
 
 import me.yochran.yocore.grants.Grant;
 import me.yochran.yocore.management.PermissionManagement;
+import me.yochran.yocore.permissions.Permissions;
 import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -57,10 +58,6 @@ public class Rank {
     public boolean isDefault() { return isDefault; }
     public String getGrantPermission() { return "yocore.grant." + getID().toLowerCase(); }
 
-    public List<String> getPermissions() {
-        return new ArrayList<>(plugin.permissionsData.config.getStringList("Ranks." + getID() + ".Permissions"));
-    }
-
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         plugin.getConfig().set("Ranks." + getID() + ".Prefix", getPrefix());
@@ -110,7 +107,7 @@ public class Rank {
         Permission permission = new Permission("yocore.grant." + getID().toLowerCase());
         permission.setDescription("Permission");
 
-        if (permissionManagement.getAllServerPerms().contains(permission))
+        if (!Permissions.getAllServerPermissions().contains(permission))
             plugin.getServer().getPluginManager().addPermission(permission);
 
         plugin.permissionsData.config.set("Ranks." + getID() + ".Permissions", new ArrayList<>());
@@ -166,4 +163,6 @@ public class Rank {
 
         getRanks().remove(getID());
     }
+
+    public Permissions permissions() { return new Permissions(this); }
 }

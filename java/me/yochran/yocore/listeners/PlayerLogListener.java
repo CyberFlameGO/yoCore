@@ -1,6 +1,7 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.*;
+import me.yochran.yocore.permissions.Permissions;
 import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
@@ -46,7 +47,7 @@ public class PlayerLogListener implements Listener {
         if (!economyManagement.isInitialized(event.getPlayer())) economyManagement.setupPlayer(event.getPlayer());
         if (!statsManagement.isInitialized(event.getPlayer())) statsManagement.setupPlayer(event.getPlayer());
 
-        permissionManagement.setupPlayer(event.getPlayer());
+        Permissions.setup(yoPlayer);
 
         if (plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString())
                 && !plugin.playerData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
