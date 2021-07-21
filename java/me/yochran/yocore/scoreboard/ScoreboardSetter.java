@@ -1,7 +1,8 @@
 package me.yochran.yocore.scoreboard;
 
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.ServerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import me.yochran.yocore.management.EconomyManagement;
@@ -25,10 +26,8 @@ public class ScoreboardSetter implements Listener {
 
     private final yoCore plugin;
 
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final EconomyManagement economyManagement = new EconomyManagement();
     private final StatsManagement statsManagement = new StatsManagement();
-    private final ServerManagement serverManagement = new ServerManagement();
 
     public List<UUID> enabled = new ArrayList<>();
 
@@ -91,22 +90,24 @@ public class ScoreboardSetter implements Listener {
         if (player.getScoreboard().equals(Bukkit.getServer().getScoreboardManager().getMainScoreboard()))
             player.setScoreboard(Bukkit.getServer().getScoreboardManager().getNewScoreboard());
 
+        yoPlayer yoPlayer = new yoPlayer(player);
+
         Scoreboard scoreboard = player.getScoreboard();
         Objective objective = (scoreboard.getObjective(player.getName()) == null) ? scoreboard.registerNewObjective(player.getName(), "dummy") : scoreboard.getObjective(player.getName());
 
         if (plugin.tsb.contains(player.getUniqueId()))
             return;
 
-        String rank;
-        if (plugin.rank_disguise.containsKey(player.getUniqueId())) rank = plugin.rank_disguise.get(player.getUniqueId());
-        else rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
-        String rankDisplay = plugin.getConfig().getString("Ranks." + rank.toUpperCase() + ".Display");
+        Server server = Server.getServer(player);
+
+        Rank rank = yoPlayer.getRank();
+        if (plugin.rank_disguise.containsKey(player.getUniqueId()))
+            rank = yoPlayer.getRankDisguise();
+
         String bounty;
-        if (economyManagement.isBountied(serverManagement.getServer(player), player)) {
-            bounty = String.valueOf(economyManagement.getBountyAmount(serverManagement.getServer(player), player));
-        } else {
-            bounty = "&cNot Bountied";
-        }
+        if (economyManagement.isBountied(server, player)) bounty = String.valueOf(economyManagement.getBountyAmount(server, player));
+        else bounty = "&cNot Bountied";
+
         int staffAmount = 0;
         for (Player staff : Bukkit.getOnlinePlayers()) {
             if (staff.hasPermission("yocore.chats.staff"))
@@ -123,16 +124,16 @@ public class ScoreboardSetter implements Listener {
                 row--;
                 String rowFormat = score
                         .replace("%online%", df.format(Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size()))
-                        .replace("%rank%", rankDisplay)
-                        .replace("%kills%", df.format(statsManagement.getKills(serverManagement.getServer(player), player)))
-                        .replace("%deaths%", df.format(statsManagement.getDeaths(serverManagement.getServer(player), player)))
-                        .replace("%kdr%", df.format(statsManagement.getKDR(serverManagement.getServer(player), player)))
-                        .replace("%streak%", df.format(statsManagement.getStreak(serverManagement.getServer(player), player)))
-                        .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer(player), player)))
+                        .replace("%rank%", rank.getDisplay())
+                        .replace("%kills%", df.format(statsManagement.getKills(server, player)))
+                        .replace("%deaths%", df.format(statsManagement.getDeaths(server, player)))
+                        .replace("%kdr%", df.format(statsManagement.getKDR(server, player)))
+                        .replace("%streak%", df.format(statsManagement.getStreak(server, player)))
+                        .replace("%balance%", df.format(economyManagement.getMoney(server, player)))
                         .replace("%bounty%", bounty)
                         .replace("%vanish%", String.valueOf(plugin.vanished_players.contains(player.getUniqueId())))
                         .replace("%online_staff%", df.format(staffAmount)
-                        .replace("%player%", playerManagement.getPlayerColor(player)));
+                        .replace("%player%", yoPlayer.getDisplayName()));
                 replaceScore(objective, row, Utils.translate(rowFormat));
             }
         } else {
@@ -144,16 +145,16 @@ public class ScoreboardSetter implements Listener {
                     row--;
                     String rowFormat = score
                             .replace("%online%", df.format(Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size()))
-                            .replace("%rank%", rankDisplay)
-                            .replace("%kills%", df.format(statsManagement.getKills(serverManagement.getServer(player), player)))
-                            .replace("%deaths%", df.format(statsManagement.getDeaths(serverManagement.getServer(player), player)))
-                            .replace("%kdr%", df.format(statsManagement.getKDR(serverManagement.getServer(player), player)))
-                            .replace("%streak%", df.format(statsManagement.getStreak(serverManagement.getServer(player), player)))
-                            .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer(player), player)))
+                            .replace("%rank%", rank.getDisplay())
+                            .replace("%kills%", df.format(statsManagement.getKills(server, player)))
+                            .replace("%deaths%", df.format(statsManagement.getDeaths(server, player)))
+                            .replace("%kdr%", df.format(statsManagement.getKDR(server, player)))
+                            .replace("%streak%", df.format(statsManagement.getStreak(server, player)))
+                            .replace("%balance%", df.format(economyManagement.getMoney(server, player)))
                             .replace("%bounty%", bounty)
                             .replace("%vanish%", String.valueOf(plugin.vanished_players.contains(player.getUniqueId())))
                             .replace("%online_staff%", df.format(staffAmount))
-                            .replace("%player%", playerManagement.getPlayerColor(player));
+                            .replace("%player%", yoPlayer.getDisplayName());
                     replaceScore(objective, row, Utils.translate(rowFormat));
                 }
             } else {
@@ -166,16 +167,16 @@ public class ScoreboardSetter implements Listener {
                             row--;
                             String rowFormat = score
                                     .replace("%online%", df.format(Bukkit.getOnlinePlayers().size() - plugin.vanished_players.size()))
-                                    .replace("%rank%", rankDisplay)
-                                    .replace("%kills%", df.format(statsManagement.getKills(serverManagement.getServer(player), player)))
-                                    .replace("%deaths%", df.format(statsManagement.getDeaths(serverManagement.getServer(player), player)))
-                                    .replace("%kdr%", df.format(statsManagement.getKDR(serverManagement.getServer(player), player)))
-                                    .replace("%streak%", df.format(statsManagement.getStreak(serverManagement.getServer(player), player)))
-                                    .replace("%balance%", df.format(economyManagement.getMoney(serverManagement.getServer(player), player)))
+                                    .replace("%rank%", rank.getDisplay())
+                                    .replace("%kills%", df.format(statsManagement.getKills(server, player)))
+                                    .replace("%deaths%", df.format(statsManagement.getDeaths(server, player)))
+                                    .replace("%kdr%", df.format(statsManagement.getKDR(server, player)))
+                                    .replace("%streak%", df.format(statsManagement.getStreak(server, player)))
+                                    .replace("%balance%", df.format(economyManagement.getMoney(server, player)))
                                     .replace("%bounty%", bounty)
                                     .replace("%vanish%", String.valueOf(plugin.vanished_players.contains(player.getUniqueId())))
                                     .replace("%online_staff%", df.format(staffAmount))
-                                    .replace("%player%", playerManagement.getPlayerColor(player));
+                                    .replace("%player%", yoPlayer.getDisplayName());
                             replaceScore(objective, row, Utils.translate(rowFormat));
                         }
                     }

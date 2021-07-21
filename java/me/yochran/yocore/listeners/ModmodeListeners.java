@@ -64,7 +64,7 @@ public class ModmodeListeners implements Listener {
         }
 
         if (event.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(Utils.translate("&6&lOnline Players"))) {
-            OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(event.getPlayer(), 27, "&aOnline players.");
+            OnlinePlayersGUI onlinePlayersGUI = new OnlinePlayersGUI(event.getPlayer(), 18, "&aOnline players.");
             onlinePlayersGUI.setup(1);
             GUI.open(onlinePlayersGUI.getGui());
         }

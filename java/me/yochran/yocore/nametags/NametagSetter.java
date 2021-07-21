@@ -1,16 +1,15 @@
 package me.yochran.yocore.nametags;
 
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@SuppressWarnings("deprecation")
 public class NametagSetter {
 
     private final yoCore plugin;
@@ -37,34 +36,37 @@ public class NametagSetter {
     }
 
     public void rankNametag(Scoreboard scoreboard, Player player) {
-        String rank;
-        if (!plugin.rank_disguise.containsKey(player.getUniqueId()))
-            rank = plugin.playerData.config.getString(player.getUniqueId().toString() + ".Rank");
-        else rank = plugin.rank_disguise.get(player.getUniqueId());
+        yoPlayer yoPlayer = new yoPlayer(player);
 
-        Team team = scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex"));
+        Rank rank = yoPlayer.getRank();
+        if (yoPlayer.isRankDisguised())
+            rank = yoPlayer.getRankDisguise();
+
+        Team team = scoreboard.getTeam(rank.getTabIndex());
         if (team != null) {
-            team.setPrefix(Utils.translate(plugin.getConfig().getString("Ranks." + rank + ".Color")));
-            try { team.setColor(ChatColor.getByChar(plugin.getConfig().getString("Ranks." + rank + ".Color").replace("&", "")));
+            team.setPrefix(Utils.translate(rank.getColor()));
+            try { team.setColor(ChatColor.getByChar(rank.getColor().replace("&", "")));
             } catch (NoSuchMethodError ignored) {}
         }
 
-        if (scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex")) != null) {
-            if (!scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex")).hasPlayer(player)) {
+        if (scoreboard.getTeam(rank.getTabIndex()) != null) {
+            if (!scoreboard.getTeam(rank.getTabIndex()).hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
-                    if (teams.hasPlayer(player)) teams.removePlayer(player);
+                    if (teams.hasPlayer(player))
+                        teams.removePlayer(player);
                 }
 
-                scoreboard.getTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex")).addPlayer(player);
+                scoreboard.getTeam(rank.getTabIndex()).addPlayer(player);
             }
-        } else scoreboard.registerNewTeam(plugin.getConfig().getString("Ranks." + rank + ".TabIndex"));
+        } else scoreboard.registerNewTeam(rank.getTabIndex());
     }
 
     public void vanishNametag(Scoreboard scoreboard, Player player) {
         if (scoreboard.getTeam("zz") != null) {
             if (!scoreboard.getTeam("zz").hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
-                    if (teams.hasPlayer(player)) teams.removePlayer(player);
+                    if (teams.hasPlayer(player))
+                        teams.removePlayer(player);
                 }
 
                 scoreboard.getTeam("zz").addPlayer(player);
@@ -82,7 +84,8 @@ public class NametagSetter {
         if (scoreboard.getTeam("zzz") != null) {
             if (!scoreboard.getTeam("zzz").hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
-                    if (teams.hasPlayer(player)) teams.removePlayer(player);
+                    if (teams.hasPlayer(player))
+                        teams.removePlayer(player);
                 }
 
                 scoreboard.getTeam("zzz").addPlayer(player);
@@ -100,7 +103,8 @@ public class NametagSetter {
         if (scoreboard.getTeam("zzzz") != null) {
             if (!scoreboard.getTeam("zzzz").hasPlayer(player)) {
                 for (Team teams : scoreboard.getTeams()) {
-                    if (teams.hasPlayer(player)) teams.removePlayer(player);
+                    if (teams.hasPlayer(player))
+                        teams.removePlayer(player);
                 }
 
                 scoreboard.getTeam("zzzz").addPlayer(player);

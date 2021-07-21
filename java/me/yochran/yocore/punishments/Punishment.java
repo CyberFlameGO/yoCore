@@ -1,7 +1,7 @@
 package me.yochran.yocore.punishments;
 
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.yoCore;
-import org.bukkit.OfflinePlayer;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ public class Punishment {
     private static final yoCore splugin = yoCore.getInstance();
 
     private PunishmentType type;
-    private OfflinePlayer target;
+    private yoPlayer target;
     private String executor;
     private Object duration;
     private boolean silent;
@@ -26,7 +26,7 @@ public class Punishment {
         punishments = new HashMap<>();
     }
 
-    public Punishment(PunishmentType type, OfflinePlayer target, String executor, Object duration, boolean silent, String reason) {
+    public Punishment(PunishmentType type, yoPlayer target, String executor, Object duration, boolean silent, String reason) {
         this.type = type;
         this.target = target;
         this.executor = executor;
@@ -41,11 +41,11 @@ public class Punishment {
 
     public static Map<Integer, Punishment> getPunishments() { return punishments; }
 
-    public static Map<Integer, Punishment> getPunishments(OfflinePlayer player) {
+    public static Map<Integer, Punishment> getPunishments(yoPlayer player) {
         Map<Integer, Punishment> punishments = new HashMap<>();
 
         for (Map.Entry<Integer, Punishment> entry : getPunishments().entrySet()) {
-            if (entry.getValue().getTarget().getUniqueId().equals(player.getUniqueId()))
+            if (entry.getValue().getTarget().getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId()))
                 punishments.put(entry.getKey(), entry.getValue());
         }
 
@@ -54,7 +54,7 @@ public class Punishment {
 
 
     public PunishmentType getType() { return type; }
-    public OfflinePlayer getTarget() { return target; }
+    public yoPlayer getTarget() { return target; }
     public String getExecutor() { return executor; }
     public Object getDuration() { return duration; }
     public boolean getSilent() { return silent; }
@@ -73,19 +73,19 @@ public class Punishment {
     public boolean isTemporary() { return !(duration instanceof String); }
 
     public void create() {
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".ID", getID());
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Executor", getExecutor());
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Reason", getReason());
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Silent", getSilent());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".ID", getID());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Executor", getExecutor());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Reason", getReason());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Silent", getSilent());
 
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Date", System.currentTimeMillis());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Date", System.currentTimeMillis());
         setDate(System.currentTimeMillis());
 
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Duration", getDuration());
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", "Active");
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Duration", getDuration());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", "Active");
 
         if (getType() == PunishmentType.KICK) {
-            splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", "Expired");
+            splugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", "Expired");
             setStatus("Expired");
         } else setStatus("Active");
 
@@ -94,19 +94,19 @@ public class Punishment {
         getPunishments().put(getID(), this);
     }
 
-    public static void redo(Punishment punishment, OfflinePlayer target, String executor, Object duration, boolean silent, String reason) {
-        splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Executor", executor);
-        splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Reason", reason);
-        splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Silent", silent);
+    public static void redo(Punishment punishment, yoPlayer target, String executor, Object duration, boolean silent, String reason) {
+        splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Executor", executor);
+        splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Reason", reason);
+        splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Silent", silent);
 
-        splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Date", System.currentTimeMillis());
+        splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Date", System.currentTimeMillis());
         punishment.setDate(System.currentTimeMillis());
 
-        splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Duration", duration);
-        splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Status", "Active");
+        splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Duration", duration);
+        splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Status", "Active");
 
         if (punishment.getType() == PunishmentType.KICK) {
-            splugin.punishmentData.config.set(target.getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Status", "Expired");
+            splugin.punishmentData.config.set(target.getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(punishment.getType()) + "." + punishment.getID() + ".Status", "Expired");
             punishment.setStatus("Expired");
         } else punishment.setStatus("Active");
 
@@ -123,22 +123,22 @@ public class Punishment {
     public void execute() {
         switch (getType()) {
             case BLACKLIST:
-                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getUniqueId().toString() + ".Name", getTarget().getName());
-                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getUniqueId().toString() + ".Reason", getReason());
+                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Name", getTarget().getPlayer().getName());
+                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Reason", getReason());
 
-                plugin.blacklisted_players.put(getTarget().getUniqueId(), getReason());
+                plugin.blacklisted_players.put(getTarget().getPlayer().getUniqueId(), getReason());
                 break;
             case BAN:
-                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getUniqueId().toString() + ".Name", getTarget().getName());
-                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getUniqueId().toString() + ".Temporary", isTemporary());
+                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Name", getTarget().getPlayer().getName());
+                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Temporary", isTemporary());
 
-                plugin.banned_players.put(getTarget().getUniqueId(), isTemporary());
+                plugin.banned_players.put(getTarget().getPlayer().getUniqueId(), isTemporary());
                 break;
             case MUTE:
-                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getUniqueId().toString() + ".Name", getTarget().getName());
-                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getUniqueId().toString() + ".Temporary", isTemporary());
+                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Name", getTarget().getPlayer().getName());
+                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Temporary", isTemporary());
 
-                plugin.muted_players.put(getTarget().getUniqueId(), isTemporary());
+                plugin.muted_players.put(getTarget().getPlayer().getUniqueId(), isTemporary());
                 break;
         }
 
@@ -148,16 +148,16 @@ public class Punishment {
     public void reexecute() {
         switch (getType()) {
             case BLACKLIST:
-                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getUniqueId().toString() + ".Name", getTarget().getName());
-                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getUniqueId().toString() + ".Reason", reason);
+                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Name", getTarget().getPlayer().getName());
+                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Reason", getReason());
                 break;
             case BAN:
-                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getUniqueId().toString() + ".Name", getTarget().getName());
-                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getUniqueId().toString() + ".Temporary", isTemporary());
+                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Name", getTarget().getPlayer().getName());
+                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Temporary", isTemporary());
                 break;
             case MUTE:
-                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getUniqueId().toString() + ".Name", getTarget().getName());
-                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getUniqueId().toString() + ".Temporary", isTemporary());
+                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Name", getTarget().getPlayer().getName());
+                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getPlayer().getUniqueId().toString() + ".Temporary", isTemporary());
                 break;
         }
 
@@ -166,21 +166,21 @@ public class Punishment {
 
     public void revoke() {
         setStatus("Revoked");
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", getStatus());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", getStatus());
         plugin.punishmentData.saveData();
 
         switch (getType()) {
             case BLACKLIST:
-                plugin.blacklisted_players.remove(getTarget().getUniqueId());
-                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getUniqueId().toString(), null);
+                plugin.blacklisted_players.remove(getTarget().getPlayer().getUniqueId());
+                plugin.punishmentData.config.set("BlacklistedPlayers." + getTarget().getPlayer().getUniqueId().toString(), null);
                 break;
             case BAN:
-                plugin.banned_players.remove(getTarget().getUniqueId());
-                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getUniqueId().toString(), null);
+                plugin.banned_players.remove(getTarget().getPlayer().getUniqueId());
+                plugin.punishmentData.config.set("BannedPlayers." + getTarget().getPlayer().getUniqueId().toString(), null);
                 break;
             case MUTE:
-                plugin.muted_players.remove(getTarget().getUniqueId());
-                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getUniqueId().toString(), null);
+                plugin.muted_players.remove(getTarget().getPlayer().getUniqueId());
+                plugin.punishmentData.config.set("MutedPlayers." + getTarget().getPlayer().getUniqueId().toString(), null);
                 break;
         }
 
@@ -190,7 +190,7 @@ public class Punishment {
     public void expire() {
         revoke();
         setStatus("Expired");
-        plugin.punishmentData.config.set(getTarget().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", getStatus());
+        plugin.punishmentData.config.set(getTarget().getPlayer().getUniqueId().toString() + "." + PunishmentType.convertToString(getType()) + "." + getID() + ".Status", getStatus());
         plugin.punishmentData.saveData();
     }
 }

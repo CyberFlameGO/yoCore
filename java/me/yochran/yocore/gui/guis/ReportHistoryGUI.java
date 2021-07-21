@@ -1,12 +1,11 @@
 package me.yochran.yocore.gui.guis;
 
 import me.yochran.yocore.gui.*;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,7 +15,6 @@ import java.util.*;
 public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public ReportHistoryGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -33,6 +31,8 @@ public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
     }
 
     public void setup(OfflinePlayer target, int page) {
+        yoPlayer yoTarget = new yoPlayer(target);
+
         Map<Integer, Button> buttons = new HashMap<>();
         Set<Integer> pages = new HashSet<>();
 
@@ -46,8 +46,8 @@ public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
                         "&a&l(Active) " + Utils.getExpirationDate(plugin.playerData.config.getLong(target.getUniqueId().toString() + ".Report." + report  + ".Date")),
                         ItemBuilder.formatLore(new String[] {
                                 "&3&m----------------------------",
-                                "&bTarget: &3" + playerManagement.getPlayerColor(target),
-                                "&bIssued By: &3" + playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(UUID.fromString(plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Executor")))),
+                                "&bTarget: &3" + yoTarget.getDisplayName(),
+                                "&bIssued By: &3" + yoPlayer.getYoPlayer(UUID.fromString(plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Executor"))).getDisplayName(),
                                 "&bIssued Reason: &3" + plugin.playerData.config.getString(target.getUniqueId().toString() + ".Report." + report + ".Reason"),
                                 "&3&m----------------------------"
                         })
@@ -65,7 +65,7 @@ public class ReportHistoryGUI extends CustomGUI implements PagedGUI {
             Toolbar toolbar = new Toolbar(getGui(), "Reports", page, new ArrayList<>(pages), () -> new BukkitRunnable() {
                 @Override
                 public void run() {
-                    ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's report history.");
+                    ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(player, 18, yoTarget.getDisplayName() + "&a's report history.");
                     reportHistoryGUI.setup(target, Toolbar.getNewPage().get());
                     GUI.open(reportHistoryGUI.getGui());
                 }

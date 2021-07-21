@@ -6,13 +6,12 @@ import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
 import me.yochran.yocore.management.GrantManagement;
-import me.yochran.yocore.management.PermissionManagement;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -22,7 +21,6 @@ import java.util.List;
 public class GrantConfirmGUI extends CustomGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
     private final GrantManagement grantManagement = new GrantManagement();
 
     public GrantConfirmGUI(Player player, int size, String title) {
@@ -32,16 +30,17 @@ public class GrantConfirmGUI extends CustomGUI {
     }
 
     public void setup(Player player, OfflinePlayer target, String grant, String duration, String reason) {
-        String finalGrant;
-        if (plugin.grant_type.get(player.getUniqueId()) == GrantType.RANK)
-            finalGrant = plugin.getConfig().getString("Ranks." + grant + ".Display");
-        else finalGrant = grant;
+        yoPlayer yoTarget = new yoPlayer(target);
+
+        String display;
+        if (plugin.grant_type.get(player.getUniqueId()) == GrantType.RANK) display = Rank.getRank(grant).getDisplay();
+        else display = grant;
 
         List<String> lore = new ArrayList<>();
         for (String line : plugin.getConfig().getStringList("Grant.Confirm.Lore")) {
             lore.add(line
-                    .replace("%target%", playerManagement.getPlayerColor(target))
-                    .replace("%grant%", finalGrant)
+                    .replace("%target%", yoTarget.getDisplayName())
+                    .replace("%grant%", display)
                     .replace("%duration%", duration)
                     .replace("%reason%", reason));
         }
@@ -55,20 +54,17 @@ public class GrantConfirmGUI extends CustomGUI {
                     GUI.close(gui);
 
                     player.sendMessage(Utils.translate(plugin.getConfig().getString("Grant.Confirm.ConfirmedGrant")
-                            .replace("%target%", playerManagement.getPlayerColor(target))
-                            .replace("%grant%", finalGrant)
-                            .replace("%duration%", plugin.grant_duration.get(player.getUniqueId()))
-                            .replace("%reason%", plugin.grant_reason.get(player.getUniqueId()))));
+                            .replace("%target%", yoTarget.getDisplayName())
+                            .replace("%grant%", display)
+                            .replace("%duration%", duration)
+                            .replace("%reason%", reason)));
 
                     Object dur = duration;
-                    if (!duration.equalsIgnoreCase("Permanent"))
-                        dur = grantManagement.getGrantDuration(duration);
+                    if (!duration.equalsIgnoreCase("Permanent")) dur = grantManagement.getGrantDuration(duration);
 
-                    Grant grant1 = new Grant(plugin.grant_type.get(player.getUniqueId()), grant, Bukkit.getOfflinePlayer(target.getUniqueId()), player, dur, reason);
-                    grant1.create();
-                    grant1.grant(plugin.grant_type.get(player.getUniqueId()), plugin.grant_grant.get(player.getUniqueId()));
-
-                    if (target.isOnline()) new PermissionManagement().setupPlayer(Bukkit.getPlayer(target.getUniqueId()));
+                    Grant grantToCreate = new Grant(plugin.grant_type.get(player.getUniqueId()), grant, yoTarget, player, dur, reason, yoTarget.getRank().getID());
+                    grantToCreate.create();
+                    grantToCreate.grant(plugin.grant_type.get(player.getUniqueId()), grant);
 
                     plugin.grant_player.remove(player.getUniqueId());
                     plugin.grant_type.remove(player.getUniqueId());

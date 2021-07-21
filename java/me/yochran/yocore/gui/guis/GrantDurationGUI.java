@@ -3,7 +3,7 @@ package me.yochran.yocore.gui.guis;
 import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -17,7 +17,6 @@ import java.util.List;
 public class GrantDurationGUI extends CustomGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public GrantDurationGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -26,12 +25,14 @@ public class GrantDurationGUI extends CustomGUI {
     }
 
     public void setup(Player player, OfflinePlayer target) {
+        yoPlayer yoTarget = new yoPlayer(target);
+
         for (String cItem : plugin.getConfig().getConfigurationSection("Grant.Duration.Items").getKeys(false)) {
             List<String> itemLore = new ArrayList<>();
             for (String line : plugin.getConfig().getStringList("Grant.Duration.Lore")) {
                 itemLore.add(line
                         .replace("%duration%", plugin.getConfig().getString("Grant.Duration.Items." + cItem + ".Name"))
-                        .replace("%target%", playerManagement.getPlayerColor(target)));
+                        .replace("%target%", yoTarget.getDisplayName()));
             }
 
             ItemBuilder itemBuilder = new ItemBuilder(

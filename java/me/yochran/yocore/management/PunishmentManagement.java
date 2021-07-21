@@ -1,5 +1,6 @@
 package me.yochran.yocore.management;
 
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.yoCore;
@@ -28,7 +29,7 @@ public class PunishmentManagement {
     public int getAmount(OfflinePlayer player, PunishmentType type) {
         int amount = 0;
 
-        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(player).entrySet()) {
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer.getYoPlayer(player)).entrySet()) {
             if (entry.getValue().getType() == type)
                 amount++;
         }
@@ -74,7 +75,7 @@ public class PunishmentManagement {
 
         plugin.punishmentData.saveData();
 
-        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(target).entrySet())
+        for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer.getYoPlayer(target)).entrySet())
             Punishment.getPunishments().remove(entry.getKey());
     }
 }

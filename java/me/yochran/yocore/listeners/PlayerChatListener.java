@@ -1,10 +1,10 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.chats.ChatType;
-import me.yochran.yocore.management.PlayerManagement;
-import me.yochran.yocore.management.PunishmentManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -21,11 +21,11 @@ import java.util.Map;
 public class PlayerChatListener implements Listener {
 
     private final yoCore plugin = yoCore.getInstance();
-    private final PlayerManagement playerManagement = new PlayerManagement();
-    private final PunishmentManagement punishmentManagement = new PunishmentManagement();
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
+        yoPlayer yoPlayer = new yoPlayer(event.getPlayer());
+
         if (ChatType.hasToggleOn(event.getPlayer())) {
             ChatType type = ChatType.getToggle(event.getPlayer());
 
@@ -61,7 +61,7 @@ public class PlayerChatListener implements Listener {
         if (plugin.muted_players.containsKey(event.getPlayer().getUniqueId())) {
             Punishment punishment = null;
 
-            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(event.getPlayer()).entrySet()) {
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer).entrySet()) {
                 if (entry.getValue().getType() == PunishmentType.MUTE && entry.getValue().getStatus().equalsIgnoreCase("Active"))
                     punishment = entry.getValue();
             }
@@ -158,9 +158,17 @@ public class PlayerChatListener implements Listener {
             playTime = -1;
         }
 
+        Rank rank = yoPlayer.getRank();
+        if (yoPlayer.isRankDisguised())
+            rank = yoPlayer.getRankDisguise();
+
+        String displayName = rank.getColor() + event.getPlayer().getName();
+        if (yoPlayer.isNicked()) displayName = rank.getColor() + yoPlayer.getDisplayNickname();
+
         String format = plugin.getConfig().getString("ChatFormat")
-                .replace("%player_prefix%", playerManagement.getPlayerPrefix(event.getPlayer()))
-                .replace("%player_color%", playerManagement.getPlayerColor(event.getPlayer()))
+                .replace("%player_prefix%", rank.getPrefix())
+                .replace("%player_color%", rank.getColor())
+                .replace("%player%", displayName)
                 .replace("%message%", message)
                 .replace("%player_playtime%", String.valueOf(playTime))
                 .replace("%player_tag%", tag);

@@ -3,7 +3,7 @@ package me.yochran.yocore.gui.guis;
 import me.yochran.yocore.gui.Button;
 import me.yochran.yocore.gui.CustomGUI;
 import me.yochran.yocore.gui.GUI;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.XMaterial;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 public class FindPageGUI extends CustomGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public FindPageGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -26,6 +25,7 @@ public class FindPageGUI extends CustomGUI {
 
     public void setup(String cl, PunishmentType type, OfflinePlayer target, int pages) {
         ItemBuilder itemBuilder = new ItemBuilder(XMaterial.BOOK.parseItem(), 1, "&4&lNULL", new ArrayList<>());
+        yoPlayer yoTarget = new yoPlayer(target);
 
         for (int i = 0; i < pages; i++) {
             int page = i;
@@ -39,17 +39,17 @@ public class FindPageGUI extends CustomGUI {
                             public void run() {
                                 switch (cl.toLowerCase()) {
                                     case "punishments":
-                                        DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(getGui().getPlayer(), 27, playerManagement.getPlayerColor(target) + "&a's " + type.toString().toLowerCase() + "&as.");
+                                        DetailedPunishmentHistoryGUI detailedPunishmentHistoryGUI = new DetailedPunishmentHistoryGUI(getGui().getPlayer(), 27, yoTarget.getDisplayName() + "&a's " + type.toString().toLowerCase() + "&as.");
                                         detailedPunishmentHistoryGUI.setup(type, getGui().getPlayer(), target, (page + 1));
                                         GUI.open(detailedPunishmentHistoryGUI.getGui());
                                         break;
                                     case "grants":
-                                        GrantsGUI grantsGUI = new GrantsGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
+                                        GrantsGUI grantsGUI = new GrantsGUI(getGui().getPlayer(), 18, yoTarget.getDisplayName() + "&a's grant history.");
                                         grantsGUI.setup(getGui().getPlayer(), target, (page + 1));
                                         GUI.open(grantsGUI.getGui());
                                         break;
                                     case "reports":
-                                        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(getGui().getPlayer(), 18, playerManagement.getPlayerColor(target) + "&a's report history.");
+                                        ReportHistoryGUI reportHistoryGUI = new ReportHistoryGUI(getGui().getPlayer(), 18, yoTarget.getDisplayName() + "&a's report history.");
                                         reportHistoryGUI.setup(target, (page + 1));
                                         GUI.open(reportHistoryGUI.getGui());
                                         break;

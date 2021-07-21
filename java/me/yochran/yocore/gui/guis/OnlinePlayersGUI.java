@@ -1,12 +1,12 @@
 package me.yochran.yocore.gui.guis;
 
 import me.yochran.yocore.gui.*;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,7 +18,6 @@ import java.util.*;
 public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public OnlinePlayersGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -40,6 +39,8 @@ public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
 
         int loop = -1;
         for (Player players : Server.getPlayers(Server.getServer(gui.getPlayer()))) {
+            yoPlayer yoPlayer = new yoPlayer(players);
+
             loop++;
             ItemStack skull = XMaterial.PLAYER_HEAD.parseItem();
             SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
@@ -48,20 +49,20 @@ public class OnlinePlayersGUI extends CustomGUI implements PagedGUI {
 
             ItemStack item = skull;
             ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setDisplayName(Utils.translate(playerManagement.getPlayerColor(players)));
+            itemMeta.setDisplayName(Utils.translate(yoPlayer.getDisplayName()));
 
-            String rank = plugin.playerData.config.getString(players.getUniqueId().toString() + ".Rank");
-            String rankDisplay = plugin.getConfig().getString("Ranks." + rank.toUpperCase() + ".Display");
+            Rank rank = yoPlayer.getRank();
+
             String vanish = String.valueOf(plugin.vanished_players.contains(players.getUniqueId()));
             String modmode = String.valueOf(plugin.modmode_players.contains(players.getUniqueId()));
 
             List<String> itemLore = new ArrayList<>();
             itemLore.add(Utils.translate("&3&m--------------------------"));
-            itemLore.add(Utils.translate("&bRank: &3" + rankDisplay));
+            itemLore.add(Utils.translate("&bRank: &3" + rank.getDisplay()));
             itemLore.add(Utils.translate("&bVanish: &3" + vanish));
             itemLore.add(Utils.translate("&bModMode: &3" + modmode));
             itemLore.add(Utils.translate("&7 "));
-            itemLore.add(Utils.translate("&aClick to teleport to " + playerManagement.getPlayerColor(players) + "&a."));
+            itemLore.add(Utils.translate("&aClick to teleport to " + yoPlayer.getDisplayName() + "&a."));
             itemLore.add(Utils.translate("&3&m--------------------------"));
 
             itemMeta.setLore(itemLore);

@@ -1,10 +1,9 @@
 package me.yochran.yocore.runnables;
 
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
@@ -22,7 +21,7 @@ public class BanUpdater extends BukkitRunnable {
     public void run() {
         if (plugin.punishmentData.config.contains("BannedPlayers")) {
             for (String entry : plugin.punishmentData.config.getConfigurationSection("BannedPlayers").getKeys(false)) {
-                OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(entry));
+                yoPlayer player = new yoPlayer(UUID.fromString(entry));
 
                 if (Punishment.getPunishments(player).size() <= 0)
                     return;

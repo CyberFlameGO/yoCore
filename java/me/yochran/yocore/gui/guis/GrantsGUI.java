@@ -4,7 +4,8 @@ import me.yochran.yocore.grants.Grant;
 import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.gui.*;
 import me.yochran.yocore.management.PermissionManagement;
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -19,7 +20,6 @@ import java.util.*;
 public class GrantsGUI extends CustomGUI implements PagedGUI {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public GrantsGUI(Player player, int size, String title) {
         super(player, size, title);
@@ -37,6 +37,8 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
     }
 
     public void setup(Player player, OfflinePlayer target, int page) {
+        yoPlayer yoTarget = new yoPlayer(target);
+
         String activePrefix = "&a&l(Active) ";
         String revokedPrefix = "&4&l(Revoked) ";
         String expiredPrefix = "&6&l(Expired) ";
@@ -46,7 +48,7 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
 
         int loop = -1;
         if (plugin.grantData.config.contains(target.getUniqueId().toString() + ".Grants")) {
-            for (Map.Entry<Integer, Grant> grant : Grant.getGrants(target).entrySet()) {
+            for (Map.Entry<Integer, Grant> grant : Grant.getGrants(yoTarget).entrySet()) {
                 loop++;
 
                 String issuedGrant;
@@ -56,31 +58,29 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
                     else issuedGrant = plugin.getConfig().getString("Ranks." + grant.getValue().getGrant().toUpperCase() + ".Display");
                 } else issuedGrant = grant.getValue().getGrant();
 
-                String executor = playerManagement.getPlayerColor(grant.getValue().getExecutor());
+                String executor = yoPlayer.getYoPlayer(grant.getValue().getExecutor()).getDisplayName();
 
                 String duration;
-                if (grant.getValue().getDuration() instanceof String)
-                    duration = "Permanent";
-                else
-                    duration = Utils.getExpirationDate((long) grant.getValue().getDuration());
+                if (grant.getValue().getDuration() instanceof String) duration = "Permanent";
+                else duration = Utils.getExpirationDate((long) grant.getValue().getDuration());
 
                 String reason = grant.getValue().getReason();
 
                 String previousRank = grant.getValue().getPreviousRank();
                 String previousRankDisplay;
                 if (!previousRank.equalsIgnoreCase("N/A"))
-                    previousRankDisplay = plugin.getConfig().getString("Ranks." + previousRank.toUpperCase() + ".Display");
+                    previousRankDisplay = Rank.getRank(previousRank).getDisplay();
                 else previousRankDisplay = "&cN/A (Permission Grant)";
 
                 String ID = String.valueOf(grant.getValue().getID());
 
                 String revokePermission;
                 if (previousRank.equalsIgnoreCase("N/A")) revokePermission = issuedGrant;
-                else revokePermission = "yocore.grant." + plugin.getConfig().getString("Ranks." + previousRank.toUpperCase() + ".ID").toLowerCase();
+                else revokePermission = Rank.getRank(previousRank).getGrantPermission();
 
                 ItemBuilder itemBuilder = new ItemBuilder(XMaterial.BEDROCK.parseItem(), 1, "&4&lNULL", ItemBuilder.formatLore(new String[] {
                         "&3&m----------------------------",
-                        "&bTarget: &3" + playerManagement.getPlayerColor(target),
+                        "&bTarget: &3" + yoTarget.getDisplayName(),
                         "&bType: &3" + GrantType.convertToString(grant.getValue().getType()),
                         "&bDuration: &3" + duration,
                         "&b ",
@@ -125,8 +125,6 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
 
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("Grant.RevokedGrant")));
                         grant.getValue().revoke();
-
-                        if (target.isOnline()) new PermissionManagement().refreshPlayer(Bukkit.getPlayer(target.getUniqueId()));
                     });
                 }
 
@@ -138,7 +136,7 @@ public class GrantsGUI extends CustomGUI implements PagedGUI {
             Toolbar toolbar = new Toolbar(getGui(), "Grants", page, new ArrayList<>(pages), () -> new BukkitRunnable() {
                 @Override
                 public void run() {
-                    GrantsGUI grantsGUI = new GrantsGUI(player, 18, playerManagement.getPlayerColor(target) + "&a's grant history.");
+                    GrantsGUI grantsGUI = new GrantsGUI(player, 18, yoTarget.getDisplayName() + "&a's grant history.");
                     grantsGUI.setup(player, target, Toolbar.getNewPage().get());
                     GUI.open(grantsGUI.getGui());
                 }

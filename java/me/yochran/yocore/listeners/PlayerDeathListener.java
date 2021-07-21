@@ -3,10 +3,10 @@ package me.yochran.yocore.listeners;
 import me.yochran.yocore.management.PlayerManagement;
 import me.yochran.yocore.management.EconomyManagement;
 import me.yochran.yocore.management.StatsManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,6 +54,9 @@ public class PlayerDeathListener implements Listener {
 
         Server server = Server.getServer(event.getEntity().getKiller());
 
+        yoPlayer attacker = new yoPlayer(event.getEntity().getKiller());
+        yoPlayer victim = new yoPlayer((Player) event.getEntity());
+
         if (economyManagement.economyIsEnabled(server)) {
             DecimalFormat df = new DecimalFormat("###,###,###,###,###,###.##");
 
@@ -63,7 +66,7 @@ public class PlayerDeathListener implements Listener {
                 economyManagement.addMoney(server, event.getEntity().getKiller(), amount);
 
                 event.getEntity().getKiller().sendMessage(Utils.translate(plugin.getConfig().getString("Economy.MoneyOnKillMessage")
-                        .replace("%target%", playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(event.getEntity().getUniqueId())))
+                        .replace("%target%", victim.getDisplayName())
                         .replace("%amount%", df.format(amount))));
             }
 
@@ -74,8 +77,8 @@ public class PlayerDeathListener implements Listener {
 
                 for (Player players : Server.getPlayers(server)) {
                     players.sendMessage(Utils.translate(plugin.getConfig().getString("Bounty.Completed")
-                            .replace("%player%", playerManagement.getPlayerColor(event.getEntity().getKiller()))
-                            .replace("%target%", playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(event.getEntity().getUniqueId())))
+                            .replace("%player%", attacker.getDisplayName())
+                            .replace("%target%", victim.getDisplayName())
                             .replace("%amount%", df.format(amount))));
                 }
             }
@@ -87,7 +90,7 @@ public class PlayerDeathListener implements Listener {
             statsManagement.addToStreak(server, event.getEntity().getKiller());
 
             event.getEntity().sendMessage(Utils.translate(plugin.getConfig().getString("Stats.KilledMessage")
-                    .replace("%player%", playerManagement.getPlayerColor(event.getEntity().getKiller()))));
+                    .replace("%player%", attacker.getDisplayName())));
 
             if (statsManagement.hasStreak(server, (OfflinePlayer) event.getEntity())) {
                 DecimalFormat df = new DecimalFormat("###,###.##");
@@ -98,8 +101,8 @@ public class PlayerDeathListener implements Listener {
                 if (statsManagement.streakShouldBeAnnounced(streak)) {
                     for (Player players : Server.getPlayers(server)) {
                         players.sendMessage(Utils.translate(plugin.getConfig().getString("Stats.StreakEndBroadcast")
-                                .replace("%player%", playerManagement.getPlayerColor(event.getEntity().getKiller()))
-                                .replace("%target%", playerManagement.getPlayerColor(Bukkit.getOfflinePlayer(event.getEntity().getUniqueId())))
+                                .replace("%player%", attacker.getDisplayName())
+                                .replace("%target%", victim.getDisplayName())
                                 .replace("%streak%", df.format(streak))));
                     }
                 }

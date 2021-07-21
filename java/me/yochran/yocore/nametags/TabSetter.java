@@ -1,6 +1,7 @@
 package me.yochran.yocore.nametags;
 
-import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
 import org.bukkit.entity.Player;
@@ -8,18 +9,24 @@ import org.bukkit.entity.Player;
 public class TabSetter {
 
     private final yoCore plugin;
-    private final PlayerManagement playerManagement = new PlayerManagement();
 
     public TabSetter() {
         plugin = yoCore.getPlugin(yoCore.class);
     }
 
     public void setTabName(Player player) {
-        String displayName = playerManagement.getPlayerColor(player);
-        if (plugin.modmode_players.contains(player.getUniqueId()))
-            displayName = "&7[M] " + playerManagement.getPlayerColor(player);
-        if (plugin.vanished_players.contains(player.getUniqueId()))
-            displayName = "&7[V] " + playerManagement.getPlayerColor(player);
+        yoPlayer yoPlayer = new yoPlayer(player);
+
+        Rank rank = yoPlayer.getRank();
+        if (yoPlayer.isRankDisguised())
+            rank = yoPlayer.getRankDisguise();
+
+        String displayName = rank.getColor() + player.getName();
+        if (yoPlayer.isNicked())
+            displayName = rank.getColor() + yoPlayer.getDisplayNickname();
+
+        if (plugin.modmode_players.contains(player.getUniqueId())) displayName = "&7[M] " + player.getName();
+        if (plugin.vanished_players.contains(player.getUniqueId())) displayName = "&7[V] " + player.getName();
 
         player.setPlayerListName(Utils.translate(displayName));
     }

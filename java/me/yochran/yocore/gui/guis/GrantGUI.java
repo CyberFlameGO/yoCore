@@ -2,6 +2,7 @@ package me.yochran.yocore.gui.guis;
 
 import me.yochran.yocore.grants.GrantType;
 import me.yochran.yocore.gui.*;
+import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.ItemBuilder;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -37,14 +38,13 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
         Map<Integer, Button> buttons = new HashMap<>();
         Set<Integer> pages = new HashSet<>();
 
-        for (String rank : plugin.getConfig().getConfigurationSection("Ranks").getKeys(false)) {
+        for (Map.Entry<String, Rank> rank : Rank.getRanks().entrySet()) {
             loop++;
 
-            ItemStack item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Ranks." + rank + ".GrantItem"));
+            ItemStack item = rank.getValue().getGrantItem();
 
             String permission;
-            if (player.hasPermission("yocore.grant." + plugin.getConfig().getString("Ranks." + rank + ".ID").toLowerCase()))
-                permission = "&aYou can grant this rank.";
+            if (player.hasPermission(rank.getValue().getGrantPermission())) permission = "&aYou can grant this rank.";
             else {
                 permission = "&cYou cannot grant this rank.";
                 item = Utils.getMaterialFromConfig(plugin.getConfig().getString("Grant.NoPermissionItem"));
@@ -53,13 +53,14 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
             ItemBuilder itemBuilder = new ItemBuilder(
                     item,
                     1,
-                    plugin.getConfig().getString("Ranks." + rank + ".Display"),
+                    rank.getValue().getDisplay(),
                     ItemBuilder.formatLore(new String[] {
                             "&3&m----------------------------",
-                            "&bID: &3" + plugin.getConfig().getString("Ranks." + rank + ".ID"),
-                            "&bPrefix: &3" + plugin.getConfig().getString("Ranks." + rank + ".Prefix"),
-                            "&bDisplay Name: &3" + plugin.getConfig().getString("Ranks." + rank + ".Display"),
-                            "&bColor: &3" + plugin.getConfig().getString("Ranks." + rank + ".Color") + "Example",
+                            "&bID: &3" + rank.getValue().getID(),
+                            "&bPrefix: &3" + rank.getValue().getPrefix(),
+                            "&bDisplay Name: &3" + rank.getValue().getDisplay(),
+                            "&bColor: &3" + rank.getValue().getColor() + "Example",
+                            "&bTab Index: &3" + rank.getValue().getTabIndex(),
                             "&bType: &3Rank",
                             "&b ",
                             permission,
@@ -71,11 +72,11 @@ public class GrantGUI extends CustomGUI implements PagedGUI {
                     itemBuilder.getItem(),
                     1,
                     () -> {
-                        if (player.hasPermission("yocore.grant." + plugin.getConfig().getString("Ranks." + rank + ".ID").toLowerCase())) {
+                        if (player.hasPermission(rank.getValue().getGrantPermission())) {
                             GUI.close(gui);
 
                             plugin.grant_type.put(player.getUniqueId(), GrantType.RANK);
-                            plugin.grant_grant.put(player.getUniqueId(), plugin.getConfig().getString("Ranks." + rank + ".ID"));
+                            plugin.grant_grant.put(player.getUniqueId(), rank.getValue().getID());
 
                             new BukkitRunnable() {
                                 @Override

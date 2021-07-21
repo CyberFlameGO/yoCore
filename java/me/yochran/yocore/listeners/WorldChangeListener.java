@@ -1,6 +1,7 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.PlayerManagement;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.server.Server;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -25,6 +26,7 @@ public class WorldChangeListener implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
         Server server = Server.getServer(event.getPlayer());
+        yoPlayer yoPlayer = new yoPlayer(event.getPlayer());
 
         if (!server.getWorlds().contains(event.getPlayer().getWorld().getName())) {
             if (plugin.getConfig().getBoolean("Spawn.SpawnOnServerChange"))
@@ -48,7 +50,7 @@ public class WorldChangeListener implements Listener {
                     for (Player staff : Bukkit.getOnlinePlayers()) {
                         if (staff.hasPermission("yocore.chats.staff"))
                             staff.sendMessage(Utils.translate(plugin.getConfig().getString("WorldChangeAlerts.Format")
-                                    .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
+                                    .replace("%player%", yoPlayer.getDisplayName())
                                     .replace("%old_server%", oldServer.getName())
                                     .replace("%new_server%", server.getName())
                                     .replace("%old_world%", event.getFrom().getName())
@@ -61,7 +63,7 @@ public class WorldChangeListener implements Listener {
                 if (plugin.getConfig().getBoolean("JoinMessage.Enabled")) {
                     for (Player player : Server.getPlayers(server))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                                .replace("%player%", yoPlayer.getDisplayName())));
                 }
             }
 
@@ -69,7 +71,7 @@ public class WorldChangeListener implements Listener {
                 if (plugin.getConfig().getBoolean("QuitMessage.Enabled")) {
                     for (Player player : Server.getPlayers(oldServer))
                         player.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))));
+                                .replace("%player%", yoPlayer.getDisplayName())));
                 }
             }
         }

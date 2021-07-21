@@ -1,6 +1,7 @@
 package me.yochran.yocore.management;
 
 import me.yochran.yocore.grants.Grant;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.yoCore;
 import org.bukkit.OfflinePlayer;
 
@@ -47,7 +48,7 @@ public class GrantManagement {
     }
 
     public void clearHistory(OfflinePlayer target) {
-        for (Map.Entry<Integer, Grant> grant : Grant.getGrants(target).entrySet())
+        for (Map.Entry<Integer, Grant> grant : Grant.getGrants(yoPlayer.getYoPlayer(target)).entrySet())
             Grant.getGrants().remove(grant.getKey());
 
         setupPlayer(target);

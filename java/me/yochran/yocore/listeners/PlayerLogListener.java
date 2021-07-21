@@ -1,6 +1,7 @@
 package me.yochran.yocore.listeners;
 
 import me.yochran.yocore.management.*;
+import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.punishments.Punishment;
 import me.yochran.yocore.punishments.PunishmentType;
 import me.yochran.yocore.server.Server;
@@ -13,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +38,8 @@ public class PlayerLogListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage("");
 
+        yoPlayer yoPlayer = new yoPlayer(event.getPlayer());
+
         if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString())) playerManagement.setupPlayer(event.getPlayer());
         if (!plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString())) punishmentManagement.setupPlayer(event.getPlayer());
         if (!plugin.grantData.config.contains(event.getPlayer().getUniqueId().toString())) grantManagement.setupPlayer(event.getPlayer());
@@ -46,31 +48,29 @@ public class PlayerLogListener implements Listener {
 
         permissionManagement.setupPlayer(event.getPlayer());
 
-        if (plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()) && !plugin.playerData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
+        if (plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString())
+                && !plugin.playerData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
             plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".Name", event.getPlayer().getName());
             plugin.playerData.saveData();
         }
 
-        if (plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString()) && !plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
+        if (plugin.punishmentData.config.contains(event.getPlayer().getUniqueId().toString())
+                && !plugin.punishmentData.config.getString(event.getPlayer().getUniqueId().toString() + ".Name").equalsIgnoreCase(event.getPlayer().getName())) {
             plugin.punishmentData.config.set(event.getPlayer().getUniqueId().toString() + ".Name", event.getPlayer().getName());
             plugin.punishmentData.saveData();
         }
 
-        if (!playerManagement.checkIP(event.getPlayer(), event.getPlayer().getAddress().getAddress().getHostAddress())) {
-            plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".IP", event.getPlayer().getAddress().getAddress().getHostAddress());
-            plugin.playerData.saveData();
-        }
+        yoPlayer.setIP(event.getPlayer().getAddress().getAddress().getHostAddress());
 
-        if (!plugin.playerData.config.getStringList(event.getPlayer().getUniqueId().toString() + ".TotalIPs").contains(event.getPlayer().getAddress().getAddress().getHostAddress())) {
-            List<String> ips = new ArrayList<>(plugin.playerData.config.getStringList(event.getPlayer().getUniqueId().toString() + ".TotalIPs"));
+        if (!yoPlayer.getAllIPs().contains(event.getPlayer().getAddress().getAddress().getHostAddress())) {
+            List<String> ips = new ArrayList<>(yoPlayer.getAllIPs());
             ips.add(event.getPlayer().getAddress().getAddress().getHostAddress());
 
-            plugin.playerData.config.set(event.getPlayer().getUniqueId().toString() + ".TotalIPs", ips);
-            plugin.playerData.saveData();
+            yoPlayer.setAllIPs(ips);
         }
 
         if (plugin.blacklisted_players.containsKey(event.getPlayer().getUniqueId())) {
-            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(event.getPlayer()).entrySet()) {
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer).entrySet()) {
                 if (entry.getValue().getType() == PunishmentType.BLACKLIST && entry.getValue().getStatus().equalsIgnoreCase("Active"))
                     event.getPlayer().kickPlayer(Utils.translate(plugin.getConfig().getString("Blacklist.TargetJoinScreen")
                             .replace("%reason%", entry.getValue().getReason())));
@@ -82,7 +82,7 @@ public class PlayerLogListener implements Listener {
         if (plugin.banned_players.containsKey(event.getPlayer().getUniqueId())) {
             Punishment punishment = null;
 
-            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(event.getPlayer()).entrySet()) {
+            for (Map.Entry<Integer, Punishment> entry : Punishment.getPunishments(yoPlayer).entrySet()) {
                 if (entry.getValue().getType() == PunishmentType.BAN && entry.getValue().getStatus().equalsIgnoreCase("Active"))
                     punishment = entry.getValue();
             }
@@ -129,7 +129,7 @@ public class PlayerLogListener implements Listener {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.chats.staff"))
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("JoinMessage.Staff.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
+                                .replace("%player%", yoPlayer.getDisplayName())
                                 .replace("%server%", server.getName())
                                 .replace("%world%", event.getPlayer().getWorld().getName())));
                 }
@@ -140,6 +140,8 @@ public class PlayerLogListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage("");
+
+        yoPlayer yoPlayer = new yoPlayer(event.getPlayer());
 
         if (!plugin.playerData.config.contains(event.getPlayer().getUniqueId().toString()))
             playerManagement.setupPlayer(event.getPlayer());
@@ -162,7 +164,7 @@ public class PlayerLogListener implements Listener {
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("yocore.chats.staff")) {
                         staff.sendMessage(Utils.translate(plugin.getConfig().getString("QuitMessage.Staff.Message")
-                                .replace("%player%", playerManagement.getPlayerColor(event.getPlayer()))
+                                .replace("%player%", yoPlayer.getDisplayName())
                                 .replace("%server%", server.getName())
                                 .replace("%world%", event.getPlayer().getWorld().getName())));
                     }
