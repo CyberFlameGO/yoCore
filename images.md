@@ -10,8 +10,8 @@
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818584998936637/Screenshot_52.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818419301384192/Screenshot_53.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818429217767464/Screenshot_56.png">
+  Essential commands, staff alerts, colored chat & /list.
 </a>
-Essential commands, staff alerts, colored chat & /list.
 <a>
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818471605010452/Screenshot_30.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818475632066590/Screenshot_31.png">
