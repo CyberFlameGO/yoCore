@@ -43,7 +43,7 @@ public class PlayerChatListener implements Listener {
 
         String prefix = event.getMessage().split(" ")[0];
         ChatType type = ChatType.getChatFromPrefix(prefix);
-        if (type != null) {
+        if (type != null && ChatType.hasPermission(event.getPlayer(), type)) {
             event.setCancelled(true);
 
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -149,7 +149,7 @@ public class PlayerChatListener implements Listener {
 
         String tag = "";
         if (plugin.tag.containsKey(event.getPlayer().getUniqueId()))
-            tag = plugin.getConfig().getString("Tags." + plugin.tag.get(event.getPlayer().getUniqueId()) + ".Prefix");
+            tag = plugin.tag.get(event.getPlayer().getUniqueId()).getPrefix();
 
         int playTime;
         try {
