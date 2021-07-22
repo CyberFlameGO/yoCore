@@ -24,6 +24,7 @@ import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.runnables.*;
 import me.yochran.yocore.scoreboard.ScoreboardSetter;
 import me.yochran.yocore.server.Server;
+import me.yochran.yocore.tags.Tag;
 import me.yochran.yocore.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -120,7 +121,6 @@ public final class yoCore extends JavaPlugin {
         playerData.saveData();
     }
 
-    public List<String> tags = new ArrayList<>();
     public List<UUID> vanished_players = new ArrayList<>();
     public List<UUID> vanish_logged = new ArrayList<>();
     public List<UUID> staff_alerts = new ArrayList<>();
@@ -155,7 +155,7 @@ public final class yoCore extends JavaPlugin {
     public Map<UUID, String> grant_reason = new HashMap<>();
     public Map<UUID, Rank> rank_disguise = new HashMap<>();
     public Map<UUID, String> nickname = new HashMap<>();
-    public Map<UUID, String> tag = new HashMap<>();
+    public Map<UUID, Tag> tag = new HashMap<>();
     public Map<UUID, PermissionAttachment> player_permissions = new HashMap<>();
     public Map<UUID, String> powertool_command = new HashMap<>();
     public Map<UUID, Material> powertool_material = new HashMap<>();
@@ -303,13 +303,17 @@ public final class yoCore extends JavaPlugin {
         }
 
         for (String tag : getConfig().getConfigurationSection("Tags").getKeys(false)) {
-            Permission permission = new Permission(getConfig().getString("Tags." + tag + ".Permission"));
+            Permission permission = new Permission("yocore.tags." + getConfig().getString("Tags." + tag + ".ID").toLowerCase());
             permission.setDescription("Permission");
 
             if (!Permissions.getAllServerPermissions().contains(permission))
                 manager.addPermission(permission);
 
-            tags.add(getConfig().getString("Tags." + tag + ".ID"));
+            String ID = getConfig().getString("Tags." + tag + ".ID");
+            String prefix = getConfig().getString("Tags." + tag + ".Prefix");
+            String display = getConfig().getString("Tags." + tag + ".Display");
+
+            Tag.getTags().put(ID, new Tag(ID, prefix, display));
         }
     }
 

@@ -177,7 +177,7 @@ public class TeleportCommands implements CommandExecutor {
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequest")
                         .replace("%target%", yoTarget.getDisplayName())));
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestTarget")
-                        .replace("%player%", yoTarget.getDisplayName())));
+                        .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
 
                 break;
             case "teleportaccept":
@@ -201,11 +201,13 @@ public class TeleportCommands implements CommandExecutor {
                     return true;
                 }
 
+                yoTarget = new yoPlayer(target);
+
                 plugin.tpa_coords.put(target.getUniqueId(), target.getLocation());
                 plugin.tpa_timer.put(target.getUniqueId(), 5);
 
                 sender.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestAccept")
-                        .replace("%player%", yoPlayer.getYoPlayer((Player) sender).getDisplayName())));
+                        .replace("%player%", yoTarget.getDisplayName())));
                 target.sendMessage(Utils.translate(plugin.getConfig().getString("Teleport.TeleportRequestStarted")));
 
                 break;

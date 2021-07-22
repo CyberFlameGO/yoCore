@@ -1,6 +1,5 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.player.yoPlayer;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.yoCore;
@@ -15,7 +14,6 @@ import java.util.List;
 public class UserCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     public UserCommand() {
         plugin = yoCore.getPlugin(yoCore.class);

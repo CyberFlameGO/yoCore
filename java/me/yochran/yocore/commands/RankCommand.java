@@ -1,6 +1,5 @@
 package me.yochran.yocore.commands;
 
-import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.ranks.Rank;
 import me.yochran.yocore.utils.Utils;
 import me.yochran.yocore.utils.XMaterial;
@@ -18,7 +17,6 @@ import java.util.*;
 public class RankCommand implements CommandExecutor {
 
     private final yoCore plugin;
-    private final PermissionManagement permissionManagement = new PermissionManagement();
 
     private String[] validArgs = new String[] {
             "add",
