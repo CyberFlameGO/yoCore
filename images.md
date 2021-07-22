@@ -1,16 +1,16 @@
+Staff Chats & Staff Join / Leave / Server Change Messages
 <a>
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818451287801925/Screenshot_26.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818468131864586/Screenshot_29.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818466186231818/Screenshot_28.png">
-  Staff Chats & Staff Join / Leave / Server Change Messages
 </a>
+Essential commands, staff alerts, colored chat & /list.
 <a>
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818425807798302/Screenshot_55.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818422163472415/Screenshot_54.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818584998936637/Screenshot_52.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818419301384192/Screenshot_53.png">
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818429217767464/Screenshot_56.png">
-  Essential commands, staff alerts, colored chat & /list.
 </a>
 <a>
   <img src="https://cdn.discordapp.com/attachments/758680334698414081/867818471605010452/Screenshot_30.png">
