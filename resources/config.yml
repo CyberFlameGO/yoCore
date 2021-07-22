@@ -88,12 +88,10 @@ Tags:
     ID: "YOCORE"
     Prefix: "&7[&byoCore&7] &7"
     Display: "&byoCore"
-    Permission: "yocore.tags.yocore"
   BETATESTER:
     ID: "BETATESTER"
     Prefix: "&7[&3Beta-Tester&7] &7"
     Display: "&3Beta-Tester"
-    Permission: "yocore.tags.betatester"
 
 TagsCommand:
   MustBePlayer: "&cYou must be a player to use that command"
