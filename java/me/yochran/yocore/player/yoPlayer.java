@@ -1,12 +1,10 @@
 package me.yochran.yocore.player;
 
-import me.yochran.yocore.management.PermissionManagement;
 import me.yochran.yocore.permissions.Permissions;
 import me.yochran.yocore.ranks.Rank;
+import me.yochran.yocore.server.Server;
 import me.yochran.yocore.yoCore;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Statistic;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -71,7 +69,7 @@ public class yoPlayer {
         String playTime;
 
         try {
-            int ticks = getPlayer().getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE);
+            int ticks = getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE);
             playTime = ((ticks / 20) / 3600) + " hours.";
         } catch (NoSuchFieldError ignored) { playTime = "Unavailable."; }
 
