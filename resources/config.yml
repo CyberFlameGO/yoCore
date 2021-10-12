@@ -1256,7 +1256,7 @@ Send:
 GList:
   NoPermission: "&cYou do not have permission to use that command."
   IncorrectUsage: |-
-    &cIncorrect Usage! &7(/bal)
+    &cIncorrect Usage! &7(/glist)
     &7- &b/glist
     &7- &b/glist <server>
     &7- &b/glist showall
